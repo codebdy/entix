@@ -37,7 +37,6 @@ func doPublish(r *repository.Repository, appUuid string) error {
 	if err != nil {
 		return err
 	}
-	//repository.LoadModel()
 
 	return nil
 }
@@ -50,7 +49,6 @@ func PublishMetaResolve(p graphql.ResolveParams, model *model.Model) (interface{
 	if appUuid == nil {
 		appUuid = consts.SYSTEM_APP_UUID
 	}
-	fmt.Println("哈哈", appUuid)
 	doPublish(repos, appUuid.(string))
 	return "success", nil
 }

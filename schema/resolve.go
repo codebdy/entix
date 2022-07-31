@@ -1,6 +1,8 @@
 package schema
 
 import (
+	"errors"
+
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/contexts"
@@ -9,7 +11,10 @@ import (
 )
 
 func publishResolve(p graphql.ResolveParams) (interface{}, error) {
-	appUuid := contexts.ParseAppUuid(p.Context)
+	if p.Args[consts.APPUUID] == nil {
+		return nil, errors.New("No appuuid!")
+	}
+	appUuid := p.Args[consts.APPUUID].(string)
 	appSchema := Get(appUuid)
 	result, err := resolve.PublishMetaResolve(p, appSchema.Model())
 	if err != nil {
