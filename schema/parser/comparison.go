@@ -263,7 +263,7 @@ func (p *ModelParser) EnumComparisonExp(attr *graph.Attribute) *graphql.InputObj
 	if p.enumComparisonExpMap[enumEntity.Name] != nil {
 		return p.enumComparisonExpMap[enumEntity.Name]
 	}
-	enumType := p.EnumType(enumEntity.Name)
+	enumType := graphql.String //p.EnumType(enumEntity.Name)
 	enumxp := graphql.InputObjectFieldConfig{
 		Type: graphql.NewInputObject(
 			graphql.InputObjectConfig{

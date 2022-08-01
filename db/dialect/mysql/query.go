@@ -114,9 +114,15 @@ func (b *MySQLBuilder) BuildBoolExp(argEntity *graph.ArgEntity, where map[string
 	for key, value := range where {
 		switch key {
 		case consts.ARG_AND:
-			ands := value.([]map[string]interface{})
+			ands, ok := value.([]interface{})
+			if !ok {
+				ands2 := value.([]map[string]interface{})
+				for i := range ands2 {
+					ands = append(ands, ands2[i])
+				}
+			}
 			for _, andValue := range ands {
-				andStr, andParam := b.BuildBoolExp(argEntity, andValue)
+				andStr, andParam := b.BuildBoolExp(argEntity, andValue.(map[string]interface{}))
 				querys = append(querys, andStr)
 				params = append(params, andParam...)
 			}
@@ -138,14 +144,14 @@ func (b *MySQLBuilder) BuildBoolExp(argEntity *graph.ArgEntity, where map[string
 				argAsso := argEntity.GetAssociation(key)
 				var associStrs []string
 				var associParams []interface{}
-				for i := range argAsso.ArgEntities {
-					assoStr, assoParam := b.BuildBoolExp(argAsso.ArgEntities[i], value.(map[string]interface{}))
-					if assoStr != "" {
-						assoStr = fmt.Sprintf("(%s)", assoStr)
-						associStrs = append(associStrs, assoStr)
-						associParams = append(associParams, assoParam...)
-					}
+
+				assoStr, assoParam := b.BuildBoolExp(argAsso.TypeArgEntity, value.(map[string]interface{}))
+				if assoStr != "" {
+					assoStr = fmt.Sprintf("(%s)", assoStr)
+					associStrs = append(associStrs, assoStr)
+					associParams = append(associParams, assoParam...)
 				}
+
 				querys = append(querys, strings.Join(associStrs, " OR "))
 				params = append(params, associParams...)
 			}
@@ -158,7 +164,7 @@ func buildArgAssociation(argAssociation *graph.ArgAssociation, owner *graph.ArgE
 	var sql string
 
 	if owner != nil {
-		typeEntity := argAssociation.GetTypeEntity(argAssociation.Association.TypeEntity().Uuid())
+		typeEntity := argAssociation.TypeArgEntity
 		povitTableAlias := fmt.Sprintf("%s_%d_%d", graph.PREFIX_T, owner.Id, typeEntity.Id)
 		sql = sql + fmt.Sprintf(
 			" LEFT JOIN %s %s ON %s=%s LEFT JOIN %s %s ON %s=%s ",
