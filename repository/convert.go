@@ -86,7 +86,8 @@ func makeAttributeValue(attr *graph.Attribute) interface{} {
 	case meta.DATE:
 		var value sql.NullTime
 		return &value
-	case meta.CLASS_VALUE_OBJECT,
+	case meta.JSON,
+		meta.CLASS_VALUE_OBJECT,
 		meta.ID_ARRAY,
 		meta.INT_ARRAY,
 		meta.FLOAT_ARRAY,

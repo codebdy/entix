@@ -42,11 +42,13 @@ func (p *ModelParser) PropertyType(property graph.Propertier) graphql.Output {
 		meta.ENTITY_ARRAY:
 		return scalars.JSONType
 	case meta.ENUM:
-		enum := property.GetEumnType()
-		if enum == nil {
-			panic("Can not find enum entity")
-		}
-		return p.EnumType(enum.Name)
+		// 方便输入，改为字符串
+		// enum := property.GetEumnType()
+		// if enum == nil {
+		// 	panic("Can not find enum entity")
+		// }
+		// return p.EnumType(enum.Name)
+		return graphql.String
 	case meta.FILE:
 		//return graphql.String
 		return fileOutputType
