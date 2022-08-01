@@ -36,7 +36,6 @@ func typeFromAssociation(associ *Association, ider Ider) *ArgEntity {
 
 func (a *ArgEntity) GetAssociation(name string) *ArgAssociation {
 	for i := range a.Associations {
-		fmt.Println("哈哈", a.Associations[i].Association.Name(), name)
 		if a.Associations[i].Association.Name() == name {
 			return a.Associations[i]
 		}
@@ -97,10 +96,26 @@ func BuildArgEntity(entity *Entity, where interface{}, ider Ider) *ArgEntity {
 func buildWhereEntity(argEntity *ArgEntity, where QueryArg, ider Ider) {
 	for key, value := range where {
 		switch key {
-		case consts.ARG_AND, consts.ARG_NOT, consts.ARG_OR:
+		case consts.ARG_NOT:
 			if subWhere, ok := value.(QueryArg); ok {
 				buildWhereEntity(argEntity, subWhere, ider)
 			}
+			break
+		case consts.ARG_AND, consts.ARG_OR:
+			args := []QueryArg{}
+			if args2, ok := value.([]QueryArg); ok {
+				args = args2
+			} else {
+				args2 := value.([]interface{})
+				for i := range args2 {
+					args = append(args, args2[i].(QueryArg))
+				}
+			}
+			for i := range args {
+				subWhere := args[i]
+				buildWhereEntity(argEntity, subWhere, ider)
+			}
+
 			break
 		default:
 			association := argEntity.Entity.GetAssociationByName(key)

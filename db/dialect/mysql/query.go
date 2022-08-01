@@ -133,6 +133,7 @@ func (b *MySQLBuilder) BuildBoolExp(argEntity *graph.ArgEntity, where map[string
 			break
 		default:
 			asso := argEntity.Entity.GetAssociationByName(key)
+			//如果不是关联
 			if asso == nil {
 				fieldStr, fieldParam := b.BuildFieldExp(argEntity.Alise()+"."+key, value.(map[string]interface{}))
 				if fieldStr != "" {
