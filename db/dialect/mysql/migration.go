@@ -80,14 +80,14 @@ func (b *MySQLBuilder) appendDeleteColumnAtoms(diff *model.TableDiff, atoms *[]m
 		if column.Index {
 			indexName := column.Name + consts.INDEX_SUFFIX
 			*atoms = append(*atoms, model.ModifyAtom{
-				ExcuteSQL: fmt.Sprintf("DROP INDEX %s ON %s ", indexName, diff.NewTable.Name),
-				UndoSQL:   fmt.Sprintf("CREATE INDEX %s ON %s (%s)", indexName, diff.NewTable.Name, column.Name),
+				ExcuteSQL: fmt.Sprintf("DROP INDEX %s ON `%s` ", indexName, diff.NewTable.Name),
+				UndoSQL:   fmt.Sprintf("CREATE INDEX %s ON `%s` (%s)", indexName, diff.NewTable.Name, column.Name),
 			})
 		}
 		//删除列
 		*atoms = append(*atoms, model.ModifyAtom{
-			ExcuteSQL: fmt.Sprintf("ALTER TABLE %s DROP  %s ", diff.NewTable.Name, column.Name),
-			UndoSQL:   fmt.Sprintf("ALTER TABLE %s ADD COLUMN  %s %s", diff.NewTable.Name, column.Name, b.ColumnTypeSQL(column)),
+			ExcuteSQL: fmt.Sprintf("ALTER TABLE `%s` DROP  `%s` ", diff.NewTable.Name, column.Name),
+			UndoSQL:   fmt.Sprintf("ALTER TABLE `%s` ADD COLUMN  `%s` %s", diff.NewTable.Name, column.Name, b.ColumnTypeSQL(column)),
 		})
 	}
 }
@@ -97,7 +97,7 @@ func (b *MySQLBuilder) appendAddColumnAtoms(diff *model.TableDiff, atoms *[]mode
 
 		//添加列
 		*atoms = append(*atoms, model.ModifyAtom{
-			ExcuteSQL: fmt.Sprintf("ALTER TABLE %s ADD COLUMN  %s %s %s", diff.NewTable.Name, column.Name, b.ColumnTypeSQL(column), nullableString(column.Nullable)),
+			ExcuteSQL: fmt.Sprintf("ALTER TABLE %s ADD COLUMN  `%s` %s %s", diff.NewTable.Name, column.Name, b.ColumnTypeSQL(column), nullableString(column.Nullable)),
 			UndoSQL:   fmt.Sprintf("ALTER TABLE %s DROP  %s ", diff.NewTable.Name, column.Name),
 		})
 		//添加索引
