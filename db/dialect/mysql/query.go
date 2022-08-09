@@ -222,8 +222,12 @@ func (b *MySQLBuilder) BuildOrderBySQL(
 	argEntity *graph.ArgEntity,
 	orderBy interface{},
 ) string {
-	if _, ok := orderBy.(graph.QueryArg); ok {
-
+	if orderByArg, ok := orderBy.(graph.QueryArg); ok {
+		argStrings := []string{}
+		for key := range orderByArg {
+			argStrings = append(argStrings, argEntity.Alise()+"."+key+" "+orderByArg[key].(string))
+		}
+		return fmt.Sprintf(" ORDER BY %s", strings.Join(argStrings, ","))
 	}
 	return fmt.Sprintf(" ORDER BY %s.id DESC", argEntity.Alise())
 }
