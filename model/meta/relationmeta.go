@@ -26,6 +26,8 @@ type RelationMeta struct {
 	TargetId               string           `json:"targetId"`
 	RoleOfTarget           string           `json:"roleOfTarget"`
 	RoleOfSource           string           `json:"roleOfSource"`
+	LabelOfTarget          string           `json:"labelOfTarget"`
+	LabelOfSource          string           `json:"labelOfSource"`
 	DescriptionOnSource    string           `json:"descriptionOnSource"`
 	DescriptionOnTarget    string           `json:"descriptionOnTarget"`
 	SourceMutiplicity      string           `json:"sourceMutiplicity"`

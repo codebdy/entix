@@ -12,6 +12,7 @@ type ClassMeta struct {
 	Uuid        string          `json:"uuid"`
 	InnerId     uint64          `json:"innerId"`
 	Name        string          `json:"name"`
+	Label       string          `json:"label"`
 	StereoType  string          `json:"stereoType"`
 	Attributes  []AttributeMeta `json:"attributes"`
 	Methods     []MethodMeta    `json:"methods"`

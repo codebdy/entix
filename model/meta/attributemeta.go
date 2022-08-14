@@ -5,6 +5,7 @@ type AttributeMeta struct {
 	Type        string `json:"type"`
 	Primary     bool   `json:"primary"`
 	Name        string `json:"name"`
+	Label       string `json:"label"`
 	Nullable    bool   `json:"nullable"`
 	Default     string `json:"default"`
 	Unique      bool   `json:"unique"`
