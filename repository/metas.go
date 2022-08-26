@@ -98,7 +98,6 @@ func (r *Repository) LoadAndDecodeMeta(appUuid string) *meta.MetaContent {
 }
 
 func (r *Repository) LoadModel(appUuid string) *model.Model {
-
 	publishedContent := r.LoadAndDecodeMeta(appUuid)
 	publishedContent.Classes = append(publishedContent.Classes,
 		meta.MetaStatusEnum,
@@ -112,6 +111,10 @@ func (r *Repository) LoadModel(appUuid string) *model.Model {
 		//systemMetaContent := r.LoadAndDecodeMeta(consts.SYSTEM_APP_UUID)
 		for i := range r.Model.Meta.Classes {
 			publishedContent.Classes = append(publishedContent.Classes, *r.Model.Meta.Classes[i])
+		}
+
+		for i := range r.Model.Meta.Relations {
+			publishedContent.Relations = append(publishedContent.Relations, *r.Model.Meta.Relations[i])
 		}
 	}
 
