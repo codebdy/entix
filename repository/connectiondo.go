@@ -416,9 +416,9 @@ func (con *Connection) doSaveAssociation(r *data.Reference, ownerId uint64) erro
 	con.clearAssociation(r, ownerId)
 
 	for _, ins := range synced {
-		if ins.Id == 0 {
-			panic("Can not add new instance when update")
-		}
+		// if ins.Id == 0 {
+		// 	panic("Can not add new instance when update")
+		// }
 		targetData := con.saveAssociationInstance(ins)
 
 		if savedIns, ok := targetData.(InsanceData); ok {
