@@ -1,7 +1,6 @@
 package data
 
 import (
-	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/model/table"
@@ -34,27 +33,8 @@ func (r *Reference) convertToInstances(data interface{}) []*Instance {
 	return doConvertToInstances(data, r.Association.IsArray(), r.TypeEntity())
 }
 
-func (r *Reference) Deleted() []*Instance {
-	return r.convertToInstances(r.Value[consts.ARG_DELETE])
-}
-
-func (r *Reference) Added() []*Instance {
-	return r.convertToInstances(r.Value[consts.ARG_ADD])
-}
-
-func (r *Reference) Updated() []*Instance {
-	return r.convertToInstances(r.Value[consts.ARG_UPDATE])
-}
-
-func (r *Reference) Synced() []*Instance {
-	return r.convertToInstances(r.Value[consts.ARG_SYNC])
-}
-
-func (r *Reference) Cascade() bool {
-	if r.Value[consts.ARG_CASCADE] != nil {
-		return r.Value[consts.ARG_CASCADE].(bool)
-	}
-	return false
+func (r *Reference) Associated() []*Instance {
+	return r.convertToInstances(r.Value)
 }
 
 func (r *Reference) SourceColumn() *table.Column {

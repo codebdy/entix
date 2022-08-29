@@ -371,44 +371,8 @@ func (con *Connection) saveAssociationInstance(ins *data.Instance) interface{} {
 }
 
 func (con *Connection) doSaveAssociation(r *data.Reference, ownerId uint64) error {
-	for _, ins := range r.Deleted() {
-		if r.Cascade() {
-			con.doDeleteInstance(ins)
-		} else {
-			povit := newAssociationPovit(r, ownerId, ins.Id)
-			con.doDeleteAssociationPovit(povit)
-		}
-	}
 
-	for _, ins := range r.Added() {
-		targetData := con.saveAssociationInstance(ins)
-
-		if savedIns, ok := targetData.(InsanceData); ok {
-			tarId := savedIns[consts.ID].(uint64)
-			relationInstance := newAssociationPovit(r, ownerId, tarId)
-			con.doSaveAssociationPovit(relationInstance)
-		} else {
-			panic("Save Association error")
-		}
-
-	}
-
-	for _, ins := range r.Updated() {
-		if ins.Id == 0 {
-			panic("Can not add new instance when update")
-		}
-		targetData := con.saveAssociationInstance(ins)
-		if savedIns, ok := targetData.(InsanceData); ok {
-			tarId := savedIns[consts.ID].(uint64)
-			relationInstance := newAssociationPovit(r, ownerId, tarId)
-
-			con.doSaveAssociationPovit(relationInstance)
-		} else {
-			panic("Save Association error")
-		}
-	}
-
-	synced := r.Synced()
+	synced := r.Associated()
 	if len(synced) == 0 {
 		return nil
 	}
@@ -437,7 +401,7 @@ func (con *Connection) doSaveAssociation(r *data.Reference, ownerId uint64) erro
 func (con *Connection) clearAssociation(r *data.Reference, ownerId uint64) {
 	con.deleteAssociationPovit(r, ownerId)
 
-	if r.Cascade() {
+	if r.IsCombination() {
 		con.deleteAssociatedInstances(r, ownerId)
 	}
 }
