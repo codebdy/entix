@@ -24,8 +24,8 @@ func doPublish(r *repository.Repository, appUuid string) error {
 	if nextMeta == nil {
 		panic("Can not find unpublished meta")
 	}
-	publishedModel := model.New(r.Model.AppUuid, repository.DecodeContent(publishedMeta, appId))
-	nextModel := model.New(r.Model.AppUuid, repository.DecodeContent(nextMeta, appId))
+	publishedModel := model.New(r.Model.AppUuid, r.MergeModel(appUuid, repository.DecodeContent(publishedMeta, appId)))
+	nextModel := model.New(r.Model.AppUuid, r.MergeModel(appUuid, repository.DecodeContent(nextMeta, appId)))
 	nextModel.Graph.Validate()
 	diff := model.CreateDiff(publishedModel, nextModel)
 	r.ExcuteDiff(diff)

@@ -97,6 +97,21 @@ func (r *Repository) LoadAndDecodeMeta(appUuid string) *meta.MetaContent {
 	return publishedContent
 }
 
+func (r *Repository) MergeModel(appUuid string, content *meta.MetaContent) *meta.MetaContent {
+	//合并系统Schema
+	if appUuid != consts.SYSTEM_APP_UUID {
+		//systemMetaContent := r.LoadAndDecodeMeta(consts.SYSTEM_APP_UUID)
+		for i := range r.Model.Meta.Classes {
+			content.Classes = append(content.Classes, *r.Model.Meta.Classes[i])
+		}
+
+		for i := range r.Model.Meta.Relations {
+			content.Relations = append(content.Relations, *r.Model.Meta.Relations[i])
+		}
+	}
+	return content
+}
+
 func (r *Repository) LoadModel(appUuid string) *model.Model {
 	publishedContent := r.LoadAndDecodeMeta(appUuid)
 	publishedContent.Classes = append(publishedContent.Classes,
@@ -106,17 +121,18 @@ func (r *Repository) LoadModel(appUuid string) *model.Model {
 		meta.AbilityTypeEnum,
 		meta.AbilityClass,
 	)
-	//合并系统Schema
-	if appUuid != consts.SYSTEM_APP_UUID {
-		//systemMetaContent := r.LoadAndDecodeMeta(consts.SYSTEM_APP_UUID)
-		for i := range r.Model.Meta.Classes {
-			publishedContent.Classes = append(publishedContent.Classes, *r.Model.Meta.Classes[i])
-		}
+	r.MergeModel(appUuid, publishedContent)
+	// //合并系统Schema
+	// if appUuid != consts.SYSTEM_APP_UUID {
+	// 	//systemMetaContent := r.LoadAndDecodeMeta(consts.SYSTEM_APP_UUID)
+	// 	for i := range r.Model.Meta.Classes {
+	// 		publishedContent.Classes = append(publishedContent.Classes, *r.Model.Meta.Classes[i])
+	// 	}
 
-		for i := range r.Model.Meta.Relations {
-			publishedContent.Relations = append(publishedContent.Relations, *r.Model.Meta.Relations[i])
-		}
-	}
+	// 	for i := range r.Model.Meta.Relations {
+	// 		publishedContent.Relations = append(publishedContent.Relations, *r.Model.Meta.Relations[i])
+	// 	}
+	// }
 
 	m := model.New(appUuid, publishedContent)
 
