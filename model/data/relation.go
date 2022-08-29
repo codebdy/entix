@@ -9,28 +9,25 @@ import (
 //没有继承关系的关联
 type Reference struct {
 	Association *graph.Association
-	Value       map[string]interface{}
+	Value       []interface{}
 }
 
-func doConvertToInstances(data interface{}, isArray bool, entity *graph.Entity) []*Instance {
+func doConvertToInstances(data interface{}, entity *graph.Entity) []*Instance {
 	instances := []*Instance{}
 	if data == nil {
-		return []*Instance{}
+		return nil
 	}
-	if isArray {
-		objects := data.([]interface{})
-		for i := range objects {
-			instances = append(instances, NewInstance(objects[i].(map[string]interface{}), entity))
-		}
-	} else {
-		instances = append(instances, NewInstance(data.(map[string]interface{}), entity))
+
+	objects := data.([]interface{})
+	for i := range objects {
+		instances = append(instances, NewInstance(objects[i].(map[string]interface{}), entity))
 	}
 
 	return instances
 }
 
 func (r *Reference) convertToInstances(data interface{}) []*Instance {
-	return doConvertToInstances(data, r.Association.IsArray(), r.TypeEntity())
+	return doConvertToInstances(data, r.TypeEntity())
 }
 
 func (r *Reference) Associated() []*Instance {

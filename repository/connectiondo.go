@@ -373,7 +373,7 @@ func (con *Connection) saveAssociationInstance(ins *data.Instance) interface{} {
 func (con *Connection) doSaveAssociation(r *data.Reference, ownerId uint64) error {
 
 	synced := r.Associated()
-	if len(synced) == 0 {
+	if synced == nil {
 		return nil
 	}
 

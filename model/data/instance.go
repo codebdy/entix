@@ -52,7 +52,7 @@ func NewInstance(object map[string]interface{}, entity *graph.Entity) *Instance 
 		if value != nil {
 			ref := Reference{
 				Association: asso,
-				Value:       value.(map[string]interface{}),
+				Value:       value.([]interface{}),
 			}
 			instance.Associations = append(instance.Associations, &ref)
 		}
