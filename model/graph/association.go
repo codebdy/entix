@@ -1,9 +1,5 @@
 package graph
 
-import (
-	"rxdrag.com/entify/model/meta"
-)
-
 type Association struct {
 	Relation       *Relation
 	OwnerClassUuid string
@@ -48,13 +44,13 @@ func (a *Association) Description() string {
 	}
 }
 
-func (a *Association) IsArray() bool {
-	if a.IsSource() {
-		return a.Relation.TargetMultiplicity == meta.ZERO_MANY
-	} else {
-		return a.Relation.SourceMutiplicity == meta.ZERO_MANY
-	}
-}
+// func (a *Association) IsArray() bool {
+// 	if a.IsSource() {
+// 		return a.Relation.TargetMultiplicity == meta.ZERO_MANY
+// 	} else {
+// 		return a.Relation.SourceMutiplicity == meta.ZERO_MANY
+// 	}
+// }
 
 func (a *Association) IsSource() bool {
 	return a.Relation.SourceEntity.Uuid() == a.OwnerClassUuid

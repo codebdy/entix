@@ -46,13 +46,9 @@ func (p *ModelParser) makeRelations(model *model.Model) {
 }
 
 func (p *ModelParser) AssociationType(association *graph.Association) graphql.Output {
-	if association.IsArray() {
-		return &graphql.NonNull{
-			OfType: &graphql.List{
-				OfType: p.OutputType(association.TypeEntity().Name()),
-			},
-		}
-	} else {
-		return p.OutputType(association.TypeEntity().Name())
+	return &graphql.NonNull{
+		OfType: &graphql.List{
+			OfType: p.OutputType(association.TypeEntity().Name()),
+		},
 	}
 }
