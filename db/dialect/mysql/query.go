@@ -18,15 +18,15 @@ func (*MySQLBuilder) BuildFieldExp(fieldName string, fieldArgs map[string]interf
 	for key, value := range fieldArgs {
 		switch key {
 		case consts.ARG_EQ:
-			queryStr = fieldName + "=?"
+			queryStr = fieldName + "= ?"
 			params = append(params, value)
 			break
 		case consts.ARG_GT:
-			queryStr = fieldName + ">"
+			queryStr = fieldName + "> ?"
 			params = append(params, value)
 			break
 		case consts.ARG_GTE:
-			queryStr = fieldName + ">="
+			queryStr = fieldName + ">= ?"
 			params = append(params, value)
 			break
 		case consts.ARG_IN:
@@ -48,15 +48,15 @@ func (*MySQLBuilder) BuildFieldExp(fieldName string, fieldArgs map[string]interf
 			}
 			break
 		case consts.ARG_LT:
-			queryStr = fieldName + "<"
+			queryStr = fieldName + "< ?"
 			params = append(params, value)
 			break
 		case consts.ARG_LTE:
-			queryStr = fieldName + "<="
+			queryStr = fieldName + "<= ?"
 			params = append(params, value)
 			break
 		case consts.ARG_NOTEQ:
-			queryStr = fieldName + "<>"
+			queryStr = fieldName + "<> ?"
 			params = append(params, value)
 			break
 		case consts.ARG_NOTIN:
@@ -73,23 +73,23 @@ func (*MySQLBuilder) BuildFieldExp(fieldName string, fieldArgs map[string]interf
 			}
 			break
 		case consts.ARG_ILIKE:
-			queryStr = fieldName + " LIKE "
+			queryStr = fieldName + " LIKE ?"
 			params = append(params, value)
 			break
 		case consts.ARG_LIKE:
-			queryStr = fieldName + " LIKE BINARY "
+			queryStr = fieldName + " LIKE BINARY ?"
 			params = append(params, value)
 			break
 		case consts.ARG_NOTILIKE:
-			queryStr = fieldName + " NOT LIKE "
+			queryStr = fieldName + " NOT LIKE ?"
 			params = append(params, value)
 			break
 		case consts.ARG_NOTLIKE:
-			queryStr = fieldName + " NOT LIKE BINARY "
+			queryStr = fieldName + " NOT LIKE BINARY ?"
 			params = append(params, value)
 			break
 		case consts.ARG_NOTREGEX:
-			queryStr = fieldName + " NOT REGEXP "
+			queryStr = fieldName + " NOT REGEXP ?"
 			params = append(params, value)
 			break
 		// case consts.ARG_NOTSIMILAR:
