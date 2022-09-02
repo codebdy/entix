@@ -108,7 +108,7 @@ func (*MySQLBuilder) BuildFieldExp(fieldName string, fieldArgs map[string]interf
 	return "(" + queryStr + ")", params
 }
 
-func (b *MySQLBuilder) BuildBoolExp(argEntity *graph.ArgEntity, where map[string]interface{}, operator string) (string, []interface{}) {
+func (b *MySQLBuilder) BuildBoolExp(argEntity *graph.ArgEntity, where map[string]interface{}) (string, []interface{}) {
 	var params []interface{}
 	querys := []string{}
 	for key, value := range where {
@@ -122,7 +122,7 @@ func (b *MySQLBuilder) BuildBoolExp(argEntity *graph.ArgEntity, where map[string
 				}
 			}
 			for _, andValue := range ands {
-				andStr, andParam := b.BuildBoolExp(argEntity, andValue.(map[string]interface{}), " AND ")
+				andStr, andParam := b.BuildBoolExp(argEntity, andValue.(map[string]interface{}))
 				querys = append(querys, andStr)
 				params = append(params, andParam...)
 			}
@@ -137,11 +137,13 @@ func (b *MySQLBuilder) BuildBoolExp(argEntity *graph.ArgEntity, where map[string
 					ors = append(ors, ors2[i])
 				}
 			}
+			orQuerys := []string{}
 			for _, orValue := range ors {
-				orStr, andParam := b.BuildBoolExp(argEntity, orValue.(map[string]interface{}), " OR ")
-				querys = append(querys, orStr)
+				orStr, andParam := b.BuildBoolExp(argEntity, orValue.(map[string]interface{}))
+				orQuerys = append(orQuerys, orStr)
 				params = append(params, andParam...)
 			}
+			querys = append(querys, strings.Join(orQuerys, " OR "))
 			break
 		default:
 			asso := argEntity.Entity.GetAssociationByName(key)
@@ -158,7 +160,7 @@ func (b *MySQLBuilder) BuildBoolExp(argEntity *graph.ArgEntity, where map[string
 				var associStrs []string
 				var associParams []interface{}
 
-				assoStr, assoParam := b.BuildBoolExp(argAsso.TypeArgEntity, value.(map[string]interface{}), " AND ")
+				assoStr, assoParam := b.BuildBoolExp(argAsso.TypeArgEntity, value.(map[string]interface{}))
 				if assoStr != "" {
 					assoStr = fmt.Sprintf("(%s)", assoStr)
 					associStrs = append(associStrs, assoStr)
@@ -170,7 +172,7 @@ func (b *MySQLBuilder) BuildBoolExp(argEntity *graph.ArgEntity, where map[string
 			}
 		}
 	}
-	return strings.Join(querys, operator), params
+	return strings.Join(querys, " AND "), params
 }
 
 func buildArgAssociation(argAssociation *graph.ArgAssociation, owner *graph.ArgEntity) string {
@@ -221,7 +223,7 @@ func (b *MySQLBuilder) BuildWhereSQL(
 	whereStr := ""
 	var params []interface{}
 	if where != nil {
-		boolStr, whereParams := b.BuildBoolExp(argEntity, where, " AND ")
+		boolStr, whereParams := b.BuildBoolExp(argEntity, where)
 		if boolStr != "" {
 			whereStr = boolStr
 			params = append(params, whereParams...)
