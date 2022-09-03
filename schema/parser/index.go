@@ -22,6 +22,7 @@ type ModelParser struct {
 	enumComparisonExpMap map[string]*graphql.InputObjectFieldConfig
 	mutationResponseMap  map[string]*graphql.Object
 	aggregateMap         map[string]*graphql.Object
+	listMap              map[string]*graphql.Object
 	selectColumnsMap     map[string]*graphql.InputObject
 }
 
@@ -49,6 +50,7 @@ func (p *ModelParser) reset() {
 	p.enumComparisonExpMap = make(map[string]*graphql.InputObjectFieldConfig)
 	p.mutationResponseMap = make(map[string]*graphql.Object)
 	p.aggregateMap = make(map[string]*graphql.Object)
+	p.listMap = make(map[string]*graphql.Object)
 	p.selectColumnsMap = make(map[string]*graphql.InputObject)
 }
 

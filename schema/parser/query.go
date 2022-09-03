@@ -2,8 +2,38 @@ package parser
 
 import (
 	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
 )
+
+func (p *ModelParser) ClassListType(entity *graph.Class) *graphql.Object {
+	return p.listType(entity.Name(), entity.ListName())
+}
+
+func (p *ModelParser) listType(name string, listName string) *graphql.Object {
+	if p.listMap[listName] != nil {
+		return p.listMap[listName]
+	}
+
+	returnValue := graphql.NewObject(
+		graphql.ObjectConfig{
+			Name: listName,
+			Fields: graphql.Fields{
+				consts.NODES: &graphql.Field{
+					Type: &graphql.List{
+						OfType: p.OutputType(name),
+					},
+				},
+				consts.TOTAL: &graphql.Field{
+					Type: graphql.Int,
+				},
+			},
+		},
+	)
+
+	p.listMap[listName] = returnValue
+	return returnValue
+}
 
 func (p *ModelParser) makeEntityOutputObjects(entities []*graph.Entity) {
 	for i := range entities {

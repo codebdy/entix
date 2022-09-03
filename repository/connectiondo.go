@@ -69,7 +69,7 @@ func (con *Connection) buildQueryEntitySQL(entity *graph.Entity, args map[string
 	return queryStr, paramsList
 }
 
-func (con *Connection) doQueryInterface(intf *graph.Interface, args map[string]interface{}) []InsanceData {
+func (con *Connection) doQueryInterface(intf *graph.Interface, args map[string]interface{}) map[string]interface{} {
 	sql, params := con.buildQueryInterfaceSQL(intf, args)
 
 	rows, err := con.Dbx.Query(sql, params...)
@@ -98,10 +98,13 @@ func (con *Connection) doQueryInterface(intf *graph.Interface, args map[string]i
 		merageInstances(instances, oneEntityInstances)
 	}
 
-	return instances
+	return map[string]interface{}{
+		consts.NODES: instances,
+		consts.TOTAL: 0,
+	}
 }
 
-func (con *Connection) doQueryEntity(entity *graph.Entity, args map[string]interface{}) []InsanceData {
+func (con *Connection) doQueryEntity(entity *graph.Entity, args map[string]interface{}) map[string]interface{} {
 	if !con.v.CanReadEntity(entity.Uuid()) {
 		panic(consts.NO_PERMISSION)
 	}
@@ -122,7 +125,10 @@ func (con *Connection) doQueryEntity(entity *graph.Entity, args map[string]inter
 		instances = append(instances, convertValuesToEntity(values, entity))
 	}
 
-	return instances
+	return map[string]interface{}{
+		consts.NODES: instances,
+		consts.TOTAL: 0,
+	}
 }
 
 func (con *Connection) QueryOneEntityById(entity *graph.Entity, id interface{}) interface{} {

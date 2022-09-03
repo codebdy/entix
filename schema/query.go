@@ -48,11 +48,7 @@ func (a *AppSchema) queryFields() graphql.Fields {
 }
 
 func (a *AppSchema) QueryResponseType(class *graph.Class) graphql.Output {
-	return &graphql.NonNull{
-		OfType: &graphql.List{
-			OfType: a.modelParser.OutputType(class.Name()),
-		},
-	}
+	return a.modelParser.ClassListType(class)
 }
 
 func (a *AppSchema) appendInterfaceToQueryFields(intf *graph.Interface, fields graphql.Fields) {

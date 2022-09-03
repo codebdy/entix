@@ -163,7 +163,7 @@ func (p *ModelParser) QueryArgs(name string) graphql.FieldConfigArgument {
 
 	if orderByExp != nil {
 		config[consts.ARG_ORDERBY] = &graphql.ArgumentConfig{
-			Type: orderByExp,
+			Type: &graphql.List{OfType: orderByExp},
 		}
 	}
 	return config

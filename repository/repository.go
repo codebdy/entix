@@ -20,7 +20,7 @@ func New(model *model.Model) *Repository {
 	}
 }
 
-func (r *Repository) QueryInterface(intf *graph.Interface, args graph.QueryArg) []InsanceData {
+func (r *Repository) QueryInterface(intf *graph.Interface, args graph.QueryArg) map[string]interface{} {
 	con, err := Open(r.V)
 	if err != nil {
 		panic(err.Error())
@@ -36,7 +36,7 @@ func (r *Repository) QueryOneInterface(intf *graph.Interface, args graph.QueryAr
 	return con.doQueryOneInterface(intf, args)
 }
 
-func (r *Repository) QueryEntity(entity *graph.Entity, args graph.QueryArg) []InsanceData {
+func (r *Repository) QueryEntity(entity *graph.Entity, args graph.QueryArg) map[string]interface{} {
 	con, err := Open(r.V)
 	if err != nil {
 		panic(err.Error())

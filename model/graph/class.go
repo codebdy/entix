@@ -120,3 +120,7 @@ func (c *Class) UpsertOneName() string {
 func (c *Class) AggregateName() string {
 	return c.Name() + utils.FirstUpper(consts.AGGREGATE)
 }
+
+func (c *Class) ListName() string {
+	return c.Name() + utils.FirstUpper(consts.LIST)
+}
