@@ -182,7 +182,7 @@ func expressionToArg(expression string) map[string]interface{} {
 }
 
 func (r *Repository) queryRolesAbilities(entityUuids []string, appUuid string) {
-	abilities := r.QueryEntity(r.Model.Graph.GetEntityByUuid(consts.ABILITY_UUID), graph.QueryArg{
+	abilitiyListResponse := r.QueryEntity(r.Model.Graph.GetEntityByUuid(consts.ABILITY_UUID), graph.QueryArg{
 		consts.ARG_WHERE: graph.QueryArg{
 			"roleId": graph.QueryArg{
 				consts.ARG_IN: r.V.RoleIds,
@@ -195,6 +195,8 @@ func (r *Repository) queryRolesAbilities(entityUuids []string, appUuid string) {
 			},
 		},
 	})
+
+	abilities := abilitiyListResponse[consts.NODES].([]InsanceData)
 
 	for _, abilityMap := range abilities {
 		var ability common.Ability
