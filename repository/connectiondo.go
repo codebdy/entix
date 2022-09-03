@@ -46,16 +46,22 @@ func (con *Connection) buildQueryInterfaceSQL(intf *graph.Interface, args map[st
 	return strings.Join(sqls, " UNION "), paramsList
 }
 
-func (con *Connection) buildQueryEntitySQL(entity *graph.Entity, args map[string]interface{}) (string, []interface{}) {
+func (con *Connection) buildQueryEntitySQL(
+	entity *graph.Entity,
+	args map[string]interface{},
+	whereArgs interface{},
+	argEntity *graph.ArgEntity,
+	queryBody string,
+) (string, []interface{}) {
 	var paramsList []interface{}
-	whereArgs := con.v.WeaveAuthInArgs(entity.Uuid(), args[consts.ARG_WHERE])
-	argEntity := graph.BuildArgEntity(
-		entity,
-		whereArgs,
-		con,
-	)
+	//whereArgs := con.v.WeaveAuthInArgs(entity.Uuid(), args[consts.ARG_WHERE])
+	// argEntity := graph.BuildArgEntity(
+	// 	entity,
+	// 	whereArgs,
+	// 	con,
+	// )
 	builder := dialect.GetSQLBuilder()
-	queryStr := builder.BuildQuerySQLBody(argEntity, entity.AllAttributes())
+	queryStr := queryBody
 	if where, ok := whereArgs.(graph.QueryArg); ok {
 		whereSQL, params := builder.BuildWhereSQL(argEntity, entity.AllAttributes(), where)
 		if whereSQL != "" {
@@ -67,6 +73,36 @@ func (con *Connection) buildQueryEntitySQL(entity *graph.Entity, args map[string
 	queryStr = queryStr + builder.BuildOrderBySQL(argEntity, args[consts.ARG_ORDERBY])
 
 	return queryStr, paramsList
+}
+
+func (con *Connection) buildQueryEntityRecordsSQL(entity *graph.Entity, args map[string]interface{}) (string, []interface{}) {
+	whereArgs := con.v.WeaveAuthInArgs(entity.Uuid(), args[consts.ARG_WHERE])
+	argEntity := graph.BuildArgEntity(
+		entity,
+		whereArgs,
+		con,
+	)
+	builder := dialect.GetSQLBuilder()
+	queryStr := builder.BuildQuerySQLBody(argEntity, entity.AllAttributes())
+	return con.buildQueryEntitySQL(entity, args, whereArgs, argEntity, queryStr)
+}
+
+func (con *Connection) buildQueryEntityCountSQL(entity *graph.Entity, args map[string]interface{}) (string, []interface{}) {
+	whereArgs := con.v.WeaveAuthInArgs(entity.Uuid(), args[consts.ARG_WHERE])
+	argEntity := graph.BuildArgEntity(
+		entity,
+		whereArgs,
+		con,
+	)
+	builder := dialect.GetSQLBuilder()
+	queryStr := builder.BuildQueryCountSQLBody(argEntity)
+	return con.buildQueryEntitySQL(
+		entity,
+		args,
+		whereArgs,
+		argEntity,
+		queryStr,
+	)
 }
 
 func (con *Connection) doQueryInterface(intf *graph.Interface, args map[string]interface{}) map[string]interface{} {
@@ -108,9 +144,9 @@ func (con *Connection) doQueryEntity(entity *graph.Entity, args map[string]inter
 	if !con.v.CanReadEntity(entity.Uuid()) {
 		panic(consts.NO_PERMISSION)
 	}
-	sql, params := con.buildQueryEntitySQL(entity, args)
-	fmt.Println("doQueryEntity SQL:", sql, params)
-	rows, err := con.Dbx.Query(sql, params...)
+	sqlStr, params := con.buildQueryEntityRecordsSQL(entity, args)
+	fmt.Println("doQueryEntity SQL:", sqlStr, params)
+	rows, err := con.Dbx.Query(sqlStr, params...)
 	defer rows.Close()
 	if err != nil {
 		panic(err.Error())
@@ -125,9 +161,22 @@ func (con *Connection) doQueryEntity(entity *graph.Entity, args map[string]inter
 		instances = append(instances, convertValuesToEntity(values, entity))
 	}
 
+	sqlStr, params = con.buildQueryEntityCountSQL(entity, args)
+	fmt.Println("doQueryEntity count SQL:", sqlStr, params)
+	count := 0
+	err = con.Dbx.QueryRow(sqlStr, params...).Scan(&count)
+	switch {
+	case err == sql.ErrNoRows:
+		count = 0
+	case err != nil:
+		panic(err.Error())
+	}
+
+	defer rows.Close()
+
 	return map[string]interface{}{
 		consts.NODES: instances,
-		consts.TOTAL: 0,
+		consts.TOTAL: count,
 	}
 }
 
@@ -165,7 +214,7 @@ func (con *Connection) doQueryOneInterface(intf *graph.Interface, args map[strin
 }
 
 func (con *Connection) doQueryOneEntity(entity *graph.Entity, args map[string]interface{}) interface{} {
-	queryStr, params := con.buildQueryEntitySQL(entity, args)
+	queryStr, params := con.buildQueryEntityRecordsSQL(entity, args)
 
 	values := makeEntityQueryValues(entity)
 	fmt.Println("doQueryOneEntity SQL:", queryStr)

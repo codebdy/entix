@@ -200,6 +200,10 @@ func buildArgAssociation(argAssociation *graph.ArgAssociation, owner *graph.ArgE
 	return sql
 }
 
+func (b *MySQLBuilder) BuildQueryCountSQLBody(argEntity *graph.ArgEntity) string {
+	return fmt.Sprintf("select count(id) from %s %s", argEntity.Entity.TableName(), argEntity.Alise())
+}
+
 func (b *MySQLBuilder) BuildQuerySQLBody(argEntity *graph.ArgEntity, fields []*graph.Attribute) string {
 	names := make([]string, len(fields))
 	for i := range fields {
