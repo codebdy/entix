@@ -201,7 +201,13 @@ func buildArgAssociation(argAssociation *graph.ArgAssociation, owner *graph.ArgE
 }
 
 func (b *MySQLBuilder) BuildQueryCountSQLBody(argEntity *graph.ArgEntity) string {
-	return fmt.Sprintf("select count(id) from %s %s", argEntity.Entity.TableName(), argEntity.Alise())
+	queryStr := fmt.Sprintf("select count(%s.id) from %s %s", argEntity.Alise(), argEntity.Entity.TableName(), argEntity.Alise())
+	for i := range argEntity.Associations {
+		association := argEntity.Associations[i]
+		queryStr = queryStr + " " + buildArgAssociation(association, argEntity)
+	}
+
+	return queryStr
 }
 
 func (b *MySQLBuilder) BuildQuerySQLBody(argEntity *graph.ArgEntity, fields []*graph.Attribute) string {
