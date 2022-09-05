@@ -246,14 +246,20 @@ func (b *MySQLBuilder) BuildOrderBySQL(
 	argEntity *graph.ArgEntity,
 	orderBy interface{},
 ) string {
-	if orderByArg, ok := orderBy.(graph.QueryArg); ok {
+	if orderByArgArray, ok := orderBy.([]interface{}); ok {
 		argStrings := []string{}
-		for key := range orderByArg {
-			argStrings = append(argStrings, argEntity.Alise()+"."+key+" "+orderByArg[key].(string))
+		for i := range orderByArgArray {
+			orderByArg := orderByArgArray[i].(graph.QueryArg)
+			for key := range orderByArg {
+				argStrings = append(argStrings, argEntity.Alise()+"."+key+" "+orderByArg[key].(string))
+			}
 		}
-		return fmt.Sprintf(" ORDER BY %s", strings.Join(argStrings, ","))
+		if len(argStrings) > 0 {
+			return fmt.Sprintf(" ORDER BY %s", strings.Join(argStrings, ","))
+		}
 	}
-	return fmt.Sprintf(" ORDER BY %s.id DESC", argEntity.Alise())
+	return ""
+	//return fmt.Sprintf(" ORDER BY %s.id DESC", argEntity.Alise())
 }
 
 func associationFieldSQL(entity *graph.Entity) string {
