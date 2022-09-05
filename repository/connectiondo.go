@@ -71,7 +71,6 @@ func (con *Connection) buildQueryEntitySQL(
 	}
 
 	queryStr = queryStr + builder.BuildOrderBySQL(argEntity, args[consts.ARG_ORDERBY])
-
 	return queryStr, paramsList
 }
 
@@ -84,7 +83,16 @@ func (con *Connection) buildQueryEntityRecordsSQL(entity *graph.Entity, args map
 	)
 	builder := dialect.GetSQLBuilder()
 	queryStr := builder.BuildQuerySQLBody(argEntity, entity.AllAttributes())
-	return con.buildQueryEntitySQL(entity, args, whereArgs, argEntity, queryStr)
+	sqlStr, params := con.buildQueryEntitySQL(entity, args, whereArgs, argEntity, queryStr)
+
+	if args[consts.ARG_LIMIT] != nil {
+		sqlStr = sqlStr + fmt.Sprintf(" LIMIT %d ", args[consts.ARG_LIMIT])
+	}
+	if args[consts.ARG_OFFSET] != nil {
+		sqlStr = sqlStr + fmt.Sprintf(" OFFSET %d ", args[consts.ARG_OFFSET])
+	}
+
+	return sqlStr, params
 }
 
 func (con *Connection) buildQueryEntityCountSQL(entity *graph.Entity, args map[string]interface{}) (string, []interface{}) {
