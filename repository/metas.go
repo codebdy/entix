@@ -29,6 +29,11 @@ func (r *Repository) QueryAppId(appUuid string) uint64 {
 }
 
 func (r *Repository) QueryPublishedMeta(appUuid string) interface{} {
+	var idOrderBy interface{}
+	idOrderBy = map[string]interface{}{
+		consts.ID: "desc",
+	}
+
 	publishedMeta := r.QueryOneEntity(r.Model.Graph.GetMetaEntity(), graph.QueryArg{
 		consts.ARG_WHERE: graph.QueryArg{
 			consts.ARG_AND: []graph.QueryArg{
@@ -44,12 +49,20 @@ func (r *Repository) QueryPublishedMeta(appUuid string) interface{} {
 				},
 			},
 		},
+		consts.ARG_ORDERBY: []interface{}{
+			idOrderBy,
+		},
 	})
 
 	return publishedMeta
 }
 
 func (r *Repository) QueryNextMeta(appUuid string) interface{} {
+	var idOrderBy interface{}
+	idOrderBy = map[string]interface{}{
+		consts.ID: "desc",
+	}
+
 	nextMeta := r.QueryOneEntity(r.Model.Graph.GetMetaEntity(), graph.QueryArg{
 		consts.ARG_WHERE: graph.QueryArg{
 			consts.ARG_AND: []graph.QueryArg{
@@ -64,6 +77,9 @@ func (r *Repository) QueryNextMeta(appUuid string) interface{} {
 					},
 				},
 			},
+		},
+		consts.ARG_ORDERBY: []interface{}{
+			idOrderBy,
 		},
 	})
 
@@ -121,6 +137,7 @@ func (r *Repository) LoadModel(appUuid string) *model.Model {
 		meta.AbilityTypeEnum,
 		meta.AbilityClass,
 	)
+
 	r.MergeModel(appUuid, publishedContent)
 	// //合并系统Schema
 	// if appUuid != consts.SYSTEM_APP_UUID {
