@@ -16,6 +16,8 @@ type ModelParser struct {
 	interfaceTypeMap     map[string]*graphql.Interface
 	setInputMap          map[string]*graphql.InputObject
 	saveInputMap         map[string]*graphql.InputObject
+	hasManyInputMap      map[string]*graphql.InputObject
+	hasOneInputMap       map[string]*graphql.InputObject
 	whereExpMap          map[string]*graphql.InputObject
 	distinctOnEnumMap    map[string]*graphql.Enum
 	orderByMap           map[string]*graphql.InputObject
@@ -44,6 +46,8 @@ func (p *ModelParser) reset() {
 	p.interfaceTypeMap = make(map[string]*graphql.Interface)
 	p.setInputMap = make(map[string]*graphql.InputObject)
 	p.saveInputMap = make(map[string]*graphql.InputObject)
+	p.hasManyInputMap = make(map[string]*graphql.InputObject)
+	p.hasOneInputMap = make(map[string]*graphql.InputObject)
 	p.whereExpMap = make(map[string]*graphql.InputObject)
 	p.distinctOnEnumMap = make(map[string]*graphql.Enum)
 	p.orderByMap = make(map[string]*graphql.InputObject)
@@ -130,6 +134,13 @@ func (p *ModelParser) SaveInput(name string) *graphql.InputObject {
 
 func (p *ModelParser) SetInput(name string) *graphql.InputObject {
 	return p.setInputMap[name]
+}
+
+func (p *ModelParser) HasManyInput(name string) *graphql.InputObject {
+	return p.hasManyInputMap[name]
+}
+func (p *ModelParser) HasOneInput(name string) *graphql.InputObject {
+	return p.hasOneInputMap[name]
 }
 
 func (p *ModelParser) MutationResponse(name string) *graphql.Object {

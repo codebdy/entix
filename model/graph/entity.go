@@ -1,8 +1,10 @@
 package graph
 
 import (
+	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/domain"
 	"rxdrag.com/entify/model/table"
+	"rxdrag.com/entify/utils"
 )
 
 type Entity struct {
@@ -15,6 +17,14 @@ func NewEntity(c *domain.Class) *Entity {
 	return &Entity{
 		Class: *NewClass(c),
 	}
+}
+
+func (e *Entity) GetHasManyName() string {
+	return utils.FirstUpper(consts.SET) + e.Name() + consts.HAS_MANY
+}
+
+func (e *Entity) GetHasOneName() string {
+	return utils.FirstUpper(consts.SET) + e.Name() + consts.HAS_ONE
 }
 
 //有同名接口

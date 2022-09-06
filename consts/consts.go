@@ -45,6 +45,8 @@ const (
 	DELETE     = "delete"
 	BY_ID      = "ById"
 	SET        = "set"
+	HAS_MANY   = "HasMany"
+	HAS_ONE    = "HasOne"
 	ENTITY     = "Entity"
 
 	ARG_DISTINCTON string = "distinctOn"
@@ -52,6 +54,12 @@ const (
 	ARG_OFFSET     string = "offset"
 	ARG_ORDERBY    string = "orderBy"
 	ARG_WHERE      string = "where"
+
+	ARG_ADD     string = "add"
+	ARG_DELETE  string = "delete"
+	ARG_UPDATE  string = "update"
+	ARG_SYNC    string = "sync"
+	ARG_CASCADE string = "cascade"
 
 	ARG_AND string = "_and"
 	ARG_NOT string = "_not"

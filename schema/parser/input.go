@@ -15,7 +15,73 @@ func (p *ModelParser) makeInputs() {
 		p.saveInputMap[entity.Name()] = p.makeEntitySaveInput(entity)
 		p.mutationResponseMap[entity.Name()] = p.makeEntityMutationResponseType(entity)
 	}
+
+	for i := range p.model.Graph.Entities {
+		entity := p.model.Graph.Entities[i]
+		p.hasManyInputMap[entity.Name()] = p.makeEntityHasManyInput(entity)
+		p.hasOneInputMap[entity.Name()] = p.makeEntityHasOneInput(entity)
+	}
+
+	//for i := range p.model.Graph.Services {
+	// partial := p.model.Graph.Services[i]
+	// p.hasManyInputMap[partial.Name()] = p.makePartailHasManyInput(partial)
+	// p.hasOneInputMap[partial.Name()] = p.makePartialHasOneInput(partial)
+	//}
+
 	p.makeEntityInputRelations()
+}
+
+func (p *ModelParser) makeHasManyInput(entity *graph.Entity, hasManyname string) *graphql.InputObject {
+	typeInput := p.SaveInput(entity.Name())
+	listType := &graphql.List{
+		OfType: typeInput,
+	}
+	return graphql.NewInputObject(graphql.InputObjectConfig{
+		Name: hasManyname,
+		Fields: graphql.InputObjectConfigFieldMap{
+			consts.ARG_ADD: &graphql.InputObjectFieldConfig{
+				Type: listType,
+			},
+			consts.ARG_DELETE: &graphql.InputObjectFieldConfig{
+				Type: listType,
+			},
+			consts.ARG_UPDATE: &graphql.InputObjectFieldConfig{
+				Type: listType,
+			},
+			consts.ARG_SYNC: &graphql.InputObjectFieldConfig{
+				Type: listType,
+			},
+			consts.ARG_CASCADE: &graphql.InputObjectFieldConfig{
+				Type: graphql.Boolean,
+			},
+		},
+	})
+}
+
+func (p *ModelParser) makeEntityHasManyInput(entity *graph.Entity) *graphql.InputObject {
+	return p.makeHasManyInput(entity, entity.GetHasManyName())
+}
+
+func (p *ModelParser) makeHasOneInput(entity *graph.Entity, hasOneName string) *graphql.InputObject {
+	typeInput := p.SaveInput(entity.Name())
+	return graphql.NewInputObject(graphql.InputObjectConfig{
+		Name: hasOneName,
+		Fields: graphql.InputObjectConfigFieldMap{
+			consts.ARG_DELETE: &graphql.InputObjectFieldConfig{
+				Type: graphql.Boolean,
+			},
+			consts.ARG_SYNC: &graphql.InputObjectFieldConfig{
+				Type: typeInput,
+			},
+			consts.ARG_CASCADE: &graphql.InputObjectFieldConfig{
+				Type: graphql.Boolean,
+			},
+		},
+	})
+}
+
+func (p *ModelParser) makeEntityHasOneInput(entity *graph.Entity) *graphql.InputObject {
+	return p.makeHasOneInput(entity, entity.GetHasOneName())
 }
 
 func (p *ModelParser) makeEntityInputRelations() {
@@ -56,17 +122,12 @@ func (p *ModelParser) makeEntityInputRelations() {
 	}
 }
 
-func (p *ModelParser) getAssociationType(association *graph.Association) *graphql.List {
-	//if association.IsArray() {
-	typeInput := p.SaveInput(association.TypeEntity().Name())
-	return &graphql.List{
-		OfType: typeInput,
+func (p *ModelParser) getAssociationType(association *graph.Association) *graphql.InputObject {
+	if association.IsArray() {
+		return p.HasManyInput(association.TypeEntity().Name())
+	} else {
+		return p.HasOneInput(association.TypeEntity().Name())
 	}
-	//return p.HasManyInput(association.TypeEntity().Name())
-	//}
-	// } else {
-	// 	return p.HasOneInput(association.TypeEntity().Name())
-	// }
 }
 
 func (p *ModelParser) inputFields(entity *graph.Entity, withId bool) graphql.InputObjectConfigFieldMap {
