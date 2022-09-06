@@ -82,7 +82,11 @@ func QueryAssociationFn(asso *graph.Association, model *model.Model) graphql.Fie
 
 			var retValue interface{}
 			if data == nil {
-				retValue = []map[string]interface{}{}
+				if asso.IsArray() {
+					retValue = []map[string]interface{}{}
+				} else {
+					retValue = nil
+				}
 			} else {
 				retValue = data
 			}
