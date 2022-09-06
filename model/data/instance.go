@@ -52,7 +52,7 @@ func NewInstance(object map[string]interface{}, entity *graph.Entity) *Instance 
 		if value != nil {
 			ref := Reference{
 				Association: asso,
-				Value:       value.([]interface{}),
+				Value:       value.(map[string]interface{}),
 			}
 			instance.Associations = append(instance.Associations, &ref)
 		}
@@ -83,9 +83,6 @@ func parseId(id interface{}) uint64 {
 	case uint64:
 		return id.(uint64)
 	case string:
-		if id.(string) == "" {
-			return 0
-		}
 		u, err := strconv.ParseUint(id.(string), 0, 64)
 		if err != nil {
 			panic(err.Error())

@@ -1,6 +1,7 @@
 package data
 
 import (
+	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/model/table"
@@ -9,29 +10,51 @@ import (
 //没有继承关系的关联
 type Reference struct {
 	Association *graph.Association
-	Value       []interface{}
+	Value       map[string]interface{}
 }
 
-func doConvertToInstances(data interface{}, entity *graph.Entity) []*Instance {
+func doConvertToInstances(data interface{}, isArray bool, entity *graph.Entity) []*Instance {
 	instances := []*Instance{}
 	if data == nil {
-		return nil
+		return []*Instance{}
 	}
-
-	objects := data.([]interface{})
-	for i := range objects {
-		instances = append(instances, NewInstance(objects[i].(map[string]interface{}), entity))
+	if isArray {
+		objects := data.([]interface{})
+		for i := range objects {
+			instances = append(instances, NewInstance(objects[i].(map[string]interface{}), entity))
+		}
+	} else {
+		instances = append(instances, NewInstance(data.(map[string]interface{}), entity))
 	}
 
 	return instances
 }
 
 func (r *Reference) convertToInstances(data interface{}) []*Instance {
-	return doConvertToInstances(data, r.TypeEntity())
+	return doConvertToInstances(data, r.Association.IsArray(), r.TypeEntity())
 }
 
-func (r *Reference) Associated() []*Instance {
-	return r.convertToInstances(r.Value)
+func (r *Reference) Deleted() []*Instance {
+	return r.convertToInstances(r.Value[consts.ARG_DELETE])
+}
+
+func (r *Reference) Added() []*Instance {
+	return r.convertToInstances(r.Value[consts.ARG_ADD])
+}
+
+func (r *Reference) Updated() []*Instance {
+	return r.convertToInstances(r.Value[consts.ARG_UPDATE])
+}
+
+func (r *Reference) Synced() []*Instance {
+	return r.convertToInstances(r.Value[consts.ARG_SYNC])
+}
+
+func (r *Reference) Cascade() bool {
+	if r.Value[consts.ARG_CASCADE] != nil {
+		return r.Value[consts.ARG_CASCADE].(bool)
+	}
+	return false
 }
 
 func (r *Reference) SourceColumn() *table.Column {
