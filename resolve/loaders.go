@@ -64,7 +64,18 @@ func QueryBatchFn(p graphql.ResolveParams, association *graph.Association, args 
 		for i := range results {
 			var data interface{}
 			associationInstances := findInstanceFromArray(ids[i], instances)
-			data = associationInstances
+			if !association.IsArray() {
+				ln := len(associationInstances)
+				if ln > 1 {
+					panic(fmt.Sprintf("To many values for %s : %d", association.Owner().Domain.Name+"."+association.Name(), len(associationInstances)))
+				} else if ln == 1 {
+					data = associationInstances[0]
+				} else {
+					data = nil
+				}
+			} else {
+				data = associationInstances
+			}
 			results[i] = &dataloader.Result{
 				Data: data,
 			}
