@@ -157,9 +157,9 @@ func (a *AppSchema) setArgs(entity *graph.Entity) graphql.FieldConfigArgument {
 
 func (a *AppSchema) appendEntityMutationToFields(entity *graph.Entity, feilds graphql.Fields) {
 	(feilds)[entity.DeleteName()] = &graphql.Field{
-		Type: a.modelParser.MutationResponse(entity.Name()),
-		Args: a.deleteArgs(entity),
-		//Resolve: entity.QueryResolve(),
+		Type:    a.modelParser.MutationResponse(entity.Name()),
+		Args:    a.deleteArgs(entity),
+		Resolve: resolve.DeleteResolveFn(entity, a.Model()),
 	}
 	(feilds)[entity.DeleteByIdName()] = &graphql.Field{
 		Type:    a.modelParser.OutputType(entity.Name()),

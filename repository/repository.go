@@ -52,12 +52,37 @@ func (r *Repository) QueryOneEntity(entity *graph.Entity, args graph.QueryArg) i
 	return con.doQueryOneEntity(entity, args)
 }
 
+func (r *Repository) DeleteInstances(instances []*data.Instance) (interface{}, error) {
+	con, err := Open(r.V)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	err = con.BeginTx()
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	defer con.ClearTx()
+
+	for i := range instances {
+		con.doDeleteInstance(instances[i])
+	}
+	return instances, nil
+}
+
 func (r *Repository) DeleteInstance(instance *data.Instance) (interface{}, error) {
 	con, err := Open(r.V)
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, err
 	}
+	err = con.BeginTx()
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	defer con.ClearTx()
 	con.doDeleteInstance(instance)
 	return instance.Id, nil
 }

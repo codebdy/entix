@@ -34,3 +34,38 @@ func DeleteByIdResolveFn(entity *graph.Entity, model *model.Model) graphql.Field
 		return repos.DeleteInstance(instance)
 	}
 }
+
+func DeleteResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolveFn {
+	return func(p graphql.ResolveParams) (interface{}, error) {
+		defer utils.PrintErrorStack()
+		repos := repository.New(model)
+		repos.MakeEntityAbilityVerifier(p, entity.Uuid())
+
+		objs := repos.QueryEntity(entity, p.Args)[consts.NODES]
+
+		if objs == nil || len(objs.([]repository.InsanceData)) == 0 {
+			return map[string]interface{}{
+				consts.RESPONSE_RETURNING:    []interface{}{},
+				consts.RESPONSE_AFFECTEDROWS: 0,
+			}, nil
+		}
+
+		convertedObjs := objs.([]repository.InsanceData)
+
+		instances := []*data.Instance{}
+		for i := range convertedObjs {
+			instance := data.NewInstance(map[string]interface{}{
+				consts.ID: ConvertId(convertedObjs[i][consts.ID]),
+			}, entity)
+
+			instances = append(instances, instance)
+		}
+
+		repos.DeleteInstances(instances)
+
+		return map[string]interface{}{
+			consts.RESPONSE_RETURNING:    objs,
+			consts.RESPONSE_AFFECTEDROWS: 0,
+		}, nil
+	}
+}
