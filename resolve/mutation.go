@@ -10,6 +10,32 @@ import (
 	"rxdrag.com/entify/utils"
 )
 
+//未实现
+func PostResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolveFn {
+	return func(p graphql.ResolveParams) (interface{}, error) {
+		defer utils.PrintErrorStack()
+		object := p.Args[consts.ARG_OBJECT].(map[string]interface{})
+		ConvertObjectId(object)
+		repos := repository.New(model)
+		repos.MakeEntityAbilityVerifier(p, entity.Uuid())
+		instance := data.NewInstance(object, entity)
+		return repos.SaveOne(instance)
+	}
+}
+
+//未实现
+func SetResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolveFn {
+	return func(p graphql.ResolveParams) (interface{}, error) {
+		defer utils.PrintErrorStack()
+		object := p.Args[consts.ARG_OBJECT].(map[string]interface{})
+		ConvertObjectId(object)
+		repos := repository.New(model)
+		repos.MakeEntityAbilityVerifier(p, entity.Uuid())
+		instance := data.NewInstance(object, entity)
+		return repos.SaveOne(instance)
+	}
+}
+
 func PostOneResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()

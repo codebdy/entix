@@ -167,10 +167,10 @@ func (a *AppSchema) appendEntityMutationToFields(entity *graph.Entity, feilds gr
 		Resolve: resolve.DeleteByIdResolveFn(entity, a.Model()),
 	}
 	(feilds)[entity.UpsertName()] = &graphql.Field{
-		Type: &graphql.List{OfType: a.modelParser.OutputType(entity.Name())},
-		Args: a.upsertArgs(entity),
+		Type:    &graphql.List{OfType: a.modelParser.OutputType(entity.Name())},
+		Args:    a.upsertArgs(entity),
+		Resolve: resolve.PostResolveFn(entity, a.Model()),
 	}
-	//Resolve: entity.QueryResolve(),
 	(feilds)[entity.UpsertOneName()] = &graphql.Field{
 		Type:    a.modelParser.OutputType(entity.Name()),
 		Args:    a.upsertOneArgs(entity),
@@ -180,9 +180,9 @@ func (a *AppSchema) appendEntityMutationToFields(entity *graph.Entity, feilds gr
 	updateInput := a.modelParser.SetInput(entity.Name())
 	if len(updateInput.Fields()) > 0 {
 		(feilds)[entity.SetName()] = &graphql.Field{
-			Type: a.modelParser.MutationResponse(entity.Name()),
-			Args: a.setArgs(entity),
-			//Resolve: entity.QueryResolve(),
+			Type:    a.modelParser.MutationResponse(entity.Name()),
+			Args:    a.setArgs(entity),
+			Resolve: resolve.SetResolveFn(entity, a.Model()),
 		}
 	}
 }
