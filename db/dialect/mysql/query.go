@@ -30,7 +30,7 @@ func (*MySQLBuilder) BuildFieldExp(fieldName string, fieldArgs map[string]interf
 			params = append(params, value)
 			break
 		case consts.ARG_IN:
-			values := value.([]string)
+			values := value.([]interface{})
 			placeHolders := []string{}
 			for i := range values {
 				placeHolders = append(placeHolders, "?")

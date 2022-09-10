@@ -14,7 +14,7 @@ import (
 
 type AbilityVerifier struct {
 	me        *common.User
-	RoleIds   []string
+	RoleIds   []interface{}
 	Abilities []*common.Ability
 	// expression Key : 从Auth模块返回的结果
 	QueryUserCache map[string][]common.User
@@ -35,7 +35,7 @@ func (r *Repository) MakeSupperVerifier() {
 	r.V = &verifier
 }
 
-func (r *Repository) InitVerifier(p graphql.ResolveParams, entityUuids []string) {
+func (r *Repository) InitVerifier(p graphql.ResolveParams, entityUuids []interface{}) {
 	me := contexts.ParseContextValues(p.Context).Me
 	r.V.me = me
 	if me != nil {
@@ -181,7 +181,7 @@ func expressionToArg(expression string) map[string]interface{} {
 	return arg
 }
 
-func (r *Repository) queryRolesAbilities(entityUuids []string, appUuid string) {
+func (r *Repository) queryRolesAbilities(entityUuids []interface{}, appUuid string) {
 	abilitiyListResponse := r.QueryEntity(r.Model.Graph.GetEntityByUuid(consts.ABILITY_UUID), graph.QueryArg{
 		consts.ARG_WHERE: graph.QueryArg{
 			"roleId": graph.QueryArg{
@@ -210,20 +210,19 @@ func (r *Repository) queryRolesAbilities(entityUuids []string, appUuid string) {
 
 func (r *Repository) MakeInterfaceAbilityVerifier(p graphql.ResolveParams, intf *graph.Interface) {
 	r.MakeVerifier()
-	var uuids []string
+	var uuids []interface{}
 	for i := range intf.Children {
 		uuids = append(uuids, intf.Children[i].Uuid())
 	}
 	r.InitVerifier(p, uuids)
 }
 
-func (r *Repository) MakeEntityAbilityVerifier(p graphql.ResolveParams, entityUuid string) {
+func (r *Repository) MakeEntityAbilityVerifier(p graphql.ResolveParams, entityUuid interface{}) {
 	r.MakeVerifier()
-
-	r.InitVerifier(p, []string{entityUuid})
+	r.InitVerifier(p, []interface{}{entityUuid})
 }
 
 func (r *Repository) MakeAssociAbilityVerifier(p graphql.ResolveParams, association *graph.Association) {
 	r.MakeVerifier()
-	r.InitVerifier(p, []string{association.TypeEntity().Uuid()})
+	r.InitVerifier(p, []interface{}{association.TypeEntity().Uuid()})
 }
