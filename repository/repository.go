@@ -72,6 +72,13 @@ func (r *Repository) DeleteInstances(instances []*data.Instance) (interface{}, e
 		con.doDeleteInstance(instance)
 		deletedIds = append(deletedIds, instance.Id)
 	}
+
+	err = con.Dbx.Commit()
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+
 	return deletedIds, nil
 }
 
@@ -88,6 +95,12 @@ func (r *Repository) DeleteInstance(instance *data.Instance) (interface{}, error
 	}
 	defer con.ClearTx()
 	con.doDeleteInstance(instance)
+
+	err = con.Dbx.Commit()
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
 	return instance.Id, nil
 }
 
