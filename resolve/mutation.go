@@ -65,7 +65,7 @@ func DeleteResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldReso
 
 		return map[string]interface{}{
 			consts.RESPONSE_RETURNING:    objs,
-			consts.RESPONSE_AFFECTEDROWS: 0,
+			consts.RESPONSE_AFFECTEDROWS: len(instances),
 		}, nil
 	}
 }

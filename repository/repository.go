@@ -65,10 +65,14 @@ func (r *Repository) DeleteInstances(instances []*data.Instance) (interface{}, e
 	}
 	defer con.ClearTx()
 
+	deletedIds := []interface{}{}
+
 	for i := range instances {
-		con.doDeleteInstance(instances[i])
+		instance := instances[i]
+		con.doDeleteInstance(instance)
+		deletedIds = append(deletedIds, instance.Id)
 	}
-	return instances, nil
+	return deletedIds, nil
 }
 
 func (r *Repository) DeleteInstance(instance *data.Instance) (interface{}, error) {
