@@ -10,16 +10,20 @@ import (
 	"rxdrag.com/entify/utils"
 )
 
-//未实现
 func PostResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
-		object := p.Args[consts.ARG_OBJECT].(map[string]interface{})
-		ConvertObjectId(object)
 		repos := repository.New(model)
 		repos.MakeEntityAbilityVerifier(p, entity.Uuid())
-		instance := data.NewInstance(object, entity)
-		return repos.SaveOne(instance)
+		objects := p.Args[consts.ARG_OBJECTS].([]map[string]interface{})
+		instances := []*data.Instance{}
+		for i := range objects {
+			object := objects[i]
+			ConvertObjectId(object)
+			instance := data.NewInstance(object, entity)
+			instances = append(instances, instance)
+		}
+		return repos.Save(instances)
 	}
 }
 

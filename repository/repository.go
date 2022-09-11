@@ -104,6 +104,41 @@ func (r *Repository) DeleteInstance(instance *data.Instance) (interface{}, error
 	return instance.Id, nil
 }
 
+func (r *Repository) Save(instances []*data.Instance) ([]interface{}, error) {
+	con, err := Open(r.V)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	err = con.BeginTx()
+	defer con.ClearTx()
+	if err != nil {
+		fmt.Println(err.Error())
+		con.Dbx.Rollback()
+		return nil, err
+	}
+	saved := []interface{}{}
+
+	for i := range instances {
+		obj, err := con.doSaveOne(instances[i])
+		if err != nil {
+			fmt.Println(err.Error())
+			con.Dbx.Rollback()
+			return nil, err
+		}
+
+		saved = append(saved, obj)
+	}
+
+	err = con.Commit()
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+
+	return saved, nil
+}
+
 func (r *Repository) SaveOne(instance *data.Instance) (interface{}, error) {
 	con, err := Open(r.V)
 	if err != nil {
@@ -120,6 +155,7 @@ func (r *Repository) SaveOne(instance *data.Instance) (interface{}, error) {
 	obj, err := con.doSaveOne(instance)
 	if err != nil {
 		fmt.Println(err.Error())
+		con.Dbx.Rollback()
 		return nil, err
 	}
 	err = con.Commit()
@@ -139,17 +175,20 @@ func (r *Repository) InsertOne(instance *data.Instance) (interface{}, error) {
 	defer con.ClearTx()
 	if err != nil {
 		fmt.Println(err.Error())
+		con.Dbx.Rollback()
 		return nil, err
 	}
 
 	obj, err := con.doInsertOne(instance)
 	if err != nil {
 		fmt.Println(err.Error())
+		con.Dbx.Rollback()
 		return nil, err
 	}
 	err = con.Commit()
 	if err != nil {
 		fmt.Println(err.Error())
+		con.Dbx.Rollback()
 		return nil, err
 	}
 	return obj, nil
