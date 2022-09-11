@@ -31,12 +31,27 @@ func PostResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolv
 func SetResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
-		object := p.Args[consts.ARG_OBJECT].(map[string]interface{})
-		ConvertObjectId(object)
 		repos := repository.New(model)
 		repos.MakeEntityAbilityVerifier(p, entity.Uuid())
-		instance := data.NewInstance(object, entity)
-		return repos.SaveOne(instance)
+
+		set := p.Args[consts.ARG_SET].(map[string]interface{})
+		objs := repos.QueryEntity(entity, p.Args)[consts.NODES]
+		convertedObjs := objs.([]repository.InsanceData)
+		instances := []*data.Instance{}
+
+		for i := range convertedObjs {
+			obj := convertedObjs[i]
+			object := map[string]interface{}{}
+
+			object[consts.ID] = obj[consts.ID]
+
+			for key := range set {
+				object[key] = set[key]
+				instance := data.NewInstance(object, entity)
+				instances = append(instances, instance)
+			}
+		}
+		return repos.Save(instances)
 	}
 }
 
