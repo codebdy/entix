@@ -23,7 +23,16 @@ func PostResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolv
 			instance := data.NewInstance(object, entity)
 			instances = append(instances, instance)
 		}
-		return repos.Save(instances)
+		returing, err := repos.Save(instances)
+
+		if err != nil {
+			return nil, err
+		}
+
+		return map[string]interface{}{
+			consts.RESPONSE_RETURNING:    returing,
+			consts.RESPONSE_AFFECTEDROWS: len(instances),
+		}, nil
 	}
 }
 
@@ -51,7 +60,16 @@ func SetResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolve
 				instances = append(instances, instance)
 			}
 		}
-		return repos.Save(instances)
+		returing, err := repos.Save(instances)
+
+		if err != nil {
+			return nil, err
+		}
+
+		return map[string]interface{}{
+			consts.RESPONSE_RETURNING:    returing,
+			consts.RESPONSE_AFFECTEDROWS: len(instances),
+		}, nil
 	}
 }
 
