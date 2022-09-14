@@ -2,18 +2,19 @@ package schema
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/contexts"
 	"rxdrag.com/entify/repository"
 	"rxdrag.com/entify/resolve"
+	"rxdrag.com/entify/storage"
 )
 
 func uploadResolve(p graphql.ResolveParams) (interface{}, error) {
-	fmt.Println("啊哈哈", p.Args[consts.ARG_FILE])
-	return nil, nil
+	file := p.Args[consts.ARG_FILE].(storage.File)
+	fileInfo := file.Save()
+	return resolve.GetFileUrl(fileInfo, p)
 }
 
 func publishResolve(p graphql.ResolveParams) (interface{}, error) {
