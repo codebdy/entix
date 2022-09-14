@@ -26,6 +26,7 @@ const (
 	NAME                   = "name"
 	INSTALLED              = "installed"
 	CAN_UPLOAD             = "canUpload"
+	UPLOAD                 = "upload"
 
 	ONE        = "one"
 	QUERY      = "query"

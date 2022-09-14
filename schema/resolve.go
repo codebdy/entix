@@ -2,6 +2,7 @@ package schema
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/consts"
@@ -9,6 +10,11 @@ import (
 	"rxdrag.com/entify/repository"
 	"rxdrag.com/entify/resolve"
 )
+
+func uploadResolve(p graphql.ResolveParams) (interface{}, error) {
+	fmt.Println("啊哈哈", p.Args[consts.ARG_FILE])
+	return nil, nil
+}
 
 func publishResolve(p graphql.ResolveParams) (interface{}, error) {
 	if p.Args[consts.APPUUID] == nil {

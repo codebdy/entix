@@ -8,6 +8,7 @@ import (
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/resolve"
+	"rxdrag.com/entify/scalars"
 	"rxdrag.com/entify/utils"
 )
 
@@ -67,6 +68,16 @@ func (a *AppSchema) appendAuthMutation(fields graphql.Fields) {
 func (a *AppSchema) rootMutation() *graphql.Object {
 	metaEntity := a.model.Graph.GetMetaEntity()
 	mutationFields := graphql.Fields{}
+
+	mutationFields[consts.UPLOAD] = &graphql.Field{
+		Type: graphql.String,
+		Args: graphql.FieldConfigArgument{
+			consts.ARG_FILE: &graphql.ArgumentConfig{
+				Type: scalars.UploadType,
+			},
+		},
+		Resolve: uploadResolve,
+	}
 
 	if a.appUuid == consts.SYSTEM_APP_UUID {
 		mutationFields[consts.PUBLISH] = &graphql.Field{
