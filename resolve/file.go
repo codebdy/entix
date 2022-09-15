@@ -10,7 +10,7 @@ import (
 
 func GetFileUrl(fileInfo storage.FileInfo, p graphql.ResolveParams) (interface{}, error) {
 	if config.Storage() == consts.LOCAL {
-		return p.Context.Value(consts.HOST).(string) + consts.UPLOAD_PRIFIX + "/" + fileInfo.Path, nil
+		return "http://" + p.Context.Value(consts.HOST).(string) + consts.UPLOAD_PRIFIX + "/" + fileInfo.Path, nil
 	} else {
 		return fileInfo.Path, nil
 	}
