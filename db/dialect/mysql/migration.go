@@ -234,14 +234,14 @@ func (b *MySQLBuilder) appendModifyColumnAtoms(diff *model.TableDiff, atoms *[]m
 		if columnDiff.OldColumn.Nullable != columnDiff.NewColumn.Nullable {
 			*atoms = append(*atoms, model.ModifyAtom{
 				ExcuteSQL: fmt.Sprintf(
-					"ALTER TABLE `%s` MODIFY  `%s` `%s` %s",
+					"ALTER TABLE `%s` MODIFY  `%s` %s %s",
 					diff.NewTable.Name,
 					columnDiff.NewColumn.Name,
 					b.ColumnTypeSQL(columnDiff.NewColumn),
 					nullableString(columnDiff.NewColumn.Nullable),
 				),
 				UndoSQL: fmt.Sprintf(
-					"ALTER TABLE `%s` MODIFY  `%s` `%s` %s",
+					"ALTER TABLE `%s` MODIFY  `%s` %s %s",
 					diff.NewTable.Name,
 					columnDiff.NewColumn.Name,
 					b.ColumnTypeSQL(columnDiff.OldColumn),
