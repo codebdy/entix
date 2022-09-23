@@ -29,10 +29,7 @@ func PostResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolv
 			return nil, err
 		}
 
-		return map[string]interface{}{
-			consts.RESPONSE_RETURNING:    returing,
-			consts.RESPONSE_AFFECTEDROWS: len(instances),
-		}, nil
+		return returing, nil
 	}
 }
 
