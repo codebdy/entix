@@ -56,11 +56,12 @@ func main() {
 	)
 
 	if config.Storage() == consts.LOCAL {
+		prefix := "/" + consts.STATIC_PATH + "/"
 		fmt.Println(fmt.Sprintf("Running a file server at http://localhost:%d/static/", PORT))
-		http.Handle(consts.STATIC_PATH+"/",
+		http.Handle(prefix,
 			http.StripPrefix(
-				"/"+consts.STATIC_PATH,
-				middlewares.CorsMiddleware(http.FileServer(http.Dir(consts.STATIC_PATH)))),
+				prefix,
+				middlewares.CorsMiddleware(http.FileServer(http.Dir("./"+consts.STATIC_PATH)))),
 		)
 	}
 
