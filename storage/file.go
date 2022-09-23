@@ -20,7 +20,7 @@ type File struct {
 type FileInfo struct {
 	Dir      string `json:"dir"`
 	Path     string `json:"path"`
-	Filename string `json:"fileName"`
+	NameBody string `json:"nameBody"`
 	Size     int64  `json:"size"`
 	MimeType string `json:"mimeType"`
 	ExtName  string `json:"extName"`
@@ -49,6 +49,7 @@ func (f *File) mimeType() string {
 }
 
 func (f *File) Save(appId uint64, folder string) FileInfo {
+	nameBody := uuid.New().String()
 	name := fmt.Sprintf("%s%s", uuid.New().String(), f.extName())
 	foldeFullPath := fmt.Sprintf("./%s/app%d/%s", consts.STATIC_PATH, appId, folder)
 	_, err := os.Stat(foldeFullPath)
@@ -70,11 +71,11 @@ func (f *File) Save(appId uint64, folder string) FileInfo {
 	}
 	io.Copy(file, f.File)
 	dir := fmt.Sprintf("app%d/%s/", appId, folder)
-	path := fmt.Sprintf("%s/%s", dir, name)
+	path := fmt.Sprintf(dir + name)
 	return FileInfo{
 		Dir:      dir,
 		Path:     path,
-		Filename: f.Filename,
+		NameBody: nameBody,
 		Size:     f.Size,
 		MimeType: f.mimeType(),
 		ExtName:  f.extName(),
