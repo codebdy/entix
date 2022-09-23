@@ -13,6 +13,7 @@ const (
 	STORAGE       = "storage"
 	STATIC_PATH   = "static"
 	UPLOAD_PATH   = "uploads"
+	PLUGINS_PATH  = "plugins"
 	//UPLOAD_PRIFIX = "/uploads"
 )
 
