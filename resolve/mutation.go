@@ -15,12 +15,12 @@ func PostResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolv
 		defer utils.PrintErrorStack()
 		repos := repository.New(model)
 		repos.MakeEntityAbilityVerifier(p, entity.Uuid())
-		objects := p.Args[consts.ARG_OBJECTS].([]map[string]interface{})
+		objects := p.Args[consts.ARG_OBJECTS].([]interface{})
 		instances := []*data.Instance{}
 		for i := range objects {
 			object := objects[i]
-			ConvertObjectId(object)
-			instance := data.NewInstance(object, entity)
+			ConvertObjectId(object.(map[string]interface{}))
+			instance := data.NewInstance(object.(map[string]interface{}), entity)
 			instances = append(instances, instance)
 		}
 		returing, err := repos.Save(instances)
