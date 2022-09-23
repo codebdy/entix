@@ -11,7 +11,7 @@ const (
 	SERVICE_ID    = "service_id"
 	AUTH_URL      = "auth_url"
 	STORAGE       = "storage"
-	STATIC_PATH   = "./static"
+	STATIC_PATH   = "static"
 	UPLOAD_PATH   = "uploads"
 	UPLOAD_PRIFIX = "/uploads"
 )
