@@ -76,7 +76,7 @@ func (a *AppSchema) rootMutation() *graphql.Object {
 				Type: scalars.UploadType,
 			},
 		},
-		Resolve: uploadResolve,
+		Resolve: resolve.UploadResolveResolveFn(a.model.AppId),
 	}
 
 	if a.appUuid == consts.SYSTEM_APP_UUID {

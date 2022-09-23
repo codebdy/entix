@@ -9,6 +9,7 @@ import (
 
 type Model struct {
 	AppUuid string
+	AppId   uint64
 	Meta    *meta.Model
 	Domain  *domain.Model
 	Graph   *graph.Model

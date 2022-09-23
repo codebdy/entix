@@ -105,12 +105,12 @@ func DecodeContent(obj interface{}, appId uint64) *meta.MetaContent {
 	return &content
 }
 
-func (r *Repository) LoadAndDecodeMeta(appUuid string) *meta.MetaContent {
+func (r *Repository) LoadAndDecodeMeta(appUuid string) (*meta.MetaContent, uint64) {
 	appId := r.QueryAppId(appUuid)
 	publishedMeta := r.QueryPublishedMeta(appUuid)
 	publishedContent := DecodeContent(publishedMeta, appId)
 
-	return publishedContent
+	return publishedContent, appId
 }
 
 func (r *Repository) MergeModel(appUuid string, content *meta.MetaContent) *meta.MetaContent {
@@ -129,7 +129,7 @@ func (r *Repository) MergeModel(appUuid string, content *meta.MetaContent) *meta
 }
 
 func (r *Repository) LoadModel(appUuid string) *model.Model {
-	publishedContent := r.LoadAndDecodeMeta(appUuid)
+	publishedContent, appId := r.LoadAndDecodeMeta(appUuid)
 	publishedContent.Classes = append(publishedContent.Classes,
 		meta.MetaStatusEnum,
 		meta.MetaClass,
@@ -152,6 +152,6 @@ func (r *Repository) LoadModel(appUuid string) *model.Model {
 	// }
 
 	m := model.New(appUuid, publishedContent)
-
+	m.AppId = appId
 	return m
 }

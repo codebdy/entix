@@ -8,14 +8,7 @@ import (
 	"rxdrag.com/entify/contexts"
 	"rxdrag.com/entify/repository"
 	"rxdrag.com/entify/resolve"
-	"rxdrag.com/entify/storage"
 )
-
-func uploadResolve(p graphql.ResolveParams) (interface{}, error) {
-	file := p.Args[consts.ARG_FILE].(storage.File)
-	fileInfo := file.Save()
-	return resolve.GetFileUrl(fileInfo, p)
-}
 
 func publishResolve(p graphql.ResolveParams) (interface{}, error) {
 	if p.Args[consts.APPUUID] == nil {
