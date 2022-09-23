@@ -56,11 +56,11 @@ func main() {
 	)
 
 	if config.Storage() == consts.LOCAL {
-		fmt.Println(fmt.Sprintf("Running a file server at http://localhost:%d/uploads/", PORT))
-		http.Handle(consts.UPLOAD_PRIFIX+"/",
+		fmt.Println(fmt.Sprintf("Running a file server at http://localhost:%d/static/", PORT))
+		http.Handle(consts.STATIC_PATH+"/",
 			http.StripPrefix(
-				consts.UPLOAD_PRIFIX,
-				middlewares.CorsMiddleware(http.FileServer(http.Dir(consts.UPLOAD_PATH)))),
+				"/"+consts.STATIC_PATH,
+				middlewares.CorsMiddleware(http.FileServer(http.Dir(consts.STATIC_PATH)))),
 		)
 	}
 
