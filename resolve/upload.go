@@ -9,7 +9,7 @@ import (
 func UploadResolveResolveFn(appId uint64) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		file := p.Args[consts.ARG_FILE].(storage.File)
-		fileInfo := file.Save()
+		fileInfo := file.Save(appId, consts.UPLOAD_PATH)
 		return GetFileUrl(fileInfo, p)
 	}
 }

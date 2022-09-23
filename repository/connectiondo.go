@@ -240,7 +240,7 @@ func (con *Connection) doQueryOneEntity(entity *graph.Entity, args map[string]in
 func (con *Connection) doInsertOne(instance *data.Instance) (interface{}, error) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	saveStr := sqlBuilder.BuildInsertSQL(instance.Fields, instance.Table())
-	values := makeSaveValues(instance.Fields)
+	values := makeSaveValues(con.appId, instance.Fields)
 	result, err := con.Dbx.Exec(saveStr, values...)
 	if err != nil {
 		fmt.Println("Insert data failed:", err.Error())
@@ -391,7 +391,7 @@ func (con *Connection) doUpdateOne(instance *data.Instance) (interface{}, error)
 	sqlBuilder := dialect.GetSQLBuilder()
 
 	saveStr := sqlBuilder.BuildUpdateSQL(instance.Id, instance.Fields, instance.Table())
-	values := makeSaveValues(instance.Fields)
+	values := makeSaveValues(con.appId, instance.Fields)
 	fmt.Println(saveStr)
 	_, err := con.Dbx.Exec(saveStr, values...)
 	if err != nil {

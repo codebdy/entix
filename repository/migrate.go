@@ -12,7 +12,7 @@ import (
 
 func (r *Repository) ExcuteDiff(d *model.Diff) {
 	var undoList []string
-	con, err := Open(r.V)
+	con, err := Open(r.V, r.Model.AppId)
 	dbx := con.Dbx
 	if err != nil {
 		panic("Open db error:" + err.Error())

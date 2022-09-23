@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 
 	"github.com/mitchellh/mapstructure"
+	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/db"
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/model/graph"
@@ -13,7 +14,7 @@ import (
 	"rxdrag.com/entify/utils"
 )
 
-func makeSaveValues(fields []*data.Field) []interface{} {
+func makeSaveValues(appId uint64, fields []*data.Field) []interface{} {
 	objValues := make([]interface{}, 0, len(fields))
 	for _, field := range fields {
 		value := field.Value
@@ -36,7 +37,7 @@ func makeSaveValues(fields []*data.Field) []interface{} {
 			value = jsonString
 		} else if column.Type == meta.FILE {
 			file := value.(storage.File)
-			jsonString, err := json.Marshal(file.Save())
+			jsonString, err := json.Marshal(file.Save(appId, consts.UPLOAD_PATH))
 			if err != nil {
 				panic(err.Error())
 			}

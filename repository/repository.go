@@ -21,7 +21,7 @@ func New(model *model.Model) *Repository {
 }
 
 func (r *Repository) QueryInterface(intf *graph.Interface, args graph.QueryArg) map[string]interface{} {
-	con, err := Open(r.V)
+	con, err := Open(r.V, r.Model.AppId)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -29,7 +29,7 @@ func (r *Repository) QueryInterface(intf *graph.Interface, args graph.QueryArg) 
 }
 
 func (r *Repository) QueryOneInterface(intf *graph.Interface, args graph.QueryArg) interface{} {
-	con, err := Open(r.V)
+	con, err := Open(r.V, r.Model.AppId)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -37,7 +37,7 @@ func (r *Repository) QueryOneInterface(intf *graph.Interface, args graph.QueryAr
 }
 
 func (r *Repository) QueryEntity(entity *graph.Entity, args graph.QueryArg) map[string]interface{} {
-	con, err := Open(r.V)
+	con, err := Open(r.V, r.Model.AppId)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -45,7 +45,7 @@ func (r *Repository) QueryEntity(entity *graph.Entity, args graph.QueryArg) map[
 }
 
 func (r *Repository) QueryOneEntity(entity *graph.Entity, args graph.QueryArg) interface{} {
-	con, err := Open(r.V)
+	con, err := Open(r.V, r.Model.AppId)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -53,7 +53,7 @@ func (r *Repository) QueryOneEntity(entity *graph.Entity, args graph.QueryArg) i
 }
 
 func (r *Repository) DeleteInstances(instances []*data.Instance) (interface{}, error) {
-	con, err := Open(r.V)
+	con, err := Open(r.V, r.Model.AppId)
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, err
@@ -83,7 +83,7 @@ func (r *Repository) DeleteInstances(instances []*data.Instance) (interface{}, e
 }
 
 func (r *Repository) DeleteInstance(instance *data.Instance) (interface{}, error) {
-	con, err := Open(r.V)
+	con, err := Open(r.V, r.Model.AppId)
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, err
@@ -105,7 +105,7 @@ func (r *Repository) DeleteInstance(instance *data.Instance) (interface{}, error
 }
 
 func (r *Repository) Save(instances []*data.Instance) ([]interface{}, error) {
-	con, err := Open(r.V)
+	con, err := Open(r.V, r.Model.AppId)
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, err
@@ -140,7 +140,7 @@ func (r *Repository) Save(instances []*data.Instance) ([]interface{}, error) {
 }
 
 func (r *Repository) SaveOne(instance *data.Instance) (interface{}, error) {
-	con, err := Open(r.V)
+	con, err := Open(r.V, r.Model.AppId)
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, err
@@ -167,7 +167,7 @@ func (r *Repository) SaveOne(instance *data.Instance) (interface{}, error) {
 }
 
 func (r *Repository) InsertOne(instance *data.Instance) (interface{}, error) {
-	con, err := Open(r.V)
+	con, err := Open(r.V, r.Model.AppId)
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, err
@@ -199,7 +199,7 @@ func (r *Repository) BatchQueryAssociations(
 	ids []uint64,
 	args graph.QueryArg,
 ) []map[string]interface{} {
-	con, err := Open(r.V)
+	con, err := Open(r.V, r.Model.AppId)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -207,7 +207,7 @@ func (r *Repository) BatchQueryAssociations(
 }
 
 func IsEntityExists(name string) bool {
-	con, err := Open(nil)
+	con, err := Open(nil, 0)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -216,7 +216,7 @@ func IsEntityExists(name string) bool {
 
 func InstallMeta() error {
 	sqlBuilder := dialect.GetSQLBuilder()
-	con, err := Open(nil)
+	con, err := Open(nil, 0)
 	if err != nil {
 		fmt.Println(err.Error())
 		return err

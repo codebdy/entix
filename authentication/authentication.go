@@ -23,7 +23,7 @@ func New() *Authentication {
 }
 
 func (a *Authentication) loadUser(loginName string) *common.User {
-	con, err := repository.Open(nil)
+	con, err := repository.Open(nil, 0)
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
@@ -66,7 +66,7 @@ func (a *Authentication) loadUser(loginName string) *common.User {
 }
 
 func (a *Authentication) CheckPassword(loginName, pwd string) (bool, error) {
-	con, err := repository.Open(nil)
+	con, err := repository.Open(nil, 0)
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
@@ -112,7 +112,7 @@ func (a *Authentication) ChangePassword(loginName, oldPassword, newPassword stri
 		return "", err
 	}
 
-	con, err := repository.Open(nil)
+	con, err := repository.Open(nil, 0)
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
