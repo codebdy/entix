@@ -18,6 +18,7 @@ type File struct {
 }
 
 type FileInfo struct {
+	Dir      string `json:"dir"`
 	Path     string `json:"path"`
 	Filename string `json:"fileName"`
 	Size     int64  `json:"size"`
@@ -68,6 +69,14 @@ func (f *File) Save(appId uint64, folder string) FileInfo {
 		panic(err.Error())
 	}
 	io.Copy(file, f.File)
-	path := fmt.Sprintf("app%d/%s/%s", appId, folder, name)
-	return FileInfo{Path: path, Filename: f.Filename, Size: f.Size, MimeType: f.mimeType(), ExtName: f.extName()}
+	dir := fmt.Sprintf("app%d/%s/", appId, folder)
+	path := fmt.Sprintf("%s/%s", dir, name)
+	return FileInfo{
+		Dir:      dir,
+		Path:     path,
+		Filename: f.Filename,
+		Size:     f.Size,
+		MimeType: f.mimeType(),
+		ExtName:  f.extName(),
+	}
 }
