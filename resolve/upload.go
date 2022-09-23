@@ -21,7 +21,7 @@ func UploadPluginResolveResolveFn(appId uint64) graphql.FieldResolveFn {
 		defer utils.PrintErrorStack()
 		file := p.Args[consts.ARG_FILE].(storage.File)
 		fileInfo := file.Save(appId, consts.PLUGINS_PATH)
-		err := storage.UnZip(fileInfo.Path, fileInfo.Dir)
+		err := storage.Unzip(fileInfo.Path, fileInfo.Dir)
 		if err != nil {
 			panic(err)
 		}

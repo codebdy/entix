@@ -2,61 +2,72 @@ package storage
 
 import (
 	"archive/zip"
+	"fmt"
 	"io"
 	"os"
-	"strings"
+	"path/filepath"
+
+	"rxdrag.com/entify/consts"
 )
 
-func UnZip(zipFile, dir string) error {
-	reader, err := zip.OpenReader(zipFile)
+func Unzip(src, dest string) error {
+	staticPath := fmt.Sprintf("./%s/", consts.STATIC_PATH)
+	r, err := zip.OpenReader(staticPath + src)
 	if err != nil {
 		return err
 	}
-	defer reader.Close()
-	for _, file := range reader.File {
-		rc, err := file.Open()
-		if err != nil {
-			return err
+	defer func() {
+		if err := r.Close(); err != nil {
+			panic(err)
 		}
-		defer rc.Close()
-		filename := dir + file.Name
-		err = os.MkdirAll(getDir(filename), 0755)
-		if err != nil {
-			return err
-		}
+	}()
+	fmt.Println("cmm", staticPath+dest)
+	_, err = os.Stat(staticPath + dest)
+	if os.IsNotExist(err) {
+		os.MkdirAll(staticPath+dest, 0755)
+	}
 
-		w, err := os.Create(filename)
+	// Closure to address file descriptors issue with all the deferred .Close() methods
+	extractAndWriteFile := func(f *zip.File) error {
+		rc, err := f.Open()
 		if err != nil {
 			return err
 		}
+		defer func() {
+			if err := rc.Close(); err != nil {
+				panic(err)
+			}
+		}()
+		path := filepath.Join(dest, f.Name)
+		if f.FileInfo().IsDir() {
+			os.MkdirAll(path, f.Mode())
+		} else {
+			os.MkdirAll(filepath.Dir(path), f.Mode())
+			f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+			if err != nil {
+				return err
+			}
+			defer func() {
+				if err := f.Close(); err != nil {
+					panic(err)
+				}
+			}()
+			_, err = io.Copy(f, rc)
+			if err != nil {
+				return err
+			}
 
-		defer w.Close()
-		_, err = io.Copy(w, rc)
+		}
+		return nil
+	}
+
+	for _, f := range r.File {
+		err := extractAndWriteFile(f)
 		if err != nil {
 			return err
 		}
-
-		w.Close()
-		rc.Close()
 	}
 
 	return nil
-}
 
-func getDir(path string) string {
-	return subString(path, 0, strings.LastIndex(path, "/"))
-}
-
-func subString(str string, start, end int) string {
-	rs := []rune(str)
-	length := len(rs)
-	if start == 0 || start == length {
-		panic("start is wrong")
-	}
-
-	if end == start || end == length {
-		panic("end is wrong")
-	}
-
-	return string(rs[start:end])
 }
