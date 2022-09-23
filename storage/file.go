@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 
 	"github.com/google/uuid"
+	"rxdrag.com/entify/consts"
 )
 
 type File struct {
@@ -48,7 +49,15 @@ func (f *File) mimeType() string {
 
 func (f *File) Save(appId uint64, folder string) FileInfo {
 	name := fmt.Sprintf("%s%s", uuid.New().String(), f.extName())
-	localPath := fmt.Sprintf("%d/%s/%s", appId, folder, name)
+	foldeFullPath := fmt.Sprintf("%s/a%d/%s", consts.STATIC_PATH, appId, folder)
+	_, err := os.Stat(foldeFullPath)
+	if os.IsNotExist(err) {
+		err = os.MkdirAll(foldeFullPath, 0777)
+		if err != nil {
+			panic(err.Error())
+		}
+	}
+	localPath := fmt.Sprintf("%s/%s", foldeFullPath, name)
 	file, err := os.OpenFile(
 		localPath,
 		os.O_WRONLY|os.O_CREATE,
