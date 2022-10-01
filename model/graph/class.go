@@ -3,6 +3,7 @@ package graph
 import (
 	"fmt"
 
+	"github.com/gertd/go-pluralize"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/domain"
 	"rxdrag.com/entify/utils"
@@ -86,7 +87,8 @@ func (c *Class) IsSoftDelete() bool {
 }
 
 func (c *Class) QueryName() string {
-	return utils.FirstLower(c.Name())
+	pluralize := pluralize.NewClient()
+	return utils.FirstLower(pluralize.Plural(c.Name()))
 }
 
 func (c *Class) QueryOneName() string {

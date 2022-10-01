@@ -16,7 +16,11 @@ require (
 
 require (
 	github.com/artdarek/go-unzip v1.0.0 // indirect
+	github.com/dlclark/regexp2 v1.7.0 // indirect
+	github.com/dop251/goja v0.0.0-20220927172339-ea66e911853d // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
+	github.com/gertd/go-pluralize v0.2.1 // indirect
+	github.com/go-sourcemap/sourcemap v2.1.3+incompatible // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
