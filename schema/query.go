@@ -67,7 +67,7 @@ func (a *AppSchema) ServiceQueryType(service *graph.Service) graphql.Output {
 	}
 	return graphql.NewObject(
 		graphql.ObjectConfig{
-			Name:        service.Name(),
+			Name:        service.QueryTypeName(),
 			Fields:      fields,
 			Description: service.Description(),
 		},

@@ -3,6 +3,7 @@ package graph
 import (
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/domain"
+	"rxdrag.com/entify/utils"
 )
 
 type Service struct {
@@ -35,4 +36,12 @@ func (s *Service) MetationMethods() []*Method {
 		}
 	}
 	return methods
+}
+
+func (s *Service) QueryTypeName() string {
+	return s.Name() + utils.FirstUpper(consts.QUERY)
+}
+
+func (s *Service) MutationTypeName() string {
+	return s.Name() + utils.FirstUpper(consts.MUTATION)
 }
