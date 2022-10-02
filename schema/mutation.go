@@ -210,14 +210,14 @@ func (a *AppSchema) appendEntityMutationToFields(entity *graph.Entity, feilds gr
 
 func (a *AppSchema) appendServiceMutationToFields(service *graph.Service, feilds graphql.Fields) {
 
-	(feilds)[service.DeleteName()] = &graphql.Field{
-		Type: a.modelParser.MutationResponse(service.Name()),
-		Args: a.deleteArgs(&service.Entity),
-		//Resolve: entity.QueryResolve(),
-	}
-	(feilds)[service.DeleteByIdName()] = &graphql.Field{
-		Type: a.modelParser.OutputType(service.Name()),
-		Args: deleteByIdArgs(),
-		//Resolve: entity.QueryResolve(),
-	}
+	// (feilds)[service.DeleteName()] = &graphql.Field{
+	// 	Type: a.modelParser.MutationResponse(service.Name()),
+	// 	Args: a.deleteArgs(&service.Entity),
+	// 	//Resolve: entity.QueryResolve(),
+	// }
+	// (feilds)[service.DeleteByIdName()] = &graphql.Field{
+	// 	Type: a.modelParser.OutputType(service.Name()),
+	// 	Args: deleteByIdArgs(),
+	// 	//Resolve: entity.QueryResolve(),
+	// }
 }
