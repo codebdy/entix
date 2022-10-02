@@ -31,6 +31,7 @@ const (
 
 	ONE        = "one"
 	QUERY      = "query"
+	MUTATION   = "mutation"
 	AGGREGATE  = "aggregate"
 	LIST       = "list"
 	FIELDS     = "Fields"

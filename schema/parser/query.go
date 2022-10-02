@@ -55,7 +55,7 @@ func (p *ModelParser) ObjectType(entity *graph.Entity) *graphql.Object {
 		return graphql.NewObject(
 			graphql.ObjectConfig{
 				Name:        name,
-				Fields:      p.outputFields(entity.AllAttributes(), entity.AllMethods()),
+				Fields:      p.outputFields(entity.AllAttributes()),
 				Description: entity.Description(),
 				Interfaces:  interfaces,
 			},
@@ -64,7 +64,7 @@ func (p *ModelParser) ObjectType(entity *graph.Entity) *graphql.Object {
 		return graphql.NewObject(
 			graphql.ObjectConfig{
 				Name:        name,
-				Fields:      p.outputFields(entity.AllAttributes(), entity.AllMethods()),
+				Fields:      p.outputFields(entity.AllAttributes()),
 				Description: entity.Description(),
 			},
 		)
@@ -72,7 +72,7 @@ func (p *ModelParser) ObjectType(entity *graph.Entity) *graphql.Object {
 
 }
 
-func (p *ModelParser) outputFields(attrs []*graph.Attribute, methods []*graph.Method) graphql.Fields {
+func (p *ModelParser) outputFields(attrs []*graph.Attribute) graphql.Fields {
 	fields := graphql.Fields{}
 	for _, attr := range attrs {
 		fields[attr.Name] = &graphql.Field{
@@ -85,15 +85,5 @@ func (p *ModelParser) outputFields(attrs []*graph.Attribute, methods []*graph.Me
 		}
 	}
 
-	for _, method := range methods {
-		fields[method.GetName()] = &graphql.Field{
-			Type:        p.PropertyType(method),
-			Description: method.Method.Description,
-			// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-			// 	fmt.Println(p.Context.Value("data"))
-			// 	return "world", nil
-			// },
-		}
-	}
 	return fields
 }

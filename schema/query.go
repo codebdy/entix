@@ -1,6 +1,8 @@
 package schema
 
 import (
+	"fmt"
+
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
@@ -51,6 +53,27 @@ func (a *AppSchema) QueryResponseType(class *graph.Class) graphql.Output {
 	return a.modelParser.ClassListType(class)
 }
 
+func (a *AppSchema) ServiceQueryType(service *graph.Service) graphql.Output {
+	fields := graphql.Fields{}
+	for _, method := range service.QueryMethods() {
+		fields[method.GetName()] = &graphql.Field{
+			Type:        a.modelParser.PropertyType(method),
+			Description: method.Method.Description,
+			// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+			// 	fmt.Println(p.Context.Value("data"))
+			// 	return "world", nil
+			// },
+		}
+	}
+	return graphql.NewObject(
+		graphql.ObjectConfig{
+			Name:        service.Name(),
+			Fields:      fields,
+			Description: service.Description(),
+		},
+	)
+}
+
 func (a *AppSchema) appendInterfaceToQueryFields(intf *graph.Interface, fields graphql.Fields) {
 	(fields)[intf.QueryName()] = &graphql.Field{
 		Type:    a.QueryResponseType(&intf.Class),
@@ -83,8 +106,14 @@ func (a *AppSchema) appendEntityToQueryFields(entity *graph.Entity, fields graph
 	}
 }
 
-func (a *AppSchema) appendServiceToQueryFields(partial *graph.Service, fields graphql.Fields) {
-
+func (a *AppSchema) appendServiceToQueryFields(service *graph.Service, fields graphql.Fields) {
+	methods := service.QueryMethods()
+	fmt.Println("哈哈", methods)
+	if len(methods) > 0 {
+		(fields)[service.Name()] = &graphql.Field{
+			Type: a.ServiceQueryType(service),
+		}
+	}
 }
 
 func (a *AppSchema) appendAuthToQuery(fields graphql.Fields) {
