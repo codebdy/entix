@@ -196,9 +196,9 @@ func (m *Model) Validate() {
 			panic(fmt.Sprintf("Entity %s should have one normal field at least", entity.Name()))
 		}
 	}
-	for _, entity := range m.Services {
-		if entity.IsEmperty() {
-			panic(fmt.Sprintf("Entity %s should have one normal field at least", entity.Name()))
+	for _, service := range m.Services {
+		if len(service.methods) == 0 {
+			panic(fmt.Sprintf("Service %s should have one method field at least", service.Name()))
 		}
 	}
 }
