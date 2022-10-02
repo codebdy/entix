@@ -18,12 +18,17 @@ func argsString(method *graph.Method) string {
 	}
 	return strings.Join(names, ", ")
 }
+func Query() string {
+	return "golang test method"
+}
 
 func MethodResolveFn(method *graph.Method, model *model.Model) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
 		vm := goja.New()
+
 		vm.Set("args", p.Args)
+		vm.Set("query", Query)
 		funcStr := fmt.Sprintf(
 			`function doMethod() {
 				const {%s} = args;
