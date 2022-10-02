@@ -1,6 +1,8 @@
 package resolve
 
 import (
+	"fmt"
+
 	"github.com/dop251/goja"
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/model"
@@ -12,13 +14,27 @@ func MethodResolveFn(method *graph.Method, model *model.Model) graphql.FieldReso
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
 		vm := goja.New()
-		v, err := vm.RunString(method.Method.Script)
+		vm.Set("args", p.Args)
+		funcStr := fmt.Sprintf(
+			`function doMethod() {
+				const {arg1, arg2} = args;
+			%s
+			}`,
+			method.Method.Script,
+		)
+
+		_, err := vm.RunString(funcStr)
 		if err != nil {
 			panic(err)
 		}
-		if num := v.Export().(int64); num != 4 {
-			panic(num)
+		var doMethod func() string
+		err = vm.ExportTo(vm.Get("doMethod"), &doMethod)
+		if err != nil {
+			panic(err)
 		}
-		return v, nil
+
+		result := doMethod()
+
+		return result, nil
 	}
 }
