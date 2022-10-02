@@ -57,12 +57,13 @@ func (a *AppSchema) ServiceQueryType(service *graph.Service) graphql.Output {
 	fields := graphql.Fields{}
 	for _, method := range service.QueryMethods() {
 		fields[method.GetName()] = &graphql.Field{
-			Type:        a.modelParser.PropertyType(method),
+			Type:        a.modelParser.PropertyType(method.GetType()),
+			Args:        a.modelParser.MethodArgs(method),
 			Description: method.Method.Description,
-			// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-			// 	fmt.Println(p.Context.Value("data"))
-			// 	return "world", nil
-			// },
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				fmt.Println(p.Context.Value("data"))
+				return "world", nil
+			},
 		}
 	}
 	return graphql.NewObject(

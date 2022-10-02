@@ -76,7 +76,7 @@ func (p *ModelParser) outputFields(attrs []*graph.Attribute) graphql.Fields {
 	fields := graphql.Fields{}
 	for _, attr := range attrs {
 		fields[attr.Name] = &graphql.Field{
-			Type:        p.PropertyType(attr),
+			Type:        p.PropertyType(attr.GetType()),
 			Description: attr.Description,
 			// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 			// 	fmt.Println(p.Context.Value("data"))

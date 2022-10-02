@@ -11,11 +11,11 @@ func (p *ModelParser) InputPropertyType(property graph.Propertier) graphql.Type 
 	if property.GetType() == meta.FILE {
 		return scalars.UploadType
 	}
-	return p.PropertyType(property)
+	return p.PropertyType(property.GetType())
 }
 
-func (p *ModelParser) PropertyType(property graph.Propertier) graphql.Output {
-	switch property.GetType() {
+func (p *ModelParser) PropertyType(propType string) graphql.Output {
+	switch propType {
 	case meta.ID:
 		return graphql.ID
 	case meta.INT:
@@ -54,7 +54,7 @@ func (p *ModelParser) PropertyType(property graph.Propertier) graphql.Output {
 		return fileOutputType
 	}
 
-	panic("No column type:" + property.GetName())
+	panic("No column type:" + propType)
 }
 
 func (p *ModelParser) AttributeExp(column *graph.Attribute) *graphql.InputObjectFieldConfig {

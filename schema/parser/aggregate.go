@@ -16,7 +16,7 @@ func (p *ModelParser) avgFields(attrs []*graph.Attribute) graphql.Fields {
 	for _, column := range attrs {
 		if column.Type == meta.INT || column.Type == meta.FLOAT {
 			fields[column.Name] = &graphql.Field{
-				Type: p.PropertyType(column),
+				Type: p.PropertyType(column.Type),
 			}
 		}
 
@@ -29,7 +29,7 @@ func (p *ModelParser) maxFields(attrs []*graph.Attribute) graphql.Fields {
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
 			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr),
+				Type: p.PropertyType(attr.Type),
 			}
 		}
 
@@ -42,7 +42,7 @@ func (p *ModelParser) minFields(attrs []*graph.Attribute) graphql.Fields {
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
 			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr),
+				Type: p.PropertyType(attr.Type),
 				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				// 	fmt.Println(p.Context.Value("data"))
 				// 	return "world", nil
@@ -72,7 +72,7 @@ func (p *ModelParser) stddevFields(attrs []*graph.Attribute) graphql.Fields {
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
 			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr),
+				Type: p.PropertyType(attr.Type),
 				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				// 	fmt.Println(p.Context.Value("data"))
 				// 	return "world", nil
@@ -89,7 +89,7 @@ func (p *ModelParser) stddevPopFields(attrs []*graph.Attribute) graphql.Fields {
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
 			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr),
+				Type: p.PropertyType(attr.Type),
 				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				// 	fmt.Println(p.Context.Value("data"))
 				// 	return "world", nil
@@ -105,7 +105,7 @@ func (p *ModelParser) stddevSampFields(attrs []*graph.Attribute) graphql.Fields 
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
 			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr),
+				Type: p.PropertyType(attr.Type),
 				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				// 	fmt.Println(p.Context.Value("data"))
 				// 	return "world", nil
@@ -122,7 +122,7 @@ func (p *ModelParser) sumFields(attrs []*graph.Attribute) graphql.Fields {
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
 			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr),
+				Type: p.PropertyType(attr.Type),
 				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				// 	fmt.Println(p.Context.Value("data"))
 				// 	return "world", nil
@@ -139,7 +139,7 @@ func (p *ModelParser) varPopFields(attrs []*graph.Attribute) graphql.Fields {
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
 			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr),
+				Type: p.PropertyType(attr.Type),
 				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				// 	fmt.Println(p.Context.Value("data"))
 				// 	return "world", nil
@@ -156,7 +156,7 @@ func (p *ModelParser) varSampFields(attrs []*graph.Attribute) graphql.Fields {
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
 			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr),
+				Type: p.PropertyType(attr.Type),
 				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				// 	fmt.Println(p.Context.Value("data"))
 				// 	return "world", nil
@@ -173,7 +173,7 @@ func (p *ModelParser) varianceFields(attrs []*graph.Attribute) graphql.Fields {
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
 			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr),
+				Type: p.PropertyType(attr.Type),
 				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				// 	fmt.Println(p.Context.Value("data"))
 				// 	return "world", nil
