@@ -109,7 +109,6 @@ func (a *AppSchema) appendEntityToQueryFields(entity *graph.Entity, fields graph
 
 func (a *AppSchema) appendServiceToQueryFields(service *graph.Service, fields graphql.Fields) {
 	methods := service.QueryMethods()
-	fmt.Println("哈哈", methods)
 	if len(methods) > 0 {
 		(fields)[service.Name()] = &graphql.Field{
 			Type: a.ServiceQueryType(service),
