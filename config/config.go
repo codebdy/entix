@@ -77,6 +77,10 @@ func AuthUrl() string {
 	return GetString(consts.AUTH_URL)
 }
 
+func ZeebeAddress() string {
+	return GetString(consts.ZEEBE_ADDRESS)
+}
+
 func Storage() string {
 	return GetString(consts.STORAGE)
 }

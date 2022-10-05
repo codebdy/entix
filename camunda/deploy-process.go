@@ -6,11 +6,13 @@ import (
 
 	"github.com/camunda/zeebe/clients/go/v8/pkg/pb"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/zbc"
+	"rxdrag.com/entify/config"
 )
 
 func First() {
 	client, err := zbc.NewClient(&zbc.ClientConfig{
-		GatewayAddress: "ZEEBE_ADDRESS",
+		GatewayAddress:         config.ZeebeAddress(),
+		UsePlaintextConnection: true,
 	})
 
 	if err != nil {

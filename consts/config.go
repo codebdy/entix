@@ -14,6 +14,7 @@ const (
 	STATIC_PATH   = "static"
 	UPLOAD_PATH   = "uploads"
 	PLUGINS_PATH  = "plugins"
+	ZEEBE_ADDRESS = "zeebe_address"
 	//UPLOAD_PRIFIX = "/uploads"
 )
 

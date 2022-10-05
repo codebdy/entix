@@ -40,10 +40,10 @@ func checkMetaInstall() {
 
 func main() {
 	defer db.Close()
-	camunda.First()
 	checkParams()
 	checkMetaInstall()
 
+	camunda.First()
 	h := handler.New(&handler.Config{
 		Pretty:         true,
 		GraphiQLConfig: &handler.GraphiQLConfig{},
