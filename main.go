@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
+	"rxdrag.com/entify/camunda"
 	"rxdrag.com/entify/config"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/db"
@@ -39,6 +40,7 @@ func checkMetaInstall() {
 
 func main() {
 	defer db.Close()
+	camunda.First()
 	checkParams()
 	checkMetaInstall()
 
