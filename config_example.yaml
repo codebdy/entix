@@ -7,3 +7,7 @@ port: "3306"
 user: root
 auth_url: ""
 #storage: "local"
+zeebe_address:"[Zeebe API]"
+zeebe_client_id:"[Client ID]"
+zeebe_client_secret:"[Client Secret]"
+zeebe_authorization_server_url:"[OAuth API]"
