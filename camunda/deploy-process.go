@@ -1,1 +1,1 @@
-package zeebe
+package camunda
