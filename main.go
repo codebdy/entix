@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
-	"rxdrag.com/entify/camunda"
 	"rxdrag.com/entify/config"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/db"
@@ -43,7 +42,6 @@ func main() {
 	checkParams()
 	checkMetaInstall()
 
-	camunda.First()
 	h := handler.New(&handler.Config{
 		Pretty:         true,
 		GraphiQLConfig: &handler.GraphiQLConfig{},
