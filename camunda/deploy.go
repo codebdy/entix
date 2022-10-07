@@ -9,7 +9,7 @@ import (
 	"rxdrag.com/entify/config"
 )
 
-func First() {
+func DeployProcess(xml string) {
 	client, err := zbc.NewClient(&zbc.ClientConfig{
 		GatewayAddress:         config.ZeebeAddress(),
 		UsePlaintextConnection: true,

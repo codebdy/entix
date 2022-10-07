@@ -2,6 +2,7 @@ package resolve
 
 import (
 	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify/camunda"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/graph"
@@ -27,11 +28,7 @@ func DeployProcessResolveFn(model *model.Model) graphql.FieldResolveFn {
 		if process == nil {
 			panic("can not find process by id")
 		}
-		//repos.MakeEntityAbilityVerifier(p, entity.Uuid())
-		// instance := data.NewInstance(map[string]interface{}{
-		// 	consts.ID: ConvertId(argId),
-		// }, entity)
-		// return repos.DeleteInstance(instance)
+		camunda.DeployProcess(process.(map[string]interface{})["xml"].(string))
 		return argId, nil
 	}
 }
