@@ -25,6 +25,8 @@ func First() {
 		panic(err)
 	}
 
+	//client.NewDeployResourceCommand().AddResource()
+
 	for _, broker := range topology.Brokers {
 		fmt.Println("Broker", broker.Host, ":", broker.Port)
 		for _, partition := range broker.Partitions {

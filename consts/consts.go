@@ -22,7 +22,7 @@ const (
 	IS_DEMO                = "isDemo"
 	PUBLISH                = "publish"
 	ROLLBACK               = "rollback"
-	SYNC_META              = "syncMeta"
+	DEPLOY_RPOCESS         = "deployProcess"
 	NAME                   = "name"
 	INSTALLED              = "installed"
 	CAN_UPLOAD             = "canUpload"
