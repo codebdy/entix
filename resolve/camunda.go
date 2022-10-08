@@ -28,7 +28,10 @@ func DeployProcessResolveFn(model *model.Model) graphql.FieldResolveFn {
 		if process == nil {
 			panic("can not find process by id")
 		}
-		camunda.DeployProcess(process.(map[string]interface{})["xml"].(string))
+		camunda.DeployProcess(
+			process.(map[string]interface{})["xml"].(string),
+			process.(map[string]interface{})["id"].(uint64),
+		)
 		return argId, nil
 	}
 }

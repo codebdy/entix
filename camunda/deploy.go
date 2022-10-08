@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/camunda/zeebe/clients/go/v8/pkg/pb"
 	"github.com/camunda/zeebe/clients/go/v8/pkg/zbc"
 	"rxdrag.com/entify/config"
 )
 
-func DeployProcess(xml string) {
+func DeployProcess(xml string, id uint64) {
+	//fmt.Println("哈哈哈", name, xml)
 	client, err := zbc.NewClient(&zbc.ClientConfig{
 		GatewayAddress:         config.ZeebeAddress(),
 		UsePlaintextConnection: true,
@@ -20,28 +20,26 @@ func DeployProcess(xml string) {
 	}
 
 	ctx := context.Background()
-	topology, err := client.NewTopologyCommand().Send(ctx)
+	response, err := client.NewDeployResourceCommand().AddResource([]byte(xml), fmt.Sprintf("%d.bpmn", id)).Send(ctx)
+	if err != nil {
+		panic(err)
+	}
+	processId := response.Deployments[0].GetProcess().BpmnProcessId
+	fmt.Println(response.String())
+
+	// After the process is deployed.
+	variables := make(map[string]interface{})
+	variables["orderId"] = "31243"
+
+	request, err := client.NewCreateInstanceCommand().BPMNProcessId(processId).LatestVersion().VariablesFromMap(variables)
 	if err != nil {
 		panic(err)
 	}
 
-	//client.NewDeployResourceCommand().AddResource()
-
-	for _, broker := range topology.Brokers {
-		fmt.Println("Broker", broker.Host, ":", broker.Port)
-		for _, partition := range broker.Partitions {
-			fmt.Println("  Partition", partition.PartitionId, ":", roleToString(partition.Role))
-		}
+	msg, err := request.Send(ctx)
+	if err != nil {
+		panic(err)
 	}
-}
 
-func roleToString(role pb.Partition_PartitionBrokerRole) string {
-	switch role {
-	case pb.Partition_LEADER:
-		return "Leader"
-	case pb.Partition_FOLLOWER:
-		return "Follower"
-	default:
-		return "Unknown"
-	}
+	fmt.Println(msg.String())
 }
