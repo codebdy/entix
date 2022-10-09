@@ -17,7 +17,6 @@ func GetFetchFn(vm *goja.Runtime) FetchFn {
 		loop := eventloop.NewEventLoop()
 		loop.Start()
 		defer loop.Stop()
-		fmt.Println("执行Promise,接收的参数", url, options)
 		p, resolve, _ := vm.NewPromise()
 		loop.RunOnLoop(func(vm *goja.Runtime) {
 			go func() {
@@ -30,8 +29,6 @@ func GetFetchFn(vm *goja.Runtime) FetchFn {
 				if options != nil && options["body"] != nil {
 					reqBody = []byte(options["body"].(string))
 				}
-				fmt.Println("哈哈", reqBody)
-				//payload := strings.NewReader(reqBody)
 				client := &http.Client{}
 				req, err := http.NewRequest(method, url, bytes.NewBuffer(reqBody))
 
