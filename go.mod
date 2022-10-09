@@ -3,10 +3,13 @@ module rxdrag.com/entify
 go 1.18
 
 require (
+	github.com/artdarek/go-unzip v1.0.0
+	github.com/camunda/zeebe/clients/go/v8 v8.1.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/dop251/goja v0.0.0-20220927172339-ea66e911853d
+	github.com/gertd/go-pluralize v0.2.1
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/google/uuid v1.3.0
-	github.com/gorilla/websocket v1.5.0
 	github.com/graph-gophers/dataloader v5.0.0+incompatible
 	github.com/graphql-go/graphql v0.8.0
 	github.com/mitchellh/mapstructure v1.4.3
@@ -15,14 +18,10 @@ require (
 )
 
 require (
-	github.com/artdarek/go-unzip v1.0.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20200108200545-475eaeb16496 // indirect
-	github.com/camunda/zeebe/clients/go/v8 v8.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dlclark/regexp2 v1.7.0 // indirect
-	github.com/dop251/goja v0.0.0-20220927172339-ea66e911853d // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
-	github.com/gertd/go-pluralize v0.2.1 // indirect
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.3+incompatible // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
