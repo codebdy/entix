@@ -2,7 +2,9 @@ package script
 
 import (
 	"fmt"
-	"time"
+	"io/ioutil"
+	"net/http"
+	"strings"
 
 	"github.com/dop251/goja"
 	"github.com/dop251/goja_nodejs/eventloop"
@@ -19,9 +21,42 @@ func GetFetchFn(vm *goja.Runtime) FetchFn {
 		p, resolve, _ := vm.NewPromise()
 		loop.RunOnLoop(func(vm *goja.Runtime) {
 			go func() {
-				time.Sleep(500 * time.Millisecond) // or perform any other blocking operation
-				fmt.Println("等待Promise结束")
-				resolve("golang返回的的Fetch 结果")
+				method := http.MethodGet
+				if options != nil && options["method"] != nil {
+					method = options["method"].(string)
+				}
+
+				payload := strings.NewReader("client_id=appx&client_secret=bx5Ono2y0FYEVRWB7zw6S55pOEmKQ2kW&grant_type=client_credentials")
+
+				client := &http.Client{}
+				req, err := http.NewRequest(method, url, payload)
+
+				if err != nil {
+					fmt.Println(err)
+					return
+				}
+				if options != nil && options["headers"] != nil {
+					headers := options["headers"].(map[string]interface{})
+					for key, header := range headers {
+						if header != nil {
+							req.Header.Add(key, header.(string))
+						}
+					}
+				}
+
+				res, err := client.Do(req)
+				if err != nil {
+					fmt.Println(err)
+					return
+				}
+				defer res.Body.Close()
+
+				body, err := ioutil.ReadAll(res.Body)
+				if err != nil {
+					fmt.Println(err)
+					return
+				}
+				resolve(string(body))
 			}()
 		})
 		return p
