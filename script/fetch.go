@@ -1,10 +1,10 @@
 package script
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strings"
 
 	"github.com/dop251/goja"
 	"github.com/dop251/goja_nodejs/eventloop"
@@ -26,10 +26,14 @@ func GetFetchFn(vm *goja.Runtime) FetchFn {
 					method = options["method"].(string)
 				}
 
-				payload := strings.NewReader("client_id=appx&client_secret=bx5Ono2y0FYEVRWB7zw6S55pOEmKQ2kW&grant_type=client_credentials")
-
+				reqBody := []byte("")
+				if options != nil && options["body"] != nil {
+					reqBody = []byte(options["body"].(string))
+				}
+				fmt.Println("哈哈", reqBody)
+				//payload := strings.NewReader(reqBody)
 				client := &http.Client{}
-				req, err := http.NewRequest(method, url, payload)
+				req, err := http.NewRequest(method, url, bytes.NewBuffer(reqBody))
 
 				if err != nil {
 					fmt.Println(err)
