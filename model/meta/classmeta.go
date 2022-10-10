@@ -10,19 +10,20 @@ const (
 )
 
 type ClassMeta struct {
-	Uuid        string          `json:"uuid"`
-	InnerId     uint64          `json:"innerId"`
-	Name        string          `json:"name"`
-	Label       string          `json:"label"`
-	StereoType  string          `json:"stereoType"`
-	Attributes  []AttributeMeta `json:"attributes"`
-	Methods     []MethodMeta    `json:"methods"`
-	Root        bool            `json:"root"`
-	Description string          `json:"description"`
-	SoftDelete  bool            `json:"softDelete"`
-	System      bool            `json:"system"`
-	IdNoShift   bool            `json:"idNoShift"`
-	PackageUuid string          `json:"packageUuid"`
-	Script      string          `json:"script"`
-	AppId       uint64
+	Uuid          string          `json:"uuid"`
+	InnerId       uint64          `json:"innerId"`
+	Name          string          `json:"name"`
+	Label         string          `json:"label"`
+	StereoType    string          `json:"stereoType"`
+	Attributes    []AttributeMeta `json:"attributes"`
+	Methods       []MethodMeta    `json:"methods"`
+	Root          bool            `json:"root"`
+	Description   string          `json:"description"`
+	SoftDelete    bool            `json:"softDelete"`
+	System        bool            `json:"system"`
+	IdNoShift     bool            `json:"idNoShift"`
+	PackageUuid   string          `json:"packageUuid"`
+	QueryScript   string          `json:"queryScript"`
+	MuationScript string          `json:"muationScript"`
+	AppId         uint64
 }

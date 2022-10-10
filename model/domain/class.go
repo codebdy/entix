@@ -3,40 +3,42 @@ package domain
 import "rxdrag.com/entify/model/meta"
 
 type Class struct {
-	Uuid        string
-	InnerId     uint64
-	StereoType  string
-	Name        string
-	Description string
-	Root        bool
-	SoftDelete  bool
-	Attributes  []*Attribute
-	Methods     []*Method
-	parents     []*Class
-	Children    []*Class
-	AppId       uint64
-	IdNoShift   bool
-	Script      string
-	PackageUuid string
+	Uuid          string
+	InnerId       uint64
+	StereoType    string
+	Name          string
+	Description   string
+	Root          bool
+	SoftDelete    bool
+	Attributes    []*Attribute
+	Methods       []*Method
+	parents       []*Class
+	Children      []*Class
+	AppId         uint64
+	IdNoShift     bool
+	QueryScript   string
+	MuationScript string
+	PackageUuid   string
 }
 
 func NewClass(c *meta.ClassMeta) *Class {
 	cls := Class{
-		Uuid:        c.Uuid,
-		InnerId:     c.InnerId,
-		StereoType:  c.StereoType,
-		Name:        c.Name,
-		Description: c.Description,
-		Root:        c.Root,
-		SoftDelete:  c.SoftDelete,
-		Attributes:  make([]*Attribute, len(c.Attributes)),
-		Methods:     make([]*Method, len(c.Methods)),
-		parents:     []*Class{},
-		Children:    []*Class{},
-		Script:      c.Script,
-		AppId:       c.AppId,
-		PackageUuid: c.PackageUuid,
-		IdNoShift:   c.IdNoShift,
+		Uuid:          c.Uuid,
+		InnerId:       c.InnerId,
+		StereoType:    c.StereoType,
+		Name:          c.Name,
+		Description:   c.Description,
+		Root:          c.Root,
+		SoftDelete:    c.SoftDelete,
+		Attributes:    make([]*Attribute, len(c.Attributes)),
+		Methods:       make([]*Method, len(c.Methods)),
+		parents:       []*Class{},
+		Children:      []*Class{},
+		QueryScript:   c.QueryScript,
+		MuationScript: c.MuationScript,
+		AppId:         c.AppId,
+		PackageUuid:   c.PackageUuid,
+		IdNoShift:     c.IdNoShift,
 	}
 
 	for i := range c.Attributes {
