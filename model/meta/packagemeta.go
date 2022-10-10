@@ -1,8 +1,8 @@
 package meta
 
 const (
-	PACKAGE_NORMAL = "Normal"
-	PACKAGE_THIRD  = "ThirdParty"
+	PACKAGE_NORMAL     = "Normal"
+	PACKAGE_THIRDPARTY = "ThirdParty"
 )
 
 type PackageMeta struct {

@@ -6,6 +6,7 @@ const (
 	CLASSS_ABSTRACT    string = "Abstract"
 	CLASS_VALUE_OBJECT string = "ValueObject"
 	CLASS_SERVICE      string = "Service"
+	CLASS_THIRDPARTY   string = "ThirdParty"
 )
 
 type ClassMeta struct {
