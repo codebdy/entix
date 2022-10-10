@@ -12,6 +12,7 @@ type Model struct {
 	Enums        []*Enum
 	Interfaces   []*Interface
 	Entities     []*Entity
+	ThirdParties []*ThirdParty
 	Services     []*Service
 	ValueObjects []*Class
 	Relations    []*Relation
@@ -63,6 +64,8 @@ func New(m *domain.Model) *Model {
 			}
 		} else if cls.StereoType == meta.CLASS_VALUE_OBJECT {
 			model.ValueObjects = append(model.ValueObjects, NewClass(cls))
+		} else if cls.StereoType == meta.CLASS_THIRDPARTY {
+			model.ThirdParties = append(model.ThirdParties, NewThirdParty(cls))
 		} else if cls.StereoType == meta.CLASS_SERVICE {
 			model.Services = append(model.Services, NewService(cls))
 		}
