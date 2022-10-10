@@ -35,6 +35,9 @@ func (a *AppSchema) queryFields() graphql.Fields {
 	for _, entity := range a.model.Graph.RootEnities() {
 		a.appendEntityToQueryFields(entity, queryFields)
 	}
+	for _, third := range a.model.Graph.ThirdParties {
+		a.appendThirdPartyToQueryFields(third, queryFields)
+	}
 	for _, service := range a.model.Graph.Services {
 		a.appendServiceToQueryFields(service, queryFields)
 	}
@@ -81,6 +84,20 @@ func (a *AppSchema) appendEntityToQueryFields(entity *graph.Entity, fields graph
 		Args:    a.modelParser.QueryArgs(entity.Name()),
 		Resolve: resolve.QueryEntityResolveFn(entity, a.Model()),
 	}
+}
+
+func (a *AppSchema) appendThirdPartyToQueryFields(third *graph.ThirdParty, fields graphql.Fields) {
+	(fields)[third.QueryName()] = &graphql.Field{
+		Type: a.QueryResponseType(&third.Class),
+		Args: a.modelParser.QueryArgs(third.Name()),
+		//Resolve: resolve.QueryEntityResolveFn(third, a.Model()),
+	}
+	(fields)[third.QueryOneName()] = &graphql.Field{
+		Type: a.modelParser.OutputType(third.Name()),
+		Args: a.modelParser.QueryArgs(third.Name()),
+		//Resolve: resolve.QueryOneEntityResolveFn(third, a.Model()),
+	}
+
 }
 
 func (a *AppSchema) appendServiceToQueryFields(service *graph.Service, fields graphql.Fields) {

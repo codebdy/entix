@@ -15,15 +15,19 @@ func (p *ModelParser) makeQueryArgs() {
 	for i := range p.model.Graph.Entities {
 		p.makeOneEntityArgs(p.model.Graph.Entities[i])
 	}
-	// for i := range p.model.Graph.Services {
-	// 	p.makeOnePartailArgs(p.model.Graph.Services[i])
-	// }
+	for i := range p.model.Graph.ThirdParties {
+		p.makeOneThirdPartyArgs(p.model.Graph.ThirdParties[i])
+	}
 
 	p.makeRelaionWhereExp()
 }
 
 func (p *ModelParser) makeOneEntityArgs(entity *graph.Entity) {
 	p.makeOneArgs(entity.Name(), entity.AllAttributes())
+}
+
+func (p *ModelParser) makeOneThirdPartyArgs(third *graph.ThirdParty) {
+	p.makeOneArgs(third.Name(), third.Attributes())
 }
 
 func (p *ModelParser) makeOneInterfaceArgs(intf *graph.Interface) {
@@ -51,8 +55,13 @@ func (p *ModelParser) makeRelaionWhereExp() {
 	for className := range p.whereExpMap {
 		exp := p.whereExpMap[className]
 		entity := p.model.Graph.GetEntityByName(className)
+		third := p.model.Graph.GetThirdPartyByName(className)
 		if entity == nil {
-			panic("Fatal error, can not find class by name:" + className)
+			if third == nil {
+				panic("Fatal error, can not find class by name:" + className)
+			} else {
+				continue
+			}
 		}
 		var associations []*graph.Association
 		associations = entity.AllAssociations()

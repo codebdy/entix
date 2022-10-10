@@ -34,6 +34,7 @@ func (p *ModelParser) ParseModel(model *model.Model) {
 	p.makeEnums(p.model.Graph.Enums)
 	p.makeOutputInterfaces(p.model.Graph.Interfaces)
 	p.makeEntityOutputObjects(p.model.Graph.Entities)
+	p.makeThirdPartyOutputObjects(p.model.Graph.ThirdParties)
 	p.makeQueryArgs()
 	p.makeRelations(model)
 	p.makeInputs()

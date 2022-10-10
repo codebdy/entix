@@ -13,3 +13,7 @@ func NewThirdParty(c *domain.Class) *ThirdParty {
 		Class: *NewClass(c),
 	}
 }
+
+func (t *ThirdParty) Attributes() []*Attribute {
+	return t.attributes
+}

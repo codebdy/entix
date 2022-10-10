@@ -290,11 +290,21 @@ func (m *Model) GetEntityByName(name string) *Entity {
 	return nil
 }
 
+func (m *Model) GetThirdPartyByName(name string) *ThirdParty {
+	for i := range m.ThirdParties {
+		third := m.ThirdParties[i]
+		if third.Name() == name {
+			return third
+		}
+	}
+	return nil
+}
+
 func (m *Model) GetServiceByName(name string) *Service {
 	for i := range m.Services {
-		partial := m.Services[i]
-		if partial.Name() == name {
-			return partial
+		service := m.Services[i]
+		if service.Name() == name {
+			return service
 		}
 	}
 	return nil

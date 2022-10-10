@@ -47,6 +47,24 @@ func (p *ModelParser) makeEntityObject(entity *graph.Entity) {
 	p.objectMapById[entity.InnerId()] = objType
 }
 
+func (p *ModelParser) makeThirdPartyOutputObjects(thirds []*graph.ThirdParty) {
+	for i := range thirds {
+		p.makeThirdPartyObject(thirds[i])
+	}
+}
+
+func (p *ModelParser) makeThirdPartyObject(third *graph.ThirdParty) {
+	objType := graphql.NewObject(
+		graphql.ObjectConfig{
+			Name:        third.Name(),
+			Fields:      p.outputFields(third.Attributes()),
+			Description: third.Description(),
+		},
+	)
+	p.objectTypeMap[third.Name()] = objType
+	p.objectMapById[third.InnerId()] = objType
+}
+
 func (p *ModelParser) ObjectType(entity *graph.Entity) *graphql.Object {
 	name := entity.Name()
 	interfaces := p.mapInterfaces(entity.Interfaces)
