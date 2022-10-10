@@ -49,7 +49,13 @@ func QueryThirdPartyResolveFn(third *graph.ThirdParty, model *model.Model) graph
 			return nil
 		})
 
-		vm.RunString(third.Domain.QueryScript)
+		_, err := vm.RunString(third.Domain.QueryScript)
+
+		if err != nil {
+			loop.ClearTimeout(timer)
+			jserr, _ := err.(*goja.Exception)
+			return nil, errors.New(jserr.Value().Export().(string))
+		}
 
 		result := <-wait
 		if timeout {
