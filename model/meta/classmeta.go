@@ -21,5 +21,6 @@ type ClassMeta struct {
 	SoftDelete  bool            `json:"softDelete"`
 	System      bool            `json:"system"`
 	IdNoShift   bool            `json:"idNoShift"`
+	PackageUuid string          `json:"packageUuid"`
 	AppId       uint64
 }
