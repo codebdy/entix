@@ -1,8 +1,10 @@
 package resolve
 
 import (
+	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/dop251/goja"
 	"github.com/dop251/goja_nodejs/eventloop"
@@ -24,16 +26,27 @@ func QueryThirdPartyResolveFn(third *graph.ThirdParty, model *model.Model) graph
 		loop := eventloop.NewEventLoop()
 		loop.Start()
 		defer loop.Stop()
+		wait := make(chan interface{}, 1)
+		timeout := false
+		timer := loop.SetTimeout(func(*goja.Runtime) {
+			timeout = true
+			wait <- nil
+		}, 2*time.Second)
 
-		wait := make(chan string, 1)
 		vm.Set("callback", func(call goja.FunctionCall) goja.Value {
 			fmt.Println("Go收到返回值")
 			wait <- call.Argument(0).ToString().String()
+			loop.ClearTimeout(timer)
 			return nil
 		})
+
 		vm.RunString(third.Domain.QueryScript)
 
-		return <-wait, nil
+		result := <-wait
+		if timeout {
+			return nil, errors.New("Time out")
+		}
+		return result, nil
 	}
 }
 
