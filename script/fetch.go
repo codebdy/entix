@@ -10,9 +10,9 @@ import (
 	"github.com/dop251/goja_nodejs/eventloop"
 )
 
-type FetchFn func(url string, options map[string]interface{}) *goja.Promise
+type GoFetchFn func(url string, options map[string]interface{}) *goja.Promise
 
-func GetFetchFn(vm *goja.Runtime) FetchFn {
+func GetFetchFn(vm *goja.Runtime) GoFetchFn {
 	return func(url string, options map[string]interface{}) *goja.Promise {
 		loop := eventloop.NewEventLoop()
 		loop.Start()
