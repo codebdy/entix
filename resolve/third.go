@@ -28,13 +28,22 @@ func QueryThirdPartyResolveFn(third *graph.ThirdParty, model *model.Model) graph
 		defer loop.Stop()
 		wait := make(chan interface{}, 1)
 		timeout := false
+		error := false
 		timer := loop.SetTimeout(func(*goja.Runtime) {
 			timeout = true
 			wait <- nil
 		}, 2*time.Second)
 
-		vm.Set("callback", func(call goja.FunctionCall) goja.Value {
+		vm.Set("Return", func(call goja.FunctionCall) goja.Value {
 			fmt.Println("Go收到返回值")
+			error = true
+			wait <- call.Argument(0).ToString().String()
+			loop.ClearTimeout(timer)
+			return nil
+		})
+
+		vm.Set("Error", func(call goja.FunctionCall) goja.Value {
+			fmt.Println("Go收到Error")
 			wait <- call.Argument(0).ToString().String()
 			loop.ClearTimeout(timer)
 			return nil
@@ -45,6 +54,8 @@ func QueryThirdPartyResolveFn(third *graph.ThirdParty, model *model.Model) graph
 		result := <-wait
 		if timeout {
 			return nil, errors.New("Time out")
+		} else if error {
+			return nil, errors.New(result.(string))
 		}
 		return result, nil
 	}
