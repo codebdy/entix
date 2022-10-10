@@ -16,6 +16,8 @@ type Class struct {
 	Children    []*Class
 	AppId       uint64
 	IdNoShift   bool
+	Script      string
+	PackageUuid string
 }
 
 func NewClass(c *meta.ClassMeta) *Class {
@@ -31,7 +33,9 @@ func NewClass(c *meta.ClassMeta) *Class {
 		Methods:     make([]*Method, len(c.Methods)),
 		parents:     []*Class{},
 		Children:    []*Class{},
+		Script:      c.Script,
 		AppId:       c.AppId,
+		PackageUuid: c.PackageUuid,
 		IdNoShift:   c.IdNoShift,
 	}
 

@@ -23,5 +23,6 @@ type ClassMeta struct {
 	System      bool            `json:"system"`
 	IdNoShift   bool            `json:"idNoShift"`
 	PackageUuid string          `json:"packageUuid"`
+	Script      string          `json:"script"`
 	AppId       uint64
 }
