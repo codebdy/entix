@@ -88,14 +88,14 @@ func (a *AppSchema) appendEntityToQueryFields(entity *graph.Entity, fields graph
 
 func (a *AppSchema) appendThirdPartyToQueryFields(third *graph.ThirdParty, fields graphql.Fields) {
 	(fields)[third.QueryName()] = &graphql.Field{
-		Type: a.QueryResponseType(&third.Class),
-		Args: a.modelParser.QueryArgs(third.Name()),
-		//Resolve: resolve.QueryEntityResolveFn(third, a.Model()),
+		Type:    a.QueryResponseType(&third.Class),
+		Args:    a.modelParser.QueryArgs(third.Name()),
+		Resolve: resolve.QueryThirdPartyResolveFn(third, a.Model()),
 	}
 	(fields)[third.QueryOneName()] = &graphql.Field{
-		Type: a.modelParser.OutputType(third.Name()),
-		Args: a.modelParser.QueryArgs(third.Name()),
-		//Resolve: resolve.QueryOneEntityResolveFn(third, a.Model()),
+		Type:    a.modelParser.OutputType(third.Name()),
+		Args:    a.modelParser.QueryArgs(third.Name()),
+		Resolve: resolve.QueryOneThirdPartyResolveFn(third, a.Model()),
 	}
 
 }
