@@ -44,7 +44,7 @@ func MethodResolveFn(method *graph.Method, model *model.Model) graphql.FieldReso
 		if err != nil {
 			panic(err)
 		}
-		var doMethod func() string
+		var doMethod func() interface{}
 		err = vm.ExportTo(vm.Get("doMethod"), &doMethod)
 		if err != nil {
 			panic(err)
