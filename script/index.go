@@ -6,6 +6,7 @@ import (
 )
 
 func Enable(vm *goja.Runtime) {
+	vm.Set("log", Log)
 	vm.Set("iFetch", FetchFn)
 	vm.Set("writeToCache", WriteToCache)
 	vm.Set("readFromCache", ReadFromCache)
@@ -20,4 +21,11 @@ func GetPackageCodes(model *model.Model, packageUuid string) string {
 		}
 	}
 	return codeStr
+}
+
+func GetCommonCodes() string {
+	return `
+	const debug = {}
+	debug.log = log
+	`
 }
