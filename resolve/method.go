@@ -28,7 +28,13 @@ func MethodResolveFn(method *graph.Method, model *model.Model) graphql.FieldReso
 		vm.Set("args", p.Args)
 		script.Enable(vm)
 		funcStr := fmt.Sprintf(
-			`function doMethod() {
+			`
+			class Test2{
+				test(){
+					return "哈哈"
+				}
+			}
+			function doMethod() {
 				const {%s} = args;
 			%s
 			}`,

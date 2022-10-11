@@ -323,3 +323,9 @@ func (m *Model) GetEnumByUuid(uuid string) *Enum {
 	}
 	return nil
 }
+
+func (m *Model) GetServicesByPackageUuid(packageUuid string) []*Service {
+	services := []*Service{}
+
+	return services
+}
