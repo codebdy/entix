@@ -4,6 +4,7 @@ type Model struct {
 	Classes   []*ClassMeta
 	Relations []*RelationMeta
 	Packages  []*PackageMeta
+	Codes     []*CodeMeta
 }
 
 func New(m *MetaContent) *Model {
@@ -11,6 +12,7 @@ func New(m *MetaContent) *Model {
 		Classes:   make([]*ClassMeta, len(m.Classes)),
 		Relations: make([]*RelationMeta, len(m.Relations)),
 		Packages:  make([]*PackageMeta, len(m.Relations)),
+		Codes:     make([]*CodeMeta, len(m.Codes)),
 	}
 
 	for i := range m.Packages {
@@ -19,6 +21,10 @@ func New(m *MetaContent) *Model {
 
 	for i := range m.Classes {
 		model.Classes[i] = &m.Classes[i]
+	}
+
+	for i := range m.Codes {
+		model.Codes[i] = &m.Codes[i]
 	}
 
 	for i := range m.Relations {

@@ -29,15 +29,13 @@ func MethodResolveFn(method *graph.Method, model *model.Model) graphql.FieldReso
 		script.Enable(vm)
 		funcStr := fmt.Sprintf(
 			`
-			class Test2{
-				test(){
-					return "哈哈"
-				}
-			}
+			%s
+
 			function doMethod() {
 				const {%s} = args;
 			%s
 			}`,
+			script.GetPackageCodes(model, method.Class.Domain.PackageUuid),
 			argsString(method),
 			method.Method.Script,
 		)
