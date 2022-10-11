@@ -7,3 +7,7 @@ func Enable(vm *goja.Runtime) {
 	vm.Set("writeToCache", WriteToCache)
 	vm.Set("readFromCache", ReadFromCache)
 }
+
+func GetPackageMethods() string {
+	return ""
+}
