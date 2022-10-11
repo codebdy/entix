@@ -1,13 +1,10 @@
 package resolve
 
 import (
-	"errors"
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/dop251/goja"
-	"github.com/dop251/goja_nodejs/eventloop"
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/graph"
@@ -21,48 +18,35 @@ func QueryThirdPartyResolveFn(third *graph.ThirdParty, model *model.Model) graph
 		if strings.Trim(third.Domain.QueryScript, " ") == "" {
 			return nil, nil
 		}
+		defer utils.PrintErrorStack()
 		vm := goja.New()
 		script.Enable(vm)
-		loop := eventloop.NewEventLoop()
-		loop.Start()
-		defer loop.Stop()
-		wait := make(chan interface{}, 1)
-		timeout := false
-		error := false
-		timer := loop.SetTimeout(func(*goja.Runtime) {
-			timeout = true
-			wait <- nil
-		}, 2*time.Second)
+		vm.Set("args", p.Args)
+		script.Enable(vm)
+		funcStr := fmt.Sprintf(
+			`
+			%s
 
-		vm.Set("Return", func(call goja.FunctionCall) goja.Value {
-			fmt.Println("Go收到返回值")
-			error = true
-			wait <- call.Argument(0).ToString().String()
-			loop.ClearTimeout(timer)
-			return nil
-		})
+			function doMethod() {
+				
+			%s
+			}`,
+			script.GetPackageCodes(model, third.Class.Domain.PackageUuid),
+			//argsString(method),
+			third.Domain.QueryScript,
+		)
 
-		vm.Set("Error", func(call goja.FunctionCall) goja.Value {
-			fmt.Println("Go收到Error")
-			wait <- call.Argument(0).ToString().String()
-			loop.ClearTimeout(timer)
-			return nil
-		})
-
-		_, err := vm.RunString(third.Domain.QueryScript)
-
+		_, err := vm.RunString(funcStr)
 		if err != nil {
-			loop.ClearTimeout(timer)
-			jserr, _ := err.(*goja.Exception)
-			return nil, errors.New(jserr.Value().Export().(string))
+			panic(err)
+		}
+		var doMethod func() interface{}
+		err = vm.ExportTo(vm.Get("doMethod"), &doMethod)
+		if err != nil {
+			panic(err)
 		}
 
-		result := <-wait
-		if timeout {
-			return nil, errors.New("Time out")
-		} else if error {
-			return nil, errors.New(result.(string))
-		}
+		result := doMethod()
 		return result, nil
 	}
 }
