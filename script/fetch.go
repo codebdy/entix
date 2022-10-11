@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func GoFetchFn(url string, options map[string]interface{}) string {
+func FetchFn(url string, options map[string]interface{}) string {
 	method := http.MethodGet
 	if options != nil && options["method"] != nil {
 		method = options["method"].(string)
