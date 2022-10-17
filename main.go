@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
+	"rxdrag.com/entify/common/errorx"
 	"rxdrag.com/entify/config"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/db"
@@ -45,6 +46,7 @@ func main() {
 	h := handler.New(&handler.Config{
 		Pretty:         true,
 		GraphiQLConfig: &handler.GraphiQLConfig{},
+		FormatErrorFn:  errorx.Format,
 	})
 
 	http.Handle("/graphql",

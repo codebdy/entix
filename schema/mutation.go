@@ -5,6 +5,7 @@ import (
 
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/authentication"
+	"rxdrag.com/entify/common/errorx"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/resolve"
@@ -27,8 +28,9 @@ func (a *AppSchema) appendAuthMutation(fields graphql.Fields) {
 		},
 		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 			defer utils.PrintErrorStack()
-			auth := authentication.New()
-			return auth.Login(p.Args[consts.LOGIN_NAME].(string), p.Args[consts.PASSWORD].(string))
+			return nil, errorx.New("001", "Can not login")
+			//auth := authentication.New()
+			//return auth.Login(p.Args[consts.LOGIN_NAME].(string), p.Args[consts.PASSWORD].(string))
 		},
 	}
 

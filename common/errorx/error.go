@@ -1,6 +1,8 @@
-package error
+package errorx
 
-import "fmt"
+import (
+	"encoding/json"
+)
 
 type Error struct {
 	Code    string `json:"code"`
@@ -15,5 +17,6 @@ func New(code, message string) Error {
 }
 
 func (e Error) Error() string {
-	return fmt.Sprintf("Error [%s] %s", e.Code, e.Message)
+	jsonByte, _ := json.Marshal(e)
+	return string(jsonByte)
 }
