@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/config"
 	"rxdrag.com/entify/consts"
-	"rxdrag.com/entify/contexts"
 	"rxdrag.com/entify/storage"
 	"rxdrag.com/entify/utils"
 )

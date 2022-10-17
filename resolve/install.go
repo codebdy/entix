@@ -5,8 +5,8 @@ import (
 
 	"github.com/graphql-go/graphql"
 	"github.com/mitchellh/mapstructure"
+	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/consts"
-	"rxdrag.com/entify/contexts"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/repository"

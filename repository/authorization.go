@@ -5,17 +5,17 @@ import (
 
 	"github.com/graphql-go/graphql"
 	"github.com/mitchellh/mapstructure"
-	"rxdrag.com/entify/common"
+	"rxdrag.com/entify/common/auth"
+	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/consts"
-	"rxdrag.com/entify/contexts"
 	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/model/meta"
 )
 
 type AbilityVerifier struct {
-	me        *common.User
+	me        *auth.User
 	RoleIds   []interface{}
-	Abilities []*common.Ability
+	Abilities []*auth.Ability
 	// expression Key : 从Auth模块返回的结果
 	//QueryUserCache map[string][]common.User
 	isSupper bool
@@ -199,7 +199,7 @@ func (r *Repository) queryRolesAbilities(entityUuids []interface{}, appUuid stri
 	abilities := abilitiyListResponse[consts.NODES].([]InsanceData)
 
 	for _, abilityMap := range abilities {
-		var ability common.Ability
+		var ability auth.Ability
 		err := mapstructure.Decode(abilityMap, &ability)
 		if err != nil {
 			panic(err.Error())

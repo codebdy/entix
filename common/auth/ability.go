@@ -1,4 +1,4 @@
-package common
+package auth
 
 type Ability struct {
 	Id          uint64 `json:"id"`

@@ -3,13 +3,13 @@ package contexts
 import (
 	"context"
 
-	"rxdrag.com/entify/common"
+	"rxdrag.com/entify/common/auth"
 	"rxdrag.com/entify/consts"
 )
 
 type ContextValues struct {
 	Token   string
-	Me      *common.User
+	Me      *auth.User
 	AppUuid string
 	Host    string
 }

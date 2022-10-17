@@ -7,13 +7,13 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 	"rxdrag.com/entify/authentication/jwt"
-	"rxdrag.com/entify/common"
+	"rxdrag.com/entify/common/auth"
 	"rxdrag.com/entify/db/dialect"
 	"rxdrag.com/entify/repository"
 	"rxdrag.com/entify/utils"
 )
 
-var TokenCache = map[string]*common.User{}
+var TokenCache = map[string]*auth.User{}
 
 type Authentication struct {
 }
@@ -22,13 +22,13 @@ func New() *Authentication {
 	return &Authentication{}
 }
 
-func (a *Authentication) loadUser(loginName string) *common.User {
+func (a *Authentication) loadUser(loginName string) *auth.User {
 	con, err := repository.Open(nil, 0)
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
 	}
-	var user common.User
+	var user auth.User
 	var isSupper sql.NullBool
 	var isDemo sql.NullBool
 
@@ -55,7 +55,7 @@ func (a *Authentication) loadUser(loginName string) *common.User {
 		panic(err.Error())
 	}
 	for rows.Next() {
-		var role common.Role
+		var role auth.Role
 		err = rows.Scan(&role.Id, &role.Name)
 		if err != nil {
 			panic(err.Error())
@@ -139,6 +139,6 @@ func Logout(token string) {
 	TokenCache[token] = nil
 }
 
-func GetUserByToken(token string) (*common.User, error) {
+func GetUserByToken(token string) (*auth.User, error) {
 	return TokenCache[token], nil
 }

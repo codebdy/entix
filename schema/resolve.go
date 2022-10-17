@@ -4,8 +4,8 @@ import (
 	"errors"
 
 	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/consts"
-	"rxdrag.com/entify/contexts"
 	"rxdrag.com/entify/repository"
 	"rxdrag.com/entify/resolve"
 )

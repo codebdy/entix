@@ -2,7 +2,7 @@ package resolve
 
 import (
 	"github.com/graphql-go/graphql"
-	"rxdrag.com/entify/contexts"
+	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/utils"
 )
 
