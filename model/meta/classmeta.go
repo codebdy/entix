@@ -25,5 +25,6 @@ type ClassMeta struct {
 	PackageUuid   string          `json:"packageUuid"`
 	QueryScript   string          `json:"queryScript"`
 	MuationScript string          `json:"muationScript"`
+	EnableVersion bool            `json:"enableVersion"`
 	AppId         uint64
 }
