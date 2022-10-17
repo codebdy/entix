@@ -9,7 +9,7 @@ import (
 
 func Logout(p graphql.ResolveParams) (interface{}, error) {
 	defer utils.PrintErrorStack()
-	token := contexts.ParseContextValues(p.Context).Token
+	token := contexts.Values(p.Context).Token
 	if token != "" {
 		authentication.Logout(token)
 	}

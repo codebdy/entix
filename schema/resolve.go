@@ -28,7 +28,7 @@ func installResolve(p graphql.ResolveParams) (interface{}, error) {
 	if !repository.IsEntityExists(consts.META_ENTITY_NAME) {
 		repository.InstallMeta()
 	}
-	appUuid := contexts.ParseAppUuid(p.Context)
+	appUuid := contexts.Values(p.Context).AppUuid
 	appSchema := Get(appUuid)
 	appSchema.Make()
 

@@ -17,7 +17,6 @@ const (
 	New_PASSWORD           = "newPassword"
 	LOGOUT                 = "logout"
 	CHANGE_PASSWORD        = "changePassword"
-	ME                     = "me"
 	IS_SUPPER              = "isSupper"
 	IS_DEMO                = "isDemo"
 	PUBLISH                = "publish"
@@ -174,7 +173,8 @@ const (
 	AUTHORIZATION  = "Authorization"
 	BEARER         = "Bearer "
 	CONTEXT_VALUES = "values"
-	HOST           = "host"
+	ME             = "me"
+	//HOST           = "host"
 )
 
 const (

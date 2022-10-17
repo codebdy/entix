@@ -8,7 +8,7 @@ import (
 
 func Me(p graphql.ResolveParams) (interface{}, error) {
 	defer utils.PrintErrorStack()
-	me := contexts.ParseContextValues(p.Context).Me
+	me := contexts.Values(p.Context).Me
 	if me == nil {
 		panic("Login expired!")
 	}

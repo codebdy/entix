@@ -17,8 +17,8 @@ type AbilityVerifier struct {
 	RoleIds   []interface{}
 	Abilities []*common.Ability
 	// expression Key : 从Auth模块返回的结果
-	QueryUserCache map[string][]common.User
-	isSupper       bool
+	//QueryUserCache map[string][]common.User
+	isSupper bool
 }
 
 func (r *Repository) MakeVerifier() {
@@ -36,7 +36,7 @@ func (r *Repository) MakeSupperVerifier() {
 }
 
 func (r *Repository) InitVerifier(p graphql.ResolveParams, entityUuids []interface{}) {
-	me := contexts.ParseContextValues(p.Context).Me
+	me := contexts.Values(p.Context).Me
 	r.V.me = me
 	if me != nil {
 		for i := range me.Roles {
@@ -46,7 +46,7 @@ func (r *Repository) InitVerifier(p graphql.ResolveParams, entityUuids []interfa
 		r.V.RoleIds = append(r.V.RoleIds, consts.GUEST_ROLE_ID)
 	}
 
-	appUuid := contexts.ParseAppUuid(p.Context)
+	appUuid := contexts.Values(p.Context).AppUuid
 
 	r.queryRolesAbilities(entityUuids, appUuid)
 }

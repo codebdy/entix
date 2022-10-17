@@ -35,7 +35,7 @@ func InstallResolve(p graphql.ResolveParams, model *model.Model) (interface{}, e
 		return nil, err
 	}
 
-	model = repos.LoadModel(contexts.ParseAppUuid(p.Context))
+	model = repos.LoadModel(contexts.Values(p.Context).AppUuid)
 
 	if input.Admin != "" {
 		instance = data.NewInstance(

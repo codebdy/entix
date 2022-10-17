@@ -210,7 +210,7 @@ func NewRequestOptions(r *http.Request) *RequestOptions {
 // ContextHandler provides an entrypoint into executing graphQL queries with a
 // user-provided context.
 func (h *Handler) ContextHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	appUuid := contexts.ParseAppUuid(ctx)
+	appUuid := contexts.Values(ctx).AppUuid
 	// get query
 	opts := NewRequestOptions(r)
 	// execute graphql query

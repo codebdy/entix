@@ -32,13 +32,13 @@ func ContextMiddleware(next http.Handler) http.Handler {
 				v.Me = me
 			}
 		}
-		ctx := context.WithValue(r.Context(), consts.CONTEXT_VALUES, v)
 		appUuid := r.Header.Get(consts.HEADER_APPX_APPUUID)
 		if appUuid == "" {
 			appUuid = consts.SYSTEM_APP_UUID
 		}
-		ctx = context.WithValue(ctx, consts.APPUUID, appUuid)
-		ctx = context.WithValue(ctx, consts.HOST, r.Host)
+		v.AppUuid = appUuid
+		v.Host = r.Host
+		ctx := context.WithValue(r.Context(), consts.CONTEXT_VALUES, v)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

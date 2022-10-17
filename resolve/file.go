@@ -6,6 +6,7 @@ import (
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/config"
 	"rxdrag.com/entify/consts"
+	"rxdrag.com/entify/contexts"
 	"rxdrag.com/entify/storage"
 	"rxdrag.com/entify/utils"
 )
@@ -14,7 +15,7 @@ func GetFileUrl(fileInfo storage.FileInfo, p graphql.ResolveParams) (interface{}
 	if config.Storage() == consts.LOCAL {
 		return fmt.Sprintf(
 			"http://%s/%s/%s",
-			p.Context.Value(consts.HOST).(string),
+			contexts.Values(p.Context).Host,
 			consts.STATIC_PATH,
 			fileInfo.Path,
 		), nil
