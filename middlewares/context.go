@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/thinkeridea/go-extend/exnet"
 	"rxdrag.com/entify/authentication"
 	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/consts"
@@ -38,6 +39,11 @@ func ContextMiddleware(next http.Handler) http.Handler {
 		}
 		v.AppUuid = appUuid
 		v.Host = r.Host
+		ip := exnet.ClientPublicIP(r)
+		if ip == "" {
+			ip = exnet.ClientIP(r)
+		}
+		v.IP = ip
 		ctx := context.WithValue(r.Context(), consts.CONTEXT_VALUES, v)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})

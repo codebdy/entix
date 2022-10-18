@@ -12,6 +12,7 @@ type ContextValues struct {
 	Me      *auth.User
 	AppUuid string
 	Host    string
+	IP      string
 }
 
 func Values(ctx context.Context) ContextValues {

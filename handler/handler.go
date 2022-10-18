@@ -219,7 +219,7 @@ func (h *Handler) ContextHandler(ctx context.Context, w http.ResponseWriter, r *
 		RequestString:  opts.Query,
 		VariableValues: opts.Variables,
 		OperationName:  opts.OperationName,
-		Context:        ctx,
+		Context:        context.WithValue(ctx, "gql", opts.Query),
 	}
 	if h.rootObjectFn != nil {
 		params.RootObject = h.rootObjectFn(ctx, r)

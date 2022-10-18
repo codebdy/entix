@@ -40,6 +40,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/testify v1.8.0 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
+	github.com/thinkeridea/go-extend v1.3.2 // indirect
 	golang.org/x/net v0.0.0-20220622184535-263ec571b305 // indirect
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5 // indirect
 	golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8 // indirect
