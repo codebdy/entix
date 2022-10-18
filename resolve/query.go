@@ -18,7 +18,7 @@ func QueryOneInterfaceResolveFn(intf *graph.Interface, model *model.Model) graph
 		repos := repository.New(model)
 		repos.MakeInterfaceAbilityVerifier(p, intf)
 		instance := repos.QueryOneInterface(intf, p.Args)
-		log.WriteModelLog(model, &intf.Class, p, log.SUCCESS, log.QUERY)
+		log.WriteModelLog(model, &intf.Class, p, log.QUERY, log.SUCCESS)
 		return instance, nil
 	}
 }
@@ -29,7 +29,7 @@ func QueryInterfaceResolveFn(intf *graph.Interface, model *model.Model) graphql.
 		repos := repository.New(model)
 		repos.MakeInterfaceAbilityVerifier(p, intf)
 		result := repos.QueryInterface(intf, p.Args)
-		log.WriteModelLog(model, &intf.Class, p, log.SUCCESS, log.QUERY)
+		log.WriteModelLog(model, &intf.Class, p, log.QUERY, log.SUCCESS)
 		return result, nil
 	}
 }
@@ -40,7 +40,7 @@ func QueryOneEntityResolveFn(entity *graph.Entity, model *model.Model) graphql.F
 		repos := repository.New(model)
 		repos.MakeEntityAbilityVerifier(p, entity.Uuid())
 		instance := repos.QueryOneEntity(entity, p.Args)
-		log.WriteModelLog(model, &entity.Class, p, log.SUCCESS, log.QUERY)
+		log.WriteModelLog(model, &entity.Class, p, log.QUERY, log.SUCCESS)
 		return instance, nil
 	}
 }
@@ -51,7 +51,7 @@ func QueryEntityResolveFn(entity *graph.Entity, model *model.Model) graphql.Fiel
 		repos := repository.New(model)
 		repos.MakeEntityAbilityVerifier(p, entity.Uuid())
 		result := repos.QueryEntity(entity, p.Args)
-		log.WriteModelLog(model, &entity.Class, p, log.SUCCESS, log.QUERY)
+		log.WriteModelLog(model, &entity.Class, p, log.QUERY, log.SUCCESS)
 		return result, nil
 	}
 }

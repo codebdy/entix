@@ -66,7 +66,7 @@ func NewRelationTable(relation *Relation) *table.Table {
 				},
 			},
 		},
-		PKString: fmt.Sprintf("%s,%s", relation.SourceEntity.TableName(), relation.TargetEntity.TableName()),
+		//PKString: fmt.Sprintf("%s,%s", relation.SourceEntity.TableName(), relation.TargetEntity.TableName()),
 	}
 	if relation.EnableAssociaitonClass {
 		for i := range relation.AssociationClass.Attributes {
