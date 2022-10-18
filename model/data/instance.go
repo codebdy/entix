@@ -20,6 +20,7 @@ type Instance struct {
 	Entity       *graph.Entity
 	Fields       []*Field
 	Associations []*Reference
+	IsEmperty    bool
 }
 
 func NewInstance(object map[string]interface{}, entity *graph.Entity) *Instance {
@@ -28,6 +29,10 @@ func NewInstance(object map[string]interface{}, entity *graph.Entity) *Instance 
 	}
 	if object[consts.ID] != nil {
 		instance.Id = parseId(object[consts.ID])
+	}
+
+	if len(object) == 1 && object[consts.ID] != nil {
+		instance.IsEmperty = true
 	}
 
 	columns := entity.Table.Columns

@@ -28,6 +28,11 @@ func WriteModelLog(
 		"gql":         p.Context.Value("gql"),
 		//"variables": p.Info.VariableValues,
 		"result": result,
+		"user": map[string]interface{}{
+			"add": map[string]interface{}{
+				"id": contextsValues.Me.Id,
+			},
+		},
 	}
 	instance := data.NewInstance(logObject, model.Graph.GetEntityByName("ModelLog"))
 	repos.SaveOne(instance)

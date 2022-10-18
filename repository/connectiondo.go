@@ -421,16 +421,16 @@ func newAssociationPovit(r *data.Reference, ownerId uint64, tarId uint64) *data.
 
 }
 
-func (con *Connection) saveAssociationInstance(ins *data.Instance) interface{} {
+func (con *Connection) saveAssociationInstance(ins *data.Instance) (interface{}, error) {
 	targetData := InsanceData{consts.ID: ins.Id}
 
 	saved, err := con.doSaveOne(ins)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	targetData = saved.(InsanceData)
 
-	return targetData
+	return targetData, nil
 }
 
 func (con *Connection) doSaveAssociation(r *data.Reference, ownerId uint64) error {
@@ -445,14 +445,18 @@ func (con *Connection) doSaveAssociation(r *data.Reference, ownerId uint64) erro
 	}
 
 	for _, ins := range r.Added() {
-		targetData := con.saveAssociationInstance(ins)
+		targetData, err := con.saveAssociationInstance(ins)
 
-		if savedIns, ok := targetData.(InsanceData); ok {
-			tarId := savedIns[consts.ID].(uint64)
-			relationInstance := newAssociationPovit(r, ownerId, tarId)
-			con.doSaveAssociationPovit(relationInstance)
+		if err != nil {
+			panic("Save Association error:" + err.Error())
 		} else {
-			panic("Save Association error")
+			if savedIns, ok := targetData.(InsanceData); ok {
+				tarId := savedIns[consts.ID].(uint64)
+				relationInstance := newAssociationPovit(r, ownerId, tarId)
+				con.doSaveAssociationPovit(relationInstance)
+			} else {
+				panic("Save Association error")
+			}
 		}
 
 	}
@@ -461,14 +465,18 @@ func (con *Connection) doSaveAssociation(r *data.Reference, ownerId uint64) erro
 		// if ins.Id == 0 {
 		// 	panic("Can not add new instance when update")
 		// }
-		targetData := con.saveAssociationInstance(ins)
-		if savedIns, ok := targetData.(InsanceData); ok {
-			tarId := savedIns[consts.ID].(uint64)
-			relationInstance := newAssociationPovit(r, ownerId, tarId)
-
-			con.doSaveAssociationPovit(relationInstance)
+		targetData, err := con.saveAssociationInstance(ins)
+		if err != nil {
+			panic("Save Association error:" + err.Error())
 		} else {
-			panic("Save Association error")
+			if savedIns, ok := targetData.(InsanceData); ok {
+				tarId := savedIns[consts.ID].(uint64)
+				relationInstance := newAssociationPovit(r, ownerId, tarId)
+
+				con.doSaveAssociationPovit(relationInstance)
+			} else {
+				panic("Save Association error")
+			}
 		}
 	}
 
@@ -477,22 +485,25 @@ func (con *Connection) doSaveAssociation(r *data.Reference, ownerId uint64) erro
 		return nil
 	}
 
+	//有死锁bug，暂时不解决
 	con.clearAssociation(r, ownerId)
 
 	for _, ins := range synced {
-		// if ins.Id == 0 {
-		// 	panic("Can not add new instance when update")
-		// }
-		targetData := con.saveAssociationInstance(ins)
-
-		if savedIns, ok := targetData.(InsanceData); ok {
-			tarId := savedIns[consts.ID].(uint64)
-			relationInstance := newAssociationPovit(r, ownerId, tarId)
-
-			con.doSaveAssociationPovit(relationInstance)
-		} else {
-			panic("Save Association error")
+		targetId := ins.Id
+		if !ins.IsEmperty {
+			targetData, err := con.saveAssociationInstance(ins)
+			if err != nil {
+				panic("Save Association error:" + err.Error())
+			} else {
+				if savedIns, ok := targetData.(InsanceData); ok {
+					targetId = savedIns[consts.ID].(uint64)
+				} else {
+					panic("Save Association error")
+				}
+			}
 		}
+		relationInstance := newAssociationPovit(r, ownerId, targetId)
+		con.doSaveAssociationPovit(relationInstance)
 	}
 
 	return nil
@@ -510,6 +521,7 @@ func (con *Connection) deleteAssociationPovit(r *data.Reference, ownerId uint64)
 	sqlBuilder := dialect.GetSQLBuilder()
 	sql := sqlBuilder.BuildClearAssociationSQL(ownerId, r.Table().Name, r.OwnerColumn().Name)
 	_, err := con.Dbx.Exec(sql)
+	fmt.Println("deleteAssociationPovit SQL:" + sql)
 	if err != nil {
 		panic(err.Error())
 	}
