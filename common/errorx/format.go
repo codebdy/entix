@@ -20,7 +20,8 @@ func Format(err error) gqlerrors.FormattedError {
 		return gqlerrors.FormattedError{
 			Message: errorMsg,
 			Extensions: map[string]interface{}{
-				"code": code,
+				"code":        code,
+				"specifiedBy": "https://github.com/rxdrag/entix/blob/main/error-code.md",
 			},
 		}
 	} else {
