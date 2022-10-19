@@ -1,4 +1,4 @@
-package log
+package logs
 
 const (
 	SUCCESS = "success"

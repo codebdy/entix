@@ -6,7 +6,7 @@ import (
 
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/consts"
-	"rxdrag.com/entify/log"
+	"rxdrag.com/entify/logs"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/model/meta"
@@ -52,9 +52,9 @@ func PublishMetaResolve(p graphql.ResolveParams, model *model.Model) (interface{
 	}
 	err := doPublish(repos, appUuid.(string))
 	if err != nil {
-		log.WriteBusinessLog(model, p, log.PUBLISH_META, log.FAILURE, err.Error())
+		logs.WriteBusinessLog(model, p, logs.PUBLISH_META, logs.FAILURE, err.Error())
 	} else {
-		log.WriteBusinessLog(model, p, log.PUBLISH_META, log.SUCCESS, "")
+		logs.WriteBusinessLog(model, p, logs.PUBLISH_META, logs.SUCCESS, "")
 	}
 	return "success", err
 }

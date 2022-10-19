@@ -3,7 +3,7 @@ package resolve
 import (
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/consts"
-	"rxdrag.com/entify/log"
+	"rxdrag.com/entify/logs"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/model/graph"
@@ -29,7 +29,7 @@ func PostResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolv
 		if err != nil {
 			return nil, err
 		}
-		log.WriteModelLog(model, &entity.Class, p, log.UPSERT, log.SUCCESS, "")
+		logs.WriteModelLog(model, &entity.Class, p, logs.UPSERT, logs.SUCCESS, "")
 		return returing, nil
 	}
 }
@@ -64,7 +64,7 @@ func SetResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolve
 			return nil, err
 		}
 
-		log.WriteModelLog(model, &entity.Class, p, log.SET, log.SUCCESS, "")
+		logs.WriteModelLog(model, &entity.Class, p, logs.SET, logs.SUCCESS, "")
 
 		return map[string]interface{}{
 			consts.RESPONSE_RETURNING:    returing,
@@ -82,7 +82,7 @@ func PostOneResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldRes
 		repos.MakeEntityAbilityVerifier(p, entity.Uuid())
 		instance := data.NewInstance(object, entity)
 		result, err := repos.SaveOne(instance)
-		log.WriteModelLog(model, &entity.Class, p, log.UPSERT, log.SUCCESS, "")
+		logs.WriteModelLog(model, &entity.Class, p, logs.UPSERT, logs.SUCCESS, "")
 		return result, err
 	}
 }
@@ -97,7 +97,7 @@ func DeleteByIdResolveFn(entity *graph.Entity, model *model.Model) graphql.Field
 			consts.ID: ConvertId(argId),
 		}, entity)
 		result, err := repos.DeleteInstance(instance)
-		log.WriteModelLog(model, &entity.Class, p, log.DELETE, log.SUCCESS, "")
+		logs.WriteModelLog(model, &entity.Class, p, logs.DELETE, logs.SUCCESS, "")
 		return result, err
 	}
 }
@@ -129,7 +129,7 @@ func DeleteResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldReso
 		}
 
 		repos.DeleteInstances(instances)
-		log.WriteModelLog(model, &entity.Class, p, log.DELETE, log.SUCCESS, "")
+		logs.WriteModelLog(model, &entity.Class, p, logs.DELETE, logs.SUCCESS, "")
 		return map[string]interface{}{
 			consts.RESPONSE_RETURNING:    objs,
 			consts.RESPONSE_AFFECTEDROWS: len(instances),

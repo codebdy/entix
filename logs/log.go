@@ -1,4 +1,4 @@
-package log
+package logs
 
 import (
 	"github.com/graphql-go/graphql"
