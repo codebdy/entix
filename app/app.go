@@ -8,7 +8,7 @@ var Installed = false
 var SYSTEM_APP_ID uint64 = 1
 
 //用来从数据库读取数据的原始Model，最初只包含Meta类 会逐步进化并包含log、user等类
-var META_MODEL *graph.Model
+var ROOT_MODEL *graph.Model
 
 var appCache = map[uint64]*AppSchema{}
 
