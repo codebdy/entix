@@ -10,12 +10,12 @@ var SYSTEM_APP_ID uint64 = 1
 //用来从数据库读取数据的原始Model，最初只包含Meta类 会逐步进化并包含log、user等类
 var META_MODEL *graph.Model
 
-var schemaCache = map[uint64]*AppSchema{}
+var appCache = map[uint64]*AppSchema{}
 
 func Get(appId uint64) *AppSchema {
-	if schemaCache[appId] == nil {
-		schemaCache[appId] = NewAppSchema(appId)
+	if appCache[appId] == nil {
+		appCache[appId] = NewAppSchema(appId)
 	}
 
-	return schemaCache[appId]
+	return appCache[appId]
 }
