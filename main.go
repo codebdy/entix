@@ -8,11 +8,11 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"rxdrag.com/entify/common/errorx"
+	"rxdrag.com/entify/common/middlewares"
 	"rxdrag.com/entify/config"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/db"
 	"rxdrag.com/entify/handler"
-	"rxdrag.com/entify/middlewares"
 	"rxdrag.com/entify/repository"
 	"rxdrag.com/entify/resolve"
 	"rxdrag.com/entify/schema"
