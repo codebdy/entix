@@ -5,5 +5,6 @@ const (
 	FAILURE = "failure"
 	QUERY   = "query"
 	UPSERT  = "upsert"
+	SET     = "set"
 	DELETE  = "delete"
 )

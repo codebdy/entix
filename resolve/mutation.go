@@ -3,6 +3,7 @@ package resolve
 import (
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/consts"
+	"rxdrag.com/entify/log"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/model/graph"
@@ -28,7 +29,7 @@ func PostResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolv
 		if err != nil {
 			return nil, err
 		}
-
+		log.WriteModelLog(model, &entity.Class, p, log.UPSERT, log.SUCCESS, "")
 		return returing, nil
 	}
 }
@@ -63,6 +64,8 @@ func SetResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolve
 			return nil, err
 		}
 
+		log.WriteModelLog(model, &entity.Class, p, log.SET, log.SUCCESS, "")
+
 		return map[string]interface{}{
 			consts.RESPONSE_RETURNING:    returing,
 			consts.RESPONSE_AFFECTEDROWS: len(instances),
@@ -78,7 +81,9 @@ func PostOneResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldRes
 		repos := repository.New(model)
 		repos.MakeEntityAbilityVerifier(p, entity.Uuid())
 		instance := data.NewInstance(object, entity)
-		return repos.SaveOne(instance)
+		result, err := repos.SaveOne(instance)
+		log.WriteModelLog(model, &entity.Class, p, log.UPSERT, log.SUCCESS, "")
+		return result, err
 	}
 }
 
@@ -91,7 +96,9 @@ func DeleteByIdResolveFn(entity *graph.Entity, model *model.Model) graphql.Field
 		instance := data.NewInstance(map[string]interface{}{
 			consts.ID: ConvertId(argId),
 		}, entity)
-		return repos.DeleteInstance(instance)
+		result, err := repos.DeleteInstance(instance)
+		log.WriteModelLog(model, &entity.Class, p, log.DELETE, log.SUCCESS, "")
+		return result, err
 	}
 }
 
@@ -122,7 +129,7 @@ func DeleteResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldReso
 		}
 
 		repos.DeleteInstances(instances)
-
+		log.WriteModelLog(model, &entity.Class, p, log.DELETE, log.SUCCESS, "")
 		return map[string]interface{}{
 			consts.RESPONSE_RETURNING:    objs,
 			consts.RESPONSE_AFFECTEDROWS: len(instances),

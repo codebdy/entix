@@ -15,6 +15,7 @@ func WriteModelLog(
 	p graphql.ResolveParams,
 	operate string,
 	result string,
+	message string,
 ) {
 	repos := repository.New(model)
 	repos.MakeSupperVerifier()
@@ -26,8 +27,8 @@ func WriteModelLog(
 		"classUuid":   cls.Uuid(),
 		"className":   cls.Name(),
 		"gql":         p.Context.Value("gql"),
-		//"variables": p.Info.VariableValues,
-		"result": result,
+		"result":      result,
+		"message":     message,
 		"user": map[string]interface{}{
 			"add": map[string]interface{}{
 				"id": contextsValues.Me.Id,
