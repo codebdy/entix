@@ -15,6 +15,7 @@ type File struct {
 	File     multipart.File
 	Filename string
 	Size     int64
+	AppId    uint64
 }
 
 type FileInfo struct {
