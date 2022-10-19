@@ -1,7 +1,6 @@
 package model
 
 import (
-	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/model/domain"
 	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/model/meta"
@@ -13,7 +12,7 @@ type Model struct {
 	Meta    *meta.Model
 	Domain  *domain.Model
 	Graph   *graph.Model
-	Schema  *graphql.Schema
+	//Schema  *graphql.Schema
 }
 
 func New(appUuid string, c *meta.MetaContent) *Model {
@@ -25,7 +24,7 @@ func New(appUuid string, c *meta.MetaContent) *Model {
 		Meta:    metaModel,
 		Domain:  domainModel,
 		Graph:   grahpModel,
-		Schema:  nil,
+		//Schema:  nil,
 	}
 	return &model
 }
