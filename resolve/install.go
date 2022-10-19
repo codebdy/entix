@@ -7,6 +7,7 @@ import (
 	"github.com/mitchellh/mapstructure"
 	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/consts"
+	"rxdrag.com/entify/log"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/repository"
@@ -32,6 +33,7 @@ func InstallResolve(p graphql.ResolveParams, model *model.Model) (interface{}, e
 
 	instance, err := addAndPublishMeta(input.Meta, model)
 	if err != nil {
+		log.WriteBusinessLog(model, p, log.INSTALL, log.FAILURE, err.Error())
 		return nil, err
 	}
 
@@ -44,6 +46,7 @@ func InstallResolve(p graphql.ResolveParams, model *model.Model) (interface{}, e
 		)
 		_, err = repos.SaveOne(instance)
 		if err != nil {
+			log.WriteBusinessLog(model, p, log.INSTALL, log.FAILURE, err.Error())
 			return nil, err
 		}
 		if input.WithDemo {
@@ -53,11 +56,14 @@ func InstallResolve(p graphql.ResolveParams, model *model.Model) (interface{}, e
 			)
 			_, err = repos.SaveOne(instance)
 			if err != nil {
+				log.WriteBusinessLog(model, p, log.INSTALL, log.FAILURE, err.Error())
 				return nil, err
 			}
 		}
 	}
-	return repository.IsEntityExists(consts.META_USER), nil
+	isExist := repository.IsEntityExists(consts.META_USER)
+	log.WriteBusinessLog(model, p, log.INSTALL, log.SUCCESS, "")
+	return isExist, nil
 }
 
 func addAndPublishMeta(meta utils.JSON, model *model.Model) (*data.Instance, error) {

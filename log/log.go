@@ -29,12 +29,45 @@ func WriteModelLog(
 		"gql":         p.Context.Value("gql"),
 		"result":      result,
 		"message":     message,
-		"user": map[string]interface{}{
+	}
+	if contextsValues.Me != nil {
+		logObject["user"] = map[string]interface{}{
 			"add": map[string]interface{}{
 				"id": contextsValues.Me.Id,
 			},
-		},
+		}
 	}
+
 	instance := data.NewInstance(logObject, model.Graph.GetEntityByName("ModelLog"))
+	repos.SaveOne(instance)
+}
+
+func WriteBusinessLog(
+	model *model.Model,
+	p graphql.ResolveParams,
+	operate string,
+	result string,
+	message string,
+) {
+	repos := repository.New(model)
+	repos.MakeSupperVerifier()
+	contextsValues := contexts.Values(p.Context)
+
+	logObject := map[string]interface{}{
+		"ip":          contextsValues.IP,
+		"appUuid":     contextsValues.AppUuid,
+		"operateType": operate,
+		"result":      result,
+		"message":     message,
+	}
+	if contextsValues.Me != nil {
+		logObject["user"] = map[string]interface{}{
+			"add": map[string]interface{}{
+				"id": contextsValues.Me.Id,
+			},
+		}
+	}
+
+	instance := data.NewInstance(logObject, model.Graph.GetEntityByName("BusinessLog"))
 	repos.SaveOne(instance)
 }

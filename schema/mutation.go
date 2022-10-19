@@ -25,16 +25,12 @@ func (a *AppSchema) appendAuthMutation(fields graphql.Fields) {
 				Type: &graphql.NonNull{OfType: graphql.String},
 			},
 		},
-		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-			defer utils.PrintErrorStack()
-			auth := authentication.New()
-			return auth.Login(p.Args[consts.LOGIN_NAME].(string), p.Args[consts.PASSWORD].(string))
-		},
+		Resolve: resolve.LoginResolveFn(a.model),
 	}
 
 	fields[consts.LOGOUT] = &graphql.Field{
 		Type:    graphql.Boolean,
-		Resolve: resolve.Logout,
+		Resolve: resolve.LogoutResolveFn(a.model),
 	}
 	fields[consts.CHANGE_PASSWORD] = &graphql.Field{
 		Type: graphql.String,
