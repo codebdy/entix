@@ -5,19 +5,19 @@ import (
 	"rxdrag.com/entify/db"
 )
 
-type Connection struct {
+type Session struct {
 	idSeed int //use for sql join table
 	Dbx    *db.Dbx
 	v      *AbilityVerifier
 	appId  uint64
 }
 
-func openWithConfig(cfg config.DbConfig, v *AbilityVerifier, appId uint64) (*Connection, error) {
+func openWithConfig(cfg config.DbConfig, v *AbilityVerifier, appId uint64) (*Session, error) {
 	dbx, err := db.Open(cfg.Driver, DbString(cfg))
 	if err != nil {
 		return nil, err
 	}
-	con := Connection{
+	con := Session{
 		idSeed: 1,
 		Dbx:    dbx,
 		v:      v,
@@ -26,25 +26,25 @@ func openWithConfig(cfg config.DbConfig, v *AbilityVerifier, appId uint64) (*Con
 	return &con, err
 }
 
-func Open(v *AbilityVerifier, appId uint64) (*Connection, error) {
+func Open(v *AbilityVerifier, appId uint64) (*Session, error) {
 	cfg := config.GetDbConfig()
 	return openWithConfig(cfg, v, appId)
 }
 
-func (c *Connection) BeginTx() error {
+func (c *Session) BeginTx() error {
 	return c.Dbx.BeginTx()
 }
 
-func (c *Connection) Commit() error {
+func (c *Session) Commit() error {
 	return c.Dbx.Commit()
 }
 
-func (c *Connection) ClearTx() {
+func (c *Session) ClearTx() {
 	c.Dbx.ClearTx()
 }
 
 //use for sql join table
-func (c *Connection) CreateId() int {
+func (c *Session) CreateId() int {
 	c.idSeed++
 	return c.idSeed
 }

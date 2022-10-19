@@ -15,7 +15,7 @@ import (
 
 type InsanceData = map[string]interface{}
 
-func (con *Connection) buildQueryInterfaceSQL(intf *graph.Interface, args map[string]interface{}) (string, []interface{}) {
+func (con *Session) buildQueryInterfaceSQL(intf *graph.Interface, args map[string]interface{}) (string, []interface{}) {
 	var (
 		sqls       []string
 		paramsList []interface{}
@@ -46,7 +46,7 @@ func (con *Connection) buildQueryInterfaceSQL(intf *graph.Interface, args map[st
 	return strings.Join(sqls, " UNION "), paramsList
 }
 
-func (con *Connection) buildQueryEntitySQL(
+func (con *Session) buildQueryEntitySQL(
 	entity *graph.Entity,
 	args map[string]interface{},
 	whereArgs interface{},
@@ -74,7 +74,7 @@ func (con *Connection) buildQueryEntitySQL(
 	return queryStr, paramsList
 }
 
-func (con *Connection) buildQueryEntityRecordsSQL(entity *graph.Entity, args map[string]interface{}) (string, []interface{}) {
+func (con *Session) buildQueryEntityRecordsSQL(entity *graph.Entity, args map[string]interface{}) (string, []interface{}) {
 	whereArgs := con.v.WeaveAuthInArgs(entity.Uuid(), args[consts.ARG_WHERE])
 	argEntity := graph.BuildArgEntity(
 		entity,
@@ -95,7 +95,7 @@ func (con *Connection) buildQueryEntityRecordsSQL(entity *graph.Entity, args map
 	return sqlStr, params
 }
 
-func (con *Connection) buildQueryEntityCountSQL(entity *graph.Entity, args map[string]interface{}) (string, []interface{}) {
+func (con *Session) buildQueryEntityCountSQL(entity *graph.Entity, args map[string]interface{}) (string, []interface{}) {
 	whereArgs := con.v.WeaveAuthInArgs(entity.Uuid(), args[consts.ARG_WHERE])
 	argEntity := graph.BuildArgEntity(
 		entity,
@@ -113,7 +113,7 @@ func (con *Connection) buildQueryEntityCountSQL(entity *graph.Entity, args map[s
 	)
 }
 
-func (con *Connection) doQueryInterface(intf *graph.Interface, args map[string]interface{}) map[string]interface{} {
+func (con *Session) doQueryInterface(intf *graph.Interface, args map[string]interface{}) map[string]interface{} {
 	sql, params := con.buildQueryInterfaceSQL(intf, args)
 
 	rows, err := con.Dbx.Query(sql, params...)
@@ -148,7 +148,7 @@ func (con *Connection) doQueryInterface(intf *graph.Interface, args map[string]i
 	}
 }
 
-func (con *Connection) doQueryEntity(entity *graph.Entity, args map[string]interface{}) map[string]interface{} {
+func (con *Session) doQueryEntity(entity *graph.Entity, args map[string]interface{}) map[string]interface{} {
 	if !con.v.CanReadEntity(entity.Uuid()) {
 		panic(consts.NO_PERMISSION)
 	}
@@ -188,7 +188,7 @@ func (con *Connection) doQueryEntity(entity *graph.Entity, args map[string]inter
 	}
 }
 
-func (con *Connection) QueryOneEntityById(entity *graph.Entity, id interface{}) interface{} {
+func (con *Session) QueryOneEntityById(entity *graph.Entity, id interface{}) interface{} {
 	return con.doQueryOneEntity(entity, graph.QueryArg{
 		consts.ARG_WHERE: graph.QueryArg{
 			consts.ID: graph.QueryArg{
@@ -197,7 +197,7 @@ func (con *Connection) QueryOneEntityById(entity *graph.Entity, id interface{}) 
 		},
 	})
 }
-func (con *Connection) doQueryOneInterface(intf *graph.Interface, args map[string]interface{}) interface{} {
+func (con *Session) doQueryOneInterface(intf *graph.Interface, args map[string]interface{}) interface{} {
 	querySql, params := con.buildQueryInterfaceSQL(intf, args)
 
 	values := makeInterfaceQueryValues(intf)
@@ -221,7 +221,7 @@ func (con *Connection) doQueryOneInterface(intf *graph.Interface, args map[strin
 	return nil
 }
 
-func (con *Connection) doQueryOneEntity(entity *graph.Entity, args map[string]interface{}) interface{} {
+func (con *Session) doQueryOneEntity(entity *graph.Entity, args map[string]interface{}) interface{} {
 	queryStr, params := con.buildQueryEntityRecordsSQL(entity, args)
 
 	values := makeEntityQueryValues(entity)
@@ -237,7 +237,7 @@ func (con *Connection) doQueryOneEntity(entity *graph.Entity, args map[string]in
 	return convertValuesToEntity(values, entity)
 }
 
-func (con *Connection) doInsertOne(instance *data.Instance) (interface{}, error) {
+func (con *Session) doInsertOne(instance *data.Instance) (interface{}, error) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	saveStr := sqlBuilder.BuildInsertSQL(instance.Fields, instance.Table())
 	values := makeSaveValues(con.appId, instance.Fields)
@@ -271,7 +271,7 @@ func (con *Connection) doInsertOne(instance *data.Instance) (interface{}, error)
 	return savedObject, nil
 }
 
-func (con *Connection) doQueryAssociatedInstances(r *data.Reference, ownerId uint64) []InsanceData {
+func (con *Session) doQueryAssociatedInstances(r *data.Reference, ownerId uint64) []InsanceData {
 	var instances []InsanceData
 	builder := dialect.GetSQLBuilder()
 	entity := r.TypeEntity()
@@ -294,7 +294,7 @@ func (con *Connection) doQueryAssociatedInstances(r *data.Reference, ownerId uin
 	return instances
 }
 
-func (con *Connection) doQueryByIds(entity *graph.Entity, ids []interface{}) []InsanceData {
+func (con *Session) doQueryByIds(entity *graph.Entity, ids []interface{}) []InsanceData {
 	var instances []map[string]interface{}
 	builder := dialect.GetSQLBuilder()
 	sql := builder.BuildQueryByIdsSQL(entity, len(ids))
@@ -315,7 +315,7 @@ func (con *Connection) doQueryByIds(entity *graph.Entity, ids []interface{}) []I
 	return instances
 }
 
-func (con *Connection) doBatchRealAssociations(
+func (con *Session) doBatchRealAssociations(
 	association *graph.Association,
 	ids []uint64,
 	args graph.QueryArg,
@@ -386,7 +386,7 @@ func merageInstances(source []InsanceData, target []InsanceData) {
 	}
 }
 
-func (con *Connection) doUpdateOne(instance *data.Instance) (interface{}, error) {
+func (con *Session) doUpdateOne(instance *data.Instance) (interface{}, error) {
 
 	sqlBuilder := dialect.GetSQLBuilder()
 
@@ -421,7 +421,7 @@ func newAssociationPovit(r *data.Reference, ownerId uint64, tarId uint64) *data.
 
 }
 
-func (con *Connection) saveAssociationInstance(ins *data.Instance) (interface{}, error) {
+func (con *Session) saveAssociationInstance(ins *data.Instance) (interface{}, error) {
 	targetData := InsanceData{consts.ID: ins.Id}
 
 	saved, err := con.doSaveOne(ins)
@@ -433,7 +433,7 @@ func (con *Connection) saveAssociationInstance(ins *data.Instance) (interface{},
 	return targetData, nil
 }
 
-func (con *Connection) doSaveAssociation(r *data.Reference, ownerId uint64) error {
+func (con *Session) doSaveAssociation(r *data.Reference, ownerId uint64) error {
 
 	for _, ins := range r.Deleted() {
 		if r.Cascade() {
@@ -509,7 +509,7 @@ func (con *Connection) doSaveAssociation(r *data.Reference, ownerId uint64) erro
 	return nil
 }
 
-func (con *Connection) clearAssociation(r *data.Reference, ownerId uint64) {
+func (con *Session) clearAssociation(r *data.Reference, ownerId uint64) {
 	con.deleteAssociationPovit(r, ownerId)
 
 	if r.IsCombination() {
@@ -517,7 +517,7 @@ func (con *Connection) clearAssociation(r *data.Reference, ownerId uint64) {
 	}
 }
 
-func (con *Connection) deleteAssociationPovit(r *data.Reference, ownerId uint64) {
+func (con *Session) deleteAssociationPovit(r *data.Reference, ownerId uint64) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	sql := sqlBuilder.BuildClearAssociationSQL(ownerId, r.Table().Name, r.OwnerColumn().Name)
 	_, err := con.Dbx.Exec(sql)
@@ -527,7 +527,7 @@ func (con *Connection) deleteAssociationPovit(r *data.Reference, ownerId uint64)
 	}
 }
 
-func (con *Connection) deleteAssociatedInstances(r *data.Reference, ownerId uint64) {
+func (con *Session) deleteAssociatedInstances(r *data.Reference, ownerId uint64) {
 	typeEntity := r.TypeEntity()
 	associatedInstances := con.doQueryAssociatedInstances(r, ownerId)
 	for i := range associatedInstances {
@@ -536,7 +536,7 @@ func (con *Connection) deleteAssociatedInstances(r *data.Reference, ownerId uint
 	}
 }
 
-func (con *Connection) doSaveAssociationPovit(povit *data.AssociationPovit) {
+func (con *Session) doSaveAssociationPovit(povit *data.AssociationPovit) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	sql := sqlBuilder.BuildQueryPovitSQL(povit)
 	rows, err := con.Dbx.Query(sql)
@@ -553,7 +553,7 @@ func (con *Connection) doSaveAssociationPovit(povit *data.AssociationPovit) {
 	}
 }
 
-func (con *Connection) doDeleteAssociationPovit(povit *data.AssociationPovit) {
+func (con *Session) doDeleteAssociationPovit(povit *data.AssociationPovit) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	sql := sqlBuilder.BuildDeletePovitSQL(povit)
 	_, err := con.Dbx.Exec(sql)
@@ -562,7 +562,7 @@ func (con *Connection) doDeleteAssociationPovit(povit *data.AssociationPovit) {
 	}
 }
 
-func (con *Connection) doSaveOne(instance *data.Instance) (interface{}, error) {
+func (con *Session) doSaveOne(instance *data.Instance) (interface{}, error) {
 	if instance.IsInsert() {
 		return con.doInsertOne(instance)
 	} else {
@@ -570,7 +570,7 @@ func (con *Connection) doSaveOne(instance *data.Instance) (interface{}, error) {
 	}
 }
 
-func (con *Connection) doDeleteInstance(instance *data.Instance) {
+func (con *Session) doDeleteInstance(instance *data.Instance) {
 	var sql string
 	sqlBuilder := dialect.GetSQLBuilder()
 	tableName := instance.Table().Name
@@ -597,7 +597,7 @@ func (con *Connection) doDeleteInstance(instance *data.Instance) {
 	}
 }
 
-func (con *Connection) doCheckEntity(name string) bool {
+func (con *Session) doCheckEntity(name string) bool {
 	sqlBuilder := dialect.GetSQLBuilder()
 	var count int
 	err := con.Dbx.QueryRow(sqlBuilder.BuildTableCheckSQL(name, config.GetDbConfig().Database)).Scan(&count)
