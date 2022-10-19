@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 	"rxdrag.com/entify/common/errorx"
@@ -17,6 +19,15 @@ import (
 )
 
 const PORT = 4000
+
+func init() {
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+	logFile, err := os.OpenFile("./debug.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		log.Panic("打开日志文件异常")
+	}
+	log.SetOutput(logFile)
+}
 
 func checkParams() {
 	dbConfig := config.GetDbConfig()
@@ -40,6 +51,7 @@ func checkMetaInstall() {
 
 func main() {
 	defer db.Close()
+	log.Println("启动应用")
 	checkParams()
 	checkMetaInstall()
 
