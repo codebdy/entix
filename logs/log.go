@@ -1,16 +1,14 @@
-package app
+package logs
 
 import (
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/common/contexts"
-	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/model/graph"
-	"rxdrag.com/entify/orm"
+	"rxdrag.com/entify/service"
 )
 
-func (a *App) WriteModelLog(
-	model *model.Model,
+func WriteModelLog(
 	cls *graph.Class,
 	p graphql.ResolveParams,
 	operate string,
@@ -36,16 +34,11 @@ func (a *App) WriteModelLog(
 		}
 	}
 
-	instance := data.NewInstance(logObject, model.Graph.GetEntityByName("ModelLog"))
-	sesson, err := orm.Open()
-	if err != nil {
-		panic(err)
-	}
-	sesson.SaveOne(instance)
+	instance := data.NewInstance(logObject, a.GetEntityByName("ModelLog"))
+	service.SaveOne(instance)
 }
 
-func (a *App) WriteBusinessLog(
-	model *model.Model,
+func WriteBusinessLog(
 	p graphql.ResolveParams,
 	operate string,
 	result string,
@@ -58,12 +51,11 @@ func (a *App) WriteBusinessLog(
 		useId = contextsValues.Me.Id
 	}
 
-	a.WriteUserBusinessLog(useId, model, p, operate, result, message)
+	a.WriteUserBusinessLog(useId, p, operate, result, message)
 }
 
-func (a *App) WriteUserBusinessLog(
+func WriteUserBusinessLog(
 	useId string,
-	model *model.Model,
 	p graphql.ResolveParams,
 	operate string,
 	result string,
@@ -86,10 +78,6 @@ func (a *App) WriteUserBusinessLog(
 		}
 	}
 
-	instance := data.NewInstance(logObject, model.Graph.GetEntityByName("BusinessLog"))
-	sesson, err := orm.Open()
-	if err != nil {
-		panic(err)
-	}
-	sesson.SaveOne(instance)
+	instance := data.NewInstance(logObject, a.GetEntityByName("BusinessLog"))
+	service.SaveOne(instance)
 }

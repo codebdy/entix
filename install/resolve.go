@@ -60,10 +60,6 @@ func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 	//repos.MakeSupperVerifier()
 
 	instance, err := addAndPublishMeta(input.Meta, model)
-	if err != nil {
-		logs.WriteBusinessLog(model, p, logs.INSTALL, logs.FAILURE, err.Error())
-		return nil, err
-	}
 
 	model = repos.LoadModel(contexts.Values(p.Context).AppId)
 
@@ -89,8 +85,8 @@ func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 			}
 		}
 	}
-	isExist := repository.IsEntityExists(consts.META_USER)
-	logs.WriteBusinessLog(model, p, logs.INSTALL, logs.SUCCESS, "")
+	isExist := orm.IsEntityExists(meta.APP_ENTITY_NAME)
+	systemApp.WriteBusinessLog(p, logs.INSTALL, logs.SUCCESS, "")
 	return isExist, nil
 }
 
