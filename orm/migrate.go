@@ -12,7 +12,7 @@ import (
 
 func Migrage(d *model.Diff) {
 	var undoList []string
-	session, err := Open()
+	session, err := Open(nil)
 	dbx := session.Dbx
 	if err != nil {
 		panic("Open db error:" + err.Error())

@@ -6,6 +6,7 @@ import (
 
 	"rxdrag.com/entify/config"
 	"rxdrag.com/entify/db"
+	"rxdrag.com/entify/model"
 )
 
 func DbString(cfg config.DbConfig) string {
@@ -18,7 +19,7 @@ func DbString(cfg config.DbConfig) string {
 	)
 }
 
-func Open() (*Session, error) {
+func Open(model *model.Model) (*Session, error) {
 	cfg := config.GetDbConfig()
 	dbx, err := db.Open(cfg.Driver, DbString(cfg))
 	if err != nil {
@@ -27,12 +28,13 @@ func Open() (*Session, error) {
 	session := Session{
 		idSeed: 1,
 		Dbx:    dbx,
+		model:  model,
 	}
 	return &session, nil
 }
 
 func IsEntityExists(name string) bool {
-	session, err := Open()
+	session, err := Open(nil)
 	if err != nil {
 		log.Panic(err)
 	}

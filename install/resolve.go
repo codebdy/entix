@@ -36,8 +36,8 @@ func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 	input := InstallArg{}
 	mapstructure.Decode(p.Args[INPUT], &input)
 
-	repos := repository.New(model)
-	repos.MakeSupperVerifier()
+	//repos := repository.New(model)
+	//repos.MakeSupperVerifier()
 
 	instance, err := addAndPublishMeta(input.Meta, model)
 	if err != nil {
