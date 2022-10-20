@@ -4,14 +4,6 @@ import (
 	"rxdrag.com/entify/consts"
 )
 
-const (
-	META_ABILITY_TYPE_CREATE    string = "create"
-	META_ABILITY_TYPE_READ      string = "read"
-	META_ABILITY_TYPE_UPDATE    string = "update"
-	META_ABILITY_TYPE_DELETE    string = "delete"
-	META_ABILITY_TYPE_ENUM_UUID string = "META_ABILITY_TYPE_ENUM_UUID"
-)
-
 var AppClass = ClassMeta{
 	Uuid:       APP_ENTITY_UUID,
 	Name:       APP_ENTITY_NAME,
@@ -19,6 +11,7 @@ var AppClass = ClassMeta{
 	StereoType: CLASSS_ENTITY,
 	IdNoShift:  true,
 	Root:       true,
+	System:     true,
 	Attributes: []AttributeMeta{
 		{
 			Name:      consts.ID,
@@ -26,15 +19,62 @@ var AppClass = ClassMeta{
 			Type:      "ID",
 			TypeLabel: "ID",
 			Uuid:      "APP_COLUMN_ID_UUID",
+			System:    true,
 		},
 		{
 			Name:      "uuid",
 			Type:      "String",
 			TypeLabel: "String",
 			Uuid:      "APP_COLUMN_UUID_UUID",
+			System:    true,
+		},
+		{
+			Name:      "name",
+			Type:      "String",
+			TypeLabel: "String",
+			Uuid:      "APP_COLUMN_NAME_UUID",
+			System:    true,
+		},
+		{
+			Name:      "meta",
+			Type:      "JSON",
+			TypeLabel: "JSON",
+			Uuid:      "APP_COLUMN_META_UUID",
+			System:    true,
+		},
+		{
+			Name:      "publishedMeta",
+			Type:      "JSON",
+			TypeLabel: "JSON",
+			Uuid:      "APP_COLUMN_PUBLISH_META_UUID",
+			System:    true,
+		},
+		{
+			Name:       "createdAt",
+			Type:       "Date",
+			TypeLabel:  "Date",
+			CreateDate: true,
+			Uuid:       "APP_COLUMN_CREATED_AT_UUID",
+			System:     true,
+		},
+		{
+			Name:       "saveMetaAt",
+			Type:       "Date",
+			TypeLabel:  "Date",
+			CreateDate: true,
+			Uuid:       "APP_COLUMN_SAVE_META_AT_UUID",
+			System:     true,
+		},
+		{
+			Name:       "publishMetaAt",
+			Type:       "Date",
+			TypeLabel:  "Date",
+			CreateDate: true,
+			Uuid:       "APP_COLUMN_PUBLISH_META_AT_UUID",
+			System:     true,
 		},
 	},
-	PackageUuid: "PACKAGE_APPX_UUID",
+	PackageUuid: PACKAGE_SYSTEM_UUID,
 }
 
 var EntityAuthSettingsClass = ClassMeta{

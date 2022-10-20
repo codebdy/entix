@@ -1,7 +1,7 @@
 package meta
 
 type MetaContent struct {
-	Classes   []ClassMeta    `json:"entities"`
+	Classes   []ClassMeta    `json:"classes"`
 	Relations []RelationMeta `json:"relations"`
 	Codes     []CodeMeta     `json:"codes"`
 	Packages  []PackageMeta  `json:"packages"`

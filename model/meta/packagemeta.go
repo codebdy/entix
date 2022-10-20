@@ -10,7 +10,6 @@ type PackageMeta struct {
 	Name        string `json:"name"`
 	Label       string `json:"label"`
 	System      bool   `json:"system"`
-	Sharable    bool   `json:"sharable"`
 	StereoType  string `json:"stereoType"`
 	TokenScript string `json:"tokenScript"`
 	AppId       uint64

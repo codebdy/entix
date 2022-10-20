@@ -3,7 +3,6 @@ package consts
 const LOADERS = "loaders"
 const HEADER_APPX_APPUUID = "Appx-appuuid"
 const APPUUID = "appUuid"
-const SYSTEM_APP_UUID = "SYSTEM"
 const TABLE_PREFIX = "a"
 
 const (
