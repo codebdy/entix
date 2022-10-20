@@ -6,8 +6,8 @@ const (
 	TWO_WAY_AGGREGATION string = "twoWayAggregation"
 	TWO_WAY_COMBINATION string = "twoWayCombination"
 	ONE_WAY_ASSOCIATION string = "oneWayAssociation"
-	ONE_WAY_AGGREGATION string = "oneWayAggregation"
-	ONE_WAY_COMBINATION string = "oneWayCombination"
+	//ONE_WAY_AGGREGATION string = "oneWayAggregation"
+	//ONE_WAY_COMBINATION string = "oneWayCombination"
 
 	ZERO_ONE  string = "0..1"
 	ZERO_MANY string = "0..*"
