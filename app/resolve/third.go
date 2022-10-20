@@ -6,9 +6,9 @@ import (
 
 	"github.com/dop251/goja"
 	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify/app/script"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/graph"
-	"rxdrag.com/entify/script"
 	"rxdrag.com/entify/utils"
 )
 
