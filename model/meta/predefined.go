@@ -5,91 +5,42 @@ import (
 )
 
 const (
-	META_STATUS_PUBLISHED       string = "published"
-	META_STATUS_CANCELLED       string = "cancelled"
-	META_STATUS_MIGRATION_ERROR string = "migrationError"
-	META_STATUS_ROLLBACK_ERROR  string = "rollbackError"
-	META_STATUS_ENUM_UUID       string = "META_STATUS_ENUM_UUID"
-
 	META_ABILITY_TYPE_CREATE    string = "create"
 	META_ABILITY_TYPE_READ      string = "read"
 	META_ABILITY_TYPE_UPDATE    string = "update"
 	META_ABILITY_TYPE_DELETE    string = "delete"
 	META_ABILITY_TYPE_ENUM_UUID string = "META_ABILITY_TYPE_ENUM_UUID"
-
-	META_ENTITY_UUID string = "META_ENTITY_UUID"
 )
 
-var MetaStatusEnum = ClassMeta{
-	Uuid:       META_STATUS_ENUM_UUID,
-	Name:       "MetaStatus",
-	StereoType: ENUM,
-	Attributes: []AttributeMeta{
-		{
-			Name: META_STATUS_PUBLISHED,
-		},
-		{
-			Name: META_STATUS_CANCELLED,
-		},
-		{
-			Name: META_STATUS_MIGRATION_ERROR,
-		},
-		{
-			Name: META_STATUS_ROLLBACK_ERROR,
-		},
-	},
-}
-
-var MetaClass = ClassMeta{
-	Uuid:       META_ENTITY_UUID,
-	Name:       consts.META_ENTITY_NAME,
-	InnerId:    consts.META_INNER_ID,
+var AppClass = ClassMeta{
+	Uuid:       APP_ENTITY_UUID,
+	Name:       APP_ENTITY_NAME,
+	InnerId:    APP_INNER_ID,
 	StereoType: CLASSS_ENTITY,
+	IdNoShift:  true,
 	Root:       true,
 	Attributes: []AttributeMeta{
 		{
-			Uuid: "META_COLUMN_ID_UUID",
-			Type: ID,
-			Name: consts.META_ID,
+			Name:      consts.ID,
+			Primary:   true,
+			Type:      "ID",
+			TypeLabel: "ID",
+			Uuid:      "APP_COLUMN_ID_UUID",
 		},
 		{
-			Uuid: "META_COLUMN_APP_ID_UUID",
-			Type: "String",
-			Name: consts.META_APP_UUID,
-		},
-		{
-			Uuid: "META_COLUMN_CONTENT_UUID",
-			Type: VALUE_OBJECT,
-			Name: consts.META_CONTENT,
-		},
-		{
-			Uuid:     "META_COLUMN_STATUS_UUID",
-			Type:     ENUM,
-			Name:     consts.META_STATUS,
-			TypeUuid: META_STATUS_ENUM_UUID,
-		},
-		{
-			Uuid: "META_COLUMN_PUBLISHED_AT_UUID",
-			Type: DATE,
-			Name: consts.META_PUBLISHEDAT,
-		},
-		{
-			Uuid: "META_COLUMN_CREATED_AT_UUID",
-			Type: DATE,
-			Name: consts.META_CREATEDAT,
-		},
-		{
-			Uuid: "META_COLUMN_UPDATED_AT_UUID",
-			Type: DATE,
-			Name: consts.META_UPDATEDAT,
+			Name:      "uuid",
+			Type:      "String",
+			TypeLabel: "String",
+			Uuid:      "APP_COLUMN_UUID_UUID",
 		},
 	},
+	PackageUuid: "PACKAGE_APPX_UUID",
 }
 
 var EntityAuthSettingsClass = ClassMeta{
 	Name:    "EntityAuthSettings",
 	Uuid:    "META_ENTITY_AUTH_SETTINGS_UUID",
-	InnerId: consts.ENTITY_AUTH_SETTINGS_INNER_ID,
+	InnerId: ENTITY_AUTH_SETTINGS_INNER_ID,
 	Root:    true,
 	System:  true,
 	Attributes: []AttributeMeta{
@@ -139,8 +90,8 @@ var AbilityTypeEnum = ClassMeta{
 
 var AbilityClass = ClassMeta{
 	Name:    "Ability",
-	Uuid:    consts.ABILITY_UUID,
-	InnerId: consts.Ability_INNER_ID,
+	Uuid:    ABILITY_UUID,
+	InnerId: Ability_INNER_ID,
 	Root:    true,
 	System:  true,
 	Attributes: []AttributeMeta{

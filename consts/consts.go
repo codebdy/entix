@@ -117,7 +117,6 @@ const (
 * Meta实体用到的常量
 **/
 const (
-	META_ENTITY_NAME string = "Meta"
 	META_ID          string = "id"
 	META_APP_UUID    string = "appUuid"
 	META_STATUS      string = "status"
@@ -175,21 +174,6 @@ const (
 	CONTEXT_VALUES = "values"
 	ME             = "me"
 	//HOST           = "host"
-)
-
-const (
-	ABILITY_UUID = "META_ABILITY_UUID"
-	USER_UUID    = "META_USER_UUID"
-	ROLE_UUID    = "META_ROLE_UUID"
-)
-const (
-	META_INNER_ID                 = 1
-	ENTITY_AUTH_SETTINGS_INNER_ID = 2
-	Ability_INNER_ID              = 3
-	USER_INNER_ID                 = 4
-	ROLE_INNER_ID                 = 5
-	MEDIA_INNER_ID                = 6
-	ROLE_USER_RELATION_INNER_ID   = 101
 )
 
 const ROOT = "root"
