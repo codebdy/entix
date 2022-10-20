@@ -7,15 +7,16 @@ import (
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/model/graph"
-	"rxdrag.com/entify/repository"
+	"rxdrag.com/entify/orm"
+	"rxdrag.com/entify/service"
 	"rxdrag.com/entify/utils"
 )
 
 func PostResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
-		repos := repository.New(model)
-		repos.MakeEntityAbilityVerifier(p, entity.Uuid())
+		//repos := repository.New(model)
+		//repos.MakeEntityAbilityVerifier(p, entity.Uuid())
 		objects := p.Args[consts.ARG_OBJECTS].([]interface{})
 		instances := []*data.Instance{}
 		for i := range objects {
@@ -24,7 +25,7 @@ func PostResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolv
 			instance := data.NewInstance(object.(map[string]interface{}), entity)
 			instances = append(instances, instance)
 		}
-		returing, err := repos.Save(instances)
+		returing, err := service.Save(instances)
 
 		if err != nil {
 			return nil, err
@@ -38,12 +39,12 @@ func PostResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolv
 func SetResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
-		repos := repository.New(model)
-		repos.MakeEntityAbilityVerifier(p, entity.Uuid())
+		//repos := repository.New(model)
+		//repos.MakeEntityAbilityVerifier(p, entity.Uuid())
 
 		set := p.Args[consts.ARG_SET].(map[string]interface{})
-		objs := repos.QueryEntity(entity, p.Args)[consts.NODES]
-		convertedObjs := objs.([]repository.InsanceData)
+		objs := service.QueryEntity(entity, p.Args)[consts.NODES]
+		convertedObjs := objs.([]orm.InsanceData)
 		instances := []*data.Instance{}
 
 		for i := range convertedObjs {
@@ -58,7 +59,7 @@ func SetResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolve
 				instances = append(instances, instance)
 			}
 		}
-		returing, err := repos.Save(instances)
+		returing, err := service.Save(instances)
 
 		if err != nil {
 			return nil, err
@@ -78,10 +79,10 @@ func PostOneResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldRes
 		defer utils.PrintErrorStack()
 		object := p.Args[consts.ARG_OBJECT].(map[string]interface{})
 		ConvertObjectId(object)
-		repos := repository.New(model)
-		repos.MakeEntityAbilityVerifier(p, entity.Uuid())
+		//repos := repository.New(model)
+		//repos.MakeEntityAbilityVerifier(p, entity.Uuid())
 		instance := data.NewInstance(object, entity)
-		result, err := repos.SaveOne(instance)
+		result, err := service.SaveOne(instance)
 		logs.WriteModelLog(model, &entity.Class, p, logs.UPSERT, logs.SUCCESS, "")
 		return result, err
 	}
@@ -91,12 +92,12 @@ func DeleteByIdResolveFn(entity *graph.Entity, model *model.Model) graphql.Field
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
 		argId := p.Args[consts.ID]
-		repos := repository.New(model)
-		repos.MakeEntityAbilityVerifier(p, entity.Uuid())
+		//repos := repository.New(model)
+		//repos.MakeEntityAbilityVerifier(p, entity.Uuid())
 		instance := data.NewInstance(map[string]interface{}{
 			consts.ID: ConvertId(argId),
 		}, entity)
-		result, err := repos.DeleteInstance(instance)
+		result, err := service.DeleteInstance(instance)
 		logs.WriteModelLog(model, &entity.Class, p, logs.DELETE, logs.SUCCESS, "")
 		return result, err
 	}
@@ -105,19 +106,19 @@ func DeleteByIdResolveFn(entity *graph.Entity, model *model.Model) graphql.Field
 func DeleteResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
-		repos := repository.New(model)
-		repos.MakeEntityAbilityVerifier(p, entity.Uuid())
+		//repos := repository.New(model)
+		//repos.MakeEntityAbilityVerifier(p, entity.Uuid())
 
-		objs := repos.QueryEntity(entity, p.Args)[consts.NODES]
+		objs := service.QueryEntity(entity, p.Args)[consts.NODES]
 
-		if objs == nil || len(objs.([]repository.InsanceData)) == 0 {
+		if objs == nil || len(objs.([]orm.InsanceData)) == 0 {
 			return map[string]interface{}{
 				consts.RESPONSE_RETURNING:    []interface{}{},
 				consts.RESPONSE_AFFECTEDROWS: 0,
 			}, nil
 		}
 
-		convertedObjs := objs.([]repository.InsanceData)
+		convertedObjs := objs.([]orm.InsanceData)
 
 		instances := []*data.Instance{}
 		for i := range convertedObjs {
@@ -128,7 +129,7 @@ func DeleteResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldReso
 			instances = append(instances, instance)
 		}
 
-		repos.DeleteInstances(instances)
+		service.DeleteInstances(instances)
 		logs.WriteModelLog(model, &entity.Class, p, logs.DELETE, logs.SUCCESS, "")
 		return map[string]interface{}{
 			consts.RESPONSE_RETURNING:    objs,
