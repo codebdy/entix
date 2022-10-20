@@ -7,16 +7,16 @@ import (
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/graph"
-	"rxdrag.com/entify/repository"
+	"rxdrag.com/entify/service"
 	"rxdrag.com/entify/utils"
 )
 
 func QueryOneInterfaceResolveFn(intf *graph.Interface, model *model.Model) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
-		repos := repository.New(model)
-		repos.MakeInterfaceAbilityVerifier(p, intf)
-		instance := repos.QueryOneInterface(intf, p.Args)
+		//repos := repository.New(model)
+		//repos.MakeInterfaceAbilityVerifier(p, intf)
+		instance := service.QueryOneInterface(intf, p.Args)
 		return instance, nil
 	}
 }
@@ -24,9 +24,9 @@ func QueryOneInterfaceResolveFn(intf *graph.Interface, model *model.Model) graph
 func QueryInterfaceResolveFn(intf *graph.Interface, model *model.Model) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
-		repos := repository.New(model)
-		repos.MakeInterfaceAbilityVerifier(p, intf)
-		result := repos.QueryInterface(intf, p.Args)
+		//repos := repository.New(model)
+		//repos.MakeInterfaceAbilityVerifier(p, intf)
+		result := service.QueryInterface(intf, p.Args)
 		return result, nil
 	}
 }
@@ -34,9 +34,9 @@ func QueryInterfaceResolveFn(intf *graph.Interface, model *model.Model) graphql.
 func QueryOneEntityResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
-		repos := repository.New(model)
-		repos.MakeEntityAbilityVerifier(p, entity.Uuid())
-		instance := repos.QueryOneEntity(entity, p.Args)
+		//repos := repository.New(model)
+		//repos.MakeEntityAbilityVerifier(p, entity.Uuid())
+		instance := service.QueryOneEntity(entity, p.Args)
 		return instance, nil
 	}
 }
@@ -44,9 +44,9 @@ func QueryOneEntityResolveFn(entity *graph.Entity, model *model.Model) graphql.F
 func QueryEntityResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
-		repos := repository.New(model)
-		repos.MakeEntityAbilityVerifier(p, entity.Uuid())
-		result := repos.QueryEntity(entity, p.Args)
+		//repos := repository.New(model)
+		//repos.MakeEntityAbilityVerifier(p, entity.Uuid())
+		result := service.QueryEntity(entity, p.Args)
 		return result, nil
 	}
 }
