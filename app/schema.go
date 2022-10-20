@@ -7,21 +7,15 @@ import (
 	"rxdrag.com/entify/schema"
 )
 
-type AppSchema struct {
-	AppId  uint64
-	model  *model.Model
-	schema *graphql.Schema
-}
-
 //本函数要重写
-func NewAppSchema(appId uint64) *AppSchema {
-	appSchema := &AppSchema{
+func NewAppSchema(appId uint64) *App {
+	appSchema := &App{
 		AppId: appId,
 	}
 
-	if !Installed && appId != SYSTEM_APP_ID {
-		panic("Server is not installed, please install first")
-	}
+	// if !Installed && appId != SYSTEM_APP_ID {
+	// 	panic("Server is not installed, please install first")
+	// }
 
 	if !Installed {
 		appSchema.schema = schema.MakeInstallSchema()
@@ -31,8 +25,8 @@ func NewAppSchema(appId uint64) *AppSchema {
 
 	return appSchema
 }
-func (s *AppSchema) Make() {
-	if s.model == nil {
+func (a *App) Make() {
+	if a.model == nil {
 		//第一步初始值，用于取meta信息，取完后，换掉该部分内容
 		// initMeta := meta.MetaContent{
 		// 	Classes: []meta.ClassMeta{
@@ -45,28 +39,28 @@ func (s *AppSchema) Make() {
 		// }
 		//s.model = model.New(s.appId, &initMeta)
 	}
-	repos := repository.New(s.Model())
+	repos := repository.New(a.Model())
 	repos.MakeSupperVerifier()
 
 	//第二步， 取系统应用，以此为基础，进一步取数据。
 	//   保证取APPID时，能拿到App实体
 	//s.model = repos.LoadModel(consts.SYSTEM_APP_UUID)
-	repos = repository.New(s.Model())
+	repos = repository.New(a.Model())
 	repos.MakeSupperVerifier()
 
 	//第三步，加载真正的Model
 	//s.model = repos.LoadModel(s.appId)
-	s.schema = s.doMake()
+	a.schema = a.doMake()
 }
-func (s *AppSchema) Model() *model.Model {
-	return s.model
-}
-
-func (s *AppSchema) Schema() *graphql.Schema {
-	return s.schema
+func (a *App) Model() *model.Model {
+	return a.model
 }
 
-func (s *AppSchema) doMake() *graphql.Schema {
+func (a *App) Schema() *graphql.Schema {
+	return a.schema
+}
+
+func (a *App) doMake() *graphql.Schema {
 	//s.modelParser.ParseModel(s.model)
 
 	schemaConfig := graphql.SchemaConfig{
