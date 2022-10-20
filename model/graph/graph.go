@@ -310,10 +310,6 @@ func (m *Model) GetServiceByName(name string) *Service {
 	return nil
 }
 
-func (m *Model) GetMetaEntity() *Entity {
-	return m.GetEntityByUuid(meta.MetaClass.Uuid)
-}
-
 func (m *Model) GetEnumByUuid(uuid string) *Enum {
 	for i := range m.Enums {
 		enum := m.Enums[i]
