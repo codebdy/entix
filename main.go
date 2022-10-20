@@ -19,6 +19,7 @@ import (
 	"rxdrag.com/entify/orm"
 
 	_ "rxdrag.com/entify/app"
+	_ "rxdrag.com/entify/authentication"
 	_ "rxdrag.com/entify/basic"
 )
 

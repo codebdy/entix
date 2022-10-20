@@ -16,7 +16,7 @@ func (m AuthenticationModule) QueryFields(ctx context.Context) []*graphql.Field 
 	return []*graphql.Field{}
 }
 func (m AuthenticationModule) MutationFields(ctx context.Context) []*graphql.Field {
-	if app.Installed {
+	if !app.Installed {
 		return []*graphql.Field{}
 	} else {
 		return mutationFields()
