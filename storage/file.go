@@ -52,7 +52,7 @@ func (f *File) mimeType() string {
 func (f *File) Save(folder string) FileInfo {
 	nameBody := uuid.New().String()
 	name := fmt.Sprintf("%s%s", nameBody, f.extName())
-	foldeFullPath := fmt.Sprintf("./%s/app%d/%s", consts.STATIC_PATH, appId, folder)
+	foldeFullPath := fmt.Sprintf("./%s/app%d/%s", consts.STATIC_PATH, f.AppId, folder)
 	_, err := os.Stat(foldeFullPath)
 	if os.IsNotExist(err) {
 		err = os.MkdirAll(foldeFullPath, 0777)

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -105,7 +106,7 @@ func getFromForm(values url.Values) *RequestOptions {
 }
 
 // NewRequestOptions Parses a http.Request into GraphQL request options struct
-func NewRequestOptions(r *http.Request) *RequestOptions {
+func NewRequestOptions(appId uint64, r *http.Request) *RequestOptions {
 	if reqOpt := getFromForm(r.URL.Query()); reqOpt != nil {
 		return reqOpt
 	}
@@ -165,6 +166,7 @@ func NewRequestOptions(r *http.Request) *RequestOptions {
 						File:     file,
 						Size:     header.Size,
 						Filename: header.Filename,
+						AppId:    appId,
 					}] = path
 				}
 			}
@@ -210,12 +212,16 @@ func NewRequestOptions(r *http.Request) *RequestOptions {
 // ContextHandler provides an entrypoint into executing graphQL queries with a
 // user-provided context.
 func (h *Handler) ContextHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	appUuid := contexts.Values(ctx).AppId
+	appId := contexts.Values(ctx).AppId
 	// get query
-	opts := NewRequestOptions(r)
+	opts := NewRequestOptions(appId, r)
 	// execute graphql query
+	app, err := app.Get(appId)
+	if err != nil {
+		log.Panic(err)
+	}
 	params := graphql.Params{
-		Schema:         *app.Get(appUuid).Schema(),
+		Schema:         *app.Schema,
 		RequestString:  opts.Query,
 		VariableValues: opts.Variables,
 		OperationName:  opts.OperationName,

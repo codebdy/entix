@@ -17,7 +17,7 @@ type App struct {
 	AppId   uint64
 	AppUuid string
 	model   *model.Model
-	schema  *graphql.Schema
+	Schema  *graphql.Schema
 }
 
 var appCache = map[uint64]*App{}
