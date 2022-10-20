@@ -1,4 +1,4 @@
-package install
+package basic
 
 import (
 	"log"
@@ -12,6 +12,7 @@ import (
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/orm"
+	"rxdrag.com/entify/scalars"
 	"rxdrag.com/entify/service"
 	"rxdrag.com/entify/utils"
 )
@@ -24,6 +25,68 @@ type InstallArg struct {
 }
 
 const INPUT = "input"
+
+const (
+	ADMIN         = "admin"
+	ADMINPASSWORD = "password"
+	WITHDEMO      = "withDemo"
+)
+
+var installInputType = graphql.NewInputObject(
+	graphql.InputObjectConfig{
+		Name: "InstallInput",
+		Fields: graphql.InputObjectConfigFieldMap{
+			"meta": &graphql.InputObjectFieldConfig{
+				Type: &graphql.NonNull{
+					OfType: scalars.JSONType,
+				},
+			},
+			ADMIN: &graphql.InputObjectFieldConfig{
+				Type: &graphql.NonNull{
+					OfType: graphql.String,
+				},
+			},
+			ADMINPASSWORD: &graphql.InputObjectFieldConfig{
+				Type: &graphql.NonNull{
+					OfType: graphql.String,
+				},
+			},
+			WITHDEMO: &graphql.InputObjectFieldConfig{
+				Type: graphql.Boolean,
+			},
+		},
+	},
+)
+
+func installQueryFields() []*graphql.Field {
+	return []*graphql.Field{
+		{
+			Name: consts.INSTALLED,
+			Type: graphql.Boolean,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				defer utils.PrintErrorStack()
+				return false, nil
+			},
+		},
+	}
+}
+
+func installMutationFields() []*graphql.Field {
+	return []*graphql.Field{
+		{
+			Name: "install",
+			Type: graphql.Boolean,
+			Args: graphql.FieldConfigArgument{
+				INPUT: &graphql.ArgumentConfig{
+					Type: &graphql.NonNull{
+						OfType: installInputType,
+					},
+				},
+			},
+			Resolve: InstallResolve,
+		},
+	}
+}
 
 func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 	defer utils.PrintErrorStack()
