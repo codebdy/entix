@@ -6,7 +6,7 @@ import (
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/graph"
-	"rxdrag.com/entify/repository"
+	"rxdrag.com/entify/service"
 	"rxdrag.com/entify/utils"
 )
 
@@ -14,10 +14,10 @@ func DeployProcessResolveFn(model *model.Model) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
 		argId := p.Args[consts.ID]
-		repos := repository.New(model)
+		//repos := repository.New(model)
 		//@@@后面需要修改权限
-		repos.MakeEntityAbilityVerifier(p, model.Graph.GetEntityByName("Process").Uuid())
-		process := repos.QueryOneEntity(model.Graph.GetEntityByName("Process"), graph.QueryArg{
+		//repos.MakeEntityAbilityVerifier(p, model.Graph.GetEntityByName("Process").Uuid())
+		process := service.QueryOneEntity(model.Graph.GetEntityByName("Process"), graph.QueryArg{
 			consts.ARG_WHERE: graph.QueryArg{
 				consts.ID: graph.QueryArg{
 					consts.ARG_EQ: argId,
