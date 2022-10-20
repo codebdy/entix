@@ -5,12 +5,14 @@ import (
 
 	"github.com/graphql-go/graphql"
 	"github.com/mitchellh/mapstructure"
+	"rxdrag.com/entify/app"
 	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/logs"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/model/meta"
+	"rxdrag.com/entify/orm"
 	"rxdrag.com/entify/repository"
 	"rxdrag.com/entify/utils"
 )
@@ -26,8 +28,9 @@ const INPUT = "input"
 
 func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 	defer utils.PrintErrorStack()
-	if !repository.IsEntityExists(meta.APP_ENTITY_NAME) {
-		repository.InstallMeta()
+	if !orm.IsEntityExists(meta.APP_ENTITY_NAME) {
+		nextMeta := meta.SystemApp["meta"].(meta.MetaContent)
+		app.PublishMeta(&meta.MetaContent{}, &nextMeta)
 	}
 
 	input := InstallArg{}

@@ -6,7 +6,7 @@ import (
 	"rxdrag.com/entify/orm"
 )
 
-func (a *App) PublishMeta(published, next *meta.MetaContent) {
+func PublishMeta(published, next *meta.MetaContent) {
 	publishedModel := model.New(published)
 	nextModel := model.New(next)
 	diff := model.CreateDiff(publishedModel, nextModel)
