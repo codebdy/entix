@@ -48,12 +48,12 @@ func Get(appId uint64) (*App, error) {
 }
 
 func GetSystemApp() *App {
-	if appCache[1] != nil {
-		return appCache[1]
+	if appCache[meta.SYSTEM_APP_ID] != nil {
+		return appCache[meta.SYSTEM_APP_ID]
 	}
 	return &App{
 		AppId: meta.SystemAppData["id"].(uint64),
-		Model: model.New(meta.SystemAppData["meta"].(*meta.MetaContent)),
+		Model: model.New(meta.SystemAppData["meta"].(*meta.MetaContent), meta.SYSTEM_APP_ID),
 	}
 }
 

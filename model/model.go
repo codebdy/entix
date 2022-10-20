@@ -12,8 +12,8 @@ type Model struct {
 	Graph  *graph.Model
 }
 
-func New(c *meta.MetaContent) *Model {
-	metaModel := meta.New(c)
+func New(c *meta.MetaContent, appid uint64) *Model {
+	metaModel := meta.New(c, appid)
 	domainModel := domain.New(metaModel)
 	grahpModel := graph.New(domainModel)
 	model := Model{

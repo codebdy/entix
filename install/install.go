@@ -98,7 +98,7 @@ func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 	}
 
 	nextMeta := systemAppData["meta"].(meta.MetaContent)
-	app.PublishMeta(&meta.MetaContent{}, &nextMeta)
+	app.PublishMeta(&meta.MetaContent{}, &nextMeta, meta.SYSTEM_APP_ID)
 
 	systemApp := app.GetSystemApp()
 

@@ -7,7 +7,7 @@ type Model struct {
 	Codes     []*CodeMeta
 }
 
-func New(m *MetaContent) *Model {
+func New(m *MetaContent, appId uint64) *Model {
 	model := Model{
 		Classes:   make([]*ClassMeta, len(m.Classes)),
 		Relations: make([]*RelationMeta, len(m.Relations)),
@@ -21,6 +21,7 @@ func New(m *MetaContent) *Model {
 
 	for i := range m.Classes {
 		model.Classes[i] = &m.Classes[i]
+		model.Classes[i].AppId = appId
 	}
 
 	for i := range m.Codes {
@@ -29,6 +30,7 @@ func New(m *MetaContent) *Model {
 
 	for i := range m.Relations {
 		model.Relations[i] = &m.Relations[i]
+		model.Relations[i].AppId = appId
 	}
 	return &model
 }
