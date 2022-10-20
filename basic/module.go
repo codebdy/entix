@@ -10,6 +10,7 @@ import (
 )
 
 type BasicModule struct {
+	Name string
 }
 
 func (m BasicModule) QueryFields(ctx context.Context) []*graphql.Field {
@@ -40,5 +41,7 @@ func (m BasicModule) Middlewares() []func(next http.Handler) http.Handler {
 }
 
 func init() {
-	entry.AddModuler(BasicModule{})
+	entry.AddModuler(BasicModule{
+		Name: "BasicModule",
+	})
 }

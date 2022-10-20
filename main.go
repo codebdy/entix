@@ -17,6 +17,9 @@ import (
 	"rxdrag.com/entify/handler"
 	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/orm"
+
+	_ "rxdrag.com/entify/app"
+	_ "rxdrag.com/entify/basic"
 )
 
 const PORT = 4000

@@ -67,10 +67,18 @@ func GetSchema(ctx context.Context) graphql.Schema {
 		Fields: rootMutationFields,
 	})
 
+	if len(rootMutationFields) == 0 {
+		rootMutation = nil
+	}
+
 	rootSubscription := graphql.NewObject(graphql.ObjectConfig{
 		Name:   ROOT_SUBSCRIPTION_NAME,
 		Fields: rootSubscriptionFields,
 	})
+
+	if len(rootSubscriptionFields) == 0 {
+		rootSubscription = nil
+	}
 
 	schemaConfig := graphql.SchemaConfig{
 		Query:        rootQuery,
