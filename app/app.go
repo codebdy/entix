@@ -53,5 +53,6 @@ func GetSystemApp() *App {
 			return appCache[key]
 		}
 	}
-	return nil
+
+	return meta.SystemApp
 }
