@@ -27,4 +27,6 @@ type ClassMeta struct {
 	MuationScript string          `json:"muationScript"`
 	EnableVersion bool            `json:"enableVersion"`
 	Sharable      bool            `json:"sharable"`
+	//生成表名时使用
+	AppId uint64
 }
