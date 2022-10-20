@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify/entry"
 )
 
 type AppModule struct {
@@ -29,4 +30,8 @@ func (m AppModule) Middlewares() []func(next http.Handler) http.Handler {
 	return []func(next http.Handler) http.Handler{
 		LoadersMiddleware,
 	}
+}
+
+func init() {
+	entry.AddModuler(AppModule{})
 }
