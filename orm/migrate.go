@@ -1,4 +1,4 @@
-package repository
+package orm
 
 import (
 	"fmt"
@@ -10,10 +10,10 @@ import (
 	"rxdrag.com/entify/model/table"
 )
 
-func (r *Repository) ExcuteDiff(d *model.Diff) {
+func Migrage(d *model.Diff) {
 	var undoList []string
-	con, err := Open(r.V, r.Model.AppId)
-	dbx := con.Dbx
+	session, err := Open()
+	dbx := session.Dbx
 	if err != nil {
 		panic("Open db error:" + err.Error())
 	}
