@@ -3,6 +3,7 @@ package entry
 import (
 	"context"
 	"log"
+	"net/http"
 
 	"github.com/graphql-go/graphql"
 )
@@ -21,6 +22,7 @@ type Moduler interface {
 	SubscriptionFields(ctx context.Context) []graphql.Field
 	Directives(ctx context.Context) []*graphql.Directive
 	Types(ctx context.Context) []graphql.Type
+	Middlewares() []func(next http.Handler) http.Handler
 }
 
 func GetSchema(ctx context.Context) graphql.Schema {
@@ -73,4 +75,14 @@ func GetSchema(ctx context.Context) graphql.Schema {
 	}
 
 	return schema
+}
+
+func AppendMiddlewares(h http.Handler) http.Handler {
+	for _, model := range modules {
+		middlewares := model.Middlewares()
+		for i := range middlewares {
+			h = middlewares[i](h)
+		}
+	}
+	return h
 }

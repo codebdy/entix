@@ -12,11 +12,8 @@ import (
 	"rxdrag.com/entify/config"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/db"
+	"rxdrag.com/entify/entry"
 	"rxdrag.com/entify/handler"
-	"rxdrag.com/entify/model/meta"
-	"rxdrag.com/entify/repository"
-	"rxdrag.com/entify/resolve"
-	"rxdrag.com/entify/schema"
 )
 
 const PORT = 4000
@@ -42,19 +39,10 @@ func checkParams() {
 	}
 }
 
-func checkMetaInstall() {
-	if !repository.IsEntityExists(meta.APP_ENTITY_NAME) {
-		schema.Installed = false
-	} else {
-		schema.Installed = true
-	}
-}
-
 func main() {
 	defer db.Close()
 	log.Println("启动应用")
 	checkParams()
-	checkMetaInstall()
 
 	h := handler.New(&handler.Config{
 		Pretty:         true,
@@ -65,7 +53,7 @@ func main() {
 	http.Handle("/graphql",
 		middlewares.CorsMiddleware(
 			middlewares.ContextMiddleware(
-				resolve.LoadersMiddleware(h),
+				entry.AppendMiddlewares(h),
 			),
 		),
 	)
