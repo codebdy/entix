@@ -37,9 +37,7 @@ var installInputType = graphql.NewInputObject(
 		Name: "InstallInput",
 		Fields: graphql.InputObjectConfigFieldMap{
 			"meta": &graphql.InputObjectFieldConfig{
-				Type: &graphql.NonNull{
-					OfType: scalars.JSONType,
-				},
+				Type: scalars.JSONType,
 			},
 			ADMIN: &graphql.InputObjectFieldConfig{
 				Type: &graphql.NonNull{
