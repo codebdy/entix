@@ -13,17 +13,13 @@ type AuthenticationModule struct {
 }
 
 func (m AuthenticationModule) QueryFields(ctx context.Context) []*graphql.Field {
-	if app.Installed {
-		return []*graphql.Field{}
-	} else {
-		return installQueryFields()
-	}
+	return []*graphql.Field{}
 }
 func (m AuthenticationModule) MutationFields(ctx context.Context) []*graphql.Field {
 	if app.Installed {
 		return []*graphql.Field{}
 	} else {
-		return installMutationFields()
+		return mutationFields()
 	}
 }
 func (m AuthenticationModule) SubscriptionFields(ctx context.Context) []*graphql.Field {
