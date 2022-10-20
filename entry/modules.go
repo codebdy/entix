@@ -25,6 +25,10 @@ type Moduler interface {
 	Middlewares() []func(next http.Handler) http.Handler
 }
 
+func AddModuler(module Moduler) {
+	modules = append(modules, module)
+}
+
 func GetSchema(ctx context.Context) graphql.Schema {
 	rootQueryFields := graphql.Fields{}
 	rootMutationFields := graphql.Fields{}
