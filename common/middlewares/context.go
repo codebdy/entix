@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/thinkeridea/go-extend/exnet"
-	"rxdrag.com/entify/app"
 	"rxdrag.com/entify/authentication"
 	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/consts"
@@ -36,9 +35,7 @@ func ContextMiddleware(next http.Handler) http.Handler {
 			}
 		}
 		appId := r.Header.Get(consts.HEADER_APPX_APPID)
-		if appId == "" {
-			v.AppId = app.GetSystemApp().AppId
-		} else {
+		if appId != "" {
 			intAppId, _ := strconv.ParseUint(appId, 10, 64)
 			v.AppId = intAppId
 		}
