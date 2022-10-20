@@ -42,7 +42,7 @@ func doPublish(r *repository.Repository, appUuid string) error {
 	return nil
 }
 
-func PublishMetaResolve(p graphql.ResolveParams, model *model.Model) (interface{}, error) {
+func PublishMetaResolve(p graphql.ResolveParams) (interface{}, error) {
 	defer utils.PrintErrorStack()
 	repos := repository.New(model)
 	repos.MakeSupperVerifier()

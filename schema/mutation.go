@@ -72,7 +72,7 @@ func (a *AppSchema) rootMutation() *graphql.Object {
 				Type: scalars.UploadType,
 			},
 		},
-		Resolve: resolve.UploadResolveResolveFn(a.model.AppId),
+		Resolve: resolve.UploadResolveResolve,
 	}
 
 	mutationFields[consts.UPLOAD_PLUGIN] = &graphql.Field{
@@ -82,18 +82,18 @@ func (a *AppSchema) rootMutation() *graphql.Object {
 				Type: scalars.UploadType,
 			},
 		},
-		Resolve: resolve.UploadPluginResolveResolveFn(a.model.AppId),
+		Resolve: resolve.UploadPluginResolveResolve,
 	}
 
 	//if a.appUuid == consts.SYSTEM_APP_UUID {
 	mutationFields[consts.PUBLISH] = &graphql.Field{
 		Type: a.modelParser.OutputType(metaEntity.Name()),
 		Args: graphql.FieldConfigArgument{
-			consts.APPUUID: &graphql.ArgumentConfig{
-				Type: &graphql.NonNull{OfType: graphql.String},
+			consts.APPID: &graphql.ArgumentConfig{
+				Type: &graphql.NonNull{OfType: graphql.ID},
 			},
 		},
-		Resolve: publishResolve,
+		Resolve: resolve.PublishMetaResolve,
 	}
 
 	mutationFields[consts.DEPLOY_RPOCESS] = &graphql.Field{

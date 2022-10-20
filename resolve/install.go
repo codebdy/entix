@@ -10,6 +10,7 @@ import (
 	"rxdrag.com/entify/logs"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/data"
+	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/repository"
 	"rxdrag.com/entify/utils"
 )
@@ -23,8 +24,12 @@ type InstallArg struct {
 
 const INPUT = "input"
 
-func InstallResolve(p graphql.ResolveParams, model *model.Model) (interface{}, error) {
+func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 	defer utils.PrintErrorStack()
+	if !repository.IsEntityExists(meta.APP_ENTITY_NAME) {
+		repository.InstallMeta()
+	}
+
 	input := InstallArg{}
 	mapstructure.Decode(p.Args[INPUT], &input)
 

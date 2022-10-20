@@ -49,7 +49,7 @@ func (f *File) mimeType() string {
 	return mimeTypes[f.extName()]
 }
 
-func (f *File) Save(appId uint64, folder string) FileInfo {
+func (f *File) Save(folder string) FileInfo {
 	nameBody := uuid.New().String()
 	name := fmt.Sprintf("%s%s", nameBody, f.extName())
 	foldeFullPath := fmt.Sprintf("./%s/app%d/%s", consts.STATIC_PATH, appId, folder)
@@ -71,7 +71,7 @@ func (f *File) Save(appId uint64, folder string) FileInfo {
 		panic(err.Error())
 	}
 	io.Copy(file, f.File)
-	dir := fmt.Sprintf("app%d/%s/", appId, folder)
+	dir := fmt.Sprintf("app%d/%s/", f.AppId, folder)
 	path := fmt.Sprintf(dir + name)
 	return FileInfo{
 		Dir:      dir,

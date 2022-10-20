@@ -7,24 +7,20 @@ import (
 	"rxdrag.com/entify/utils"
 )
 
-func UploadResolveResolveFn(appId uint64) graphql.FieldResolveFn {
-	return func(p graphql.ResolveParams) (interface{}, error) {
-		defer utils.PrintErrorStack()
-		file := p.Args[consts.ARG_FILE].(storage.File)
-		fileInfo := file.Save(appId, consts.UPLOAD_PATH)
-		return GetFileUrl(fileInfo, p)
-	}
+func UploadResolveResolve(p graphql.ResolveParams) (interface{}, error) {
+	defer utils.PrintErrorStack()
+	file := p.Args[consts.ARG_FILE].(storage.File)
+	fileInfo := file.Save(consts.UPLOAD_PATH)
+	return GetFileUrl(fileInfo, p)
 }
 
-func UploadPluginResolveResolveFn(appId uint64) graphql.FieldResolveFn {
-	return func(p graphql.ResolveParams) (interface{}, error) {
-		defer utils.PrintErrorStack()
-		file := p.Args[consts.ARG_FILE].(storage.File)
-		fileInfo := file.Save(appId, consts.PLUGINS_PATH)
-		err := storage.Unzip(fileInfo.Path, fileInfo.Dir+fileInfo.NameBody)
-		if err != nil {
-			panic(err)
-		}
-		return GetFileUrl(fileInfo, p)
+func UploadPluginResolveResolve(p graphql.ResolveParams) (interface{}, error) {
+	defer utils.PrintErrorStack()
+	file := p.Args[consts.ARG_FILE].(storage.File)
+	fileInfo := file.Save(consts.PLUGINS_PATH)
+	err := storage.Unzip(fileInfo.Path, fileInfo.Dir+fileInfo.NameBody)
+	if err != nil {
+		panic(err)
 	}
+	return GetFileUrl(fileInfo, p)
 }

@@ -3,6 +3,7 @@ package schema
 import (
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/consts"
+	"rxdrag.com/entify/resolve"
 	"rxdrag.com/entify/scalars"
 	"rxdrag.com/entify/utils"
 )
@@ -61,15 +62,7 @@ func MakeInstallSchema() *graphql.Schema {
 							},
 						},
 					},
-					Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-						defer utils.PrintErrorStack()
-						data, err := installResolve(p)
-						if err == nil {
-							Installed = true
-						}
-
-						return data, err
-					},
+					Resolve: resolve.InstallResolve,
 				},
 			},
 			Description: "Root mutation of entity engine. For install auth entix",
