@@ -11,14 +11,14 @@ import (
 type AppModule struct {
 }
 
-func (m AppModule) QueryFields(ctx context.Context) []graphql.Field {
-	return []graphql.Field{}
+func (m AppModule) QueryFields(ctx context.Context) []*graphql.Field {
+	return []*graphql.Field{}
 }
-func (m AppModule) MutationFields(ctx context.Context) []graphql.Field {
-	return []graphql.Field{}
+func (m AppModule) MutationFields(ctx context.Context) []*graphql.Field {
+	return []*graphql.Field{}
 }
-func (m AppModule) SubscriptionFields(ctx context.Context) []graphql.Field {
-	return []graphql.Field{}
+func (m AppModule) SubscriptionFields(ctx context.Context) []*graphql.Field {
+	return []*graphql.Field{}
 }
 func (m AppModule) Directives(ctx context.Context) []*graphql.Directive {
 	return []*graphql.Directive{}

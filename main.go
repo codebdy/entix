@@ -7,6 +7,7 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+	"rxdrag.com/entify/app"
 	"rxdrag.com/entify/common/errorx"
 	"rxdrag.com/entify/common/middlewares"
 	"rxdrag.com/entify/config"
@@ -14,6 +15,8 @@ import (
 	"rxdrag.com/entify/db"
 	"rxdrag.com/entify/entry"
 	"rxdrag.com/entify/handler"
+	"rxdrag.com/entify/model/meta"
+	"rxdrag.com/entify/repository"
 )
 
 const PORT = 4000
@@ -39,9 +42,18 @@ func checkParams() {
 	}
 }
 
+func checkMetaInstall() {
+	if !repository.IsEntityExists(meta.APP_ENTITY_NAME) {
+		app.Installed = false
+	} else {
+		app.Installed = true
+	}
+}
+
 func main() {
 	defer db.Close()
 	log.Println("启动应用")
+	checkMetaInstall()
 	checkParams()
 
 	h := handler.New(&handler.Config{

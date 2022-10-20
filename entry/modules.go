@@ -17,9 +17,9 @@ const (
 var modules []Moduler = []Moduler{}
 
 type Moduler interface {
-	QueryFields(ctx context.Context) []graphql.Field
-	MutationFields(ctx context.Context) []graphql.Field
-	SubscriptionFields(ctx context.Context) []graphql.Field
+	QueryFields(ctx context.Context) []*graphql.Field
+	MutationFields(ctx context.Context) []*graphql.Field
+	SubscriptionFields(ctx context.Context) []*graphql.Field
 	Directives(ctx context.Context) []*graphql.Directive
 	Types(ctx context.Context) []graphql.Type
 	Middlewares() []func(next http.Handler) http.Handler
@@ -37,14 +37,21 @@ func GetSchema(ctx context.Context) graphql.Schema {
 	types := []graphql.Type{}
 
 	for _, module := range modules {
-		for _, field := range module.QueryFields(ctx) {
-			rootQueryFields[field.Name] = &field
+		queryFields := module.QueryFields(ctx)
+		for i := range queryFields {
+			field := queryFields[i]
+			rootQueryFields[field.Name] = field
 		}
-		for _, field := range module.MutationFields(ctx) {
-			rootMutationFields[field.Name] = &field
+		mutationFields := module.MutationFields(ctx)
+		for i := range mutationFields {
+			field := mutationFields[i]
+			rootMutationFields[field.Name] = field
 		}
-		for _, field := range module.SubscriptionFields(ctx) {
-			rootSubscriptionFields[field.Name] = &field
+
+		subscriptionFields := module.SubscriptionFields(ctx)
+		for i := range subscriptionFields {
+			field := subscriptionFields[i]
+			rootSubscriptionFields[field.Name] = field
 		}
 		directives = append(directives, module.Directives(ctx)...)
 		types = append(types, module.Types(ctx)...)
