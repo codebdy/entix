@@ -1,65 +1,14 @@
 package schema
 
 import (
-	"errors"
-
 	"github.com/graphql-go/graphql"
-	"rxdrag.com/entify/authentication"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/resolve"
 	"rxdrag.com/entify/scalars"
-	"rxdrag.com/entify/utils"
 )
 
 const INPUT = "input"
-
-func (a *AppSchema) appendAuthMutation(fields graphql.Fields) {
-	fields[consts.LOGIN] = &graphql.Field{
-		Type: graphql.String,
-		Args: graphql.FieldConfigArgument{
-			consts.LOGIN_NAME: &graphql.ArgumentConfig{
-				Type: &graphql.NonNull{OfType: graphql.String},
-			},
-			consts.PASSWORD: &graphql.ArgumentConfig{
-				Type: &graphql.NonNull{OfType: graphql.String},
-			},
-		},
-		Resolve: resolve.LoginResolveFn(a.model),
-	}
-
-	fields[consts.LOGOUT] = &graphql.Field{
-		Type:    graphql.Boolean,
-		Resolve: resolve.LogoutResolveFn(a.model),
-	}
-	fields[consts.CHANGE_PASSWORD] = &graphql.Field{
-		Type: graphql.String,
-		Args: graphql.FieldConfigArgument{
-			consts.LOGIN_NAME: &graphql.ArgumentConfig{
-				Type: &graphql.NonNull{OfType: graphql.String},
-			},
-			consts.OLD_PASSWORD: &graphql.ArgumentConfig{
-				Type: &graphql.NonNull{OfType: graphql.String},
-			},
-			consts.New_PASSWORD: &graphql.ArgumentConfig{
-				Type: &graphql.NonNull{OfType: graphql.String},
-			},
-		},
-		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-			defer utils.PrintErrorStack()
-			if p.Args[consts.LOGIN_NAME] == nil ||
-				p.Args["oldPassword"] == nil ||
-				p.Args["newPassword"] == nil {
-				return "", errors.New("loginName, oldPassword or newPassword is emperty!")
-			}
-			auth := authentication.New()
-
-			return auth.ChangePassword(p.Args[consts.LOGIN_NAME].(string),
-				p.Args["oldPassword"].(string),
-				p.Args["newPassword"].(string))
-		},
-	}
-}
 
 func (a *AppSchema) rootMutation() *graphql.Object {
 	metaEntity := a.model.Graph.GetMetaEntity()
@@ -84,28 +33,6 @@ func (a *AppSchema) rootMutation() *graphql.Object {
 		},
 		Resolve: resolve.UploadPluginResolveResolve,
 	}
-
-	//if a.appUuid == consts.SYSTEM_APP_UUID {
-	mutationFields[consts.PUBLISH] = &graphql.Field{
-		Type: a.modelParser.OutputType(metaEntity.Name()),
-		Args: graphql.FieldConfigArgument{
-			consts.APPID: &graphql.ArgumentConfig{
-				Type: &graphql.NonNull{OfType: graphql.ID},
-			},
-		},
-		Resolve: resolve.PublishMetaResolve,
-	}
-
-	mutationFields[consts.DEPLOY_RPOCESS] = &graphql.Field{
-		Type: graphql.ID,
-		Args: graphql.FieldConfigArgument{
-			consts.ID: &graphql.ArgumentConfig{
-				Type: &graphql.NonNull{OfType: graphql.ID},
-			},
-		},
-		Resolve: resolve.DeployProcessResolveFn(a.model),
-	}
-	//}
 
 	for _, entity := range a.model.Graph.RootEnities() {
 		if entity.Domain.Root {
