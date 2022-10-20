@@ -33,8 +33,12 @@ func Open(model *model.Model) (*Session, error) {
 	return &session, nil
 }
 
+func OpenSessionWithoutApp() (*Session, error) {
+	return Open(nil)
+}
+
 func IsEntityExists(name string) bool {
-	session, err := Open(nil)
+	session, err := OpenSessionWithoutApp()
 	if err != nil {
 		log.Panic(err)
 	}

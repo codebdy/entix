@@ -30,21 +30,3 @@ func Open(v *AbilityVerifier, appId uint64) (*Session, error) {
 	cfg := config.GetDbConfig()
 	return openWithConfig(cfg, v, appId)
 }
-
-func (c *Session) BeginTx() error {
-	return c.Dbx.BeginTx()
-}
-
-func (c *Session) Commit() error {
-	return c.Dbx.Commit()
-}
-
-func (c *Session) ClearTx() {
-	c.Dbx.ClearTx()
-}
-
-//use for sql join table
-func (c *Session) CreateId() int {
-	c.idSeed++
-	return c.idSeed
-}
