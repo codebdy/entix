@@ -37,7 +37,7 @@ func ContextMiddleware(next http.Handler) http.Handler {
 		}
 		appId := r.Header.Get(consts.HEADER_APPX_APPID)
 		if appId == "" {
-			v.AppId = app.GetSystemApp().Model().AppId
+			v.AppId = app.GetSystemApp().AppId
 		} else {
 			intAppId, _ := strconv.ParseUint(appId, 10, 64)
 			v.AppId = intAppId

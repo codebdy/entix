@@ -13,8 +13,8 @@ import (
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/graphql/gqlerrors"
 	"github.com/mitchellh/mapstructure"
+	"rxdrag.com/entify/app"
 	"rxdrag.com/entify/common/contexts"
-	"rxdrag.com/entify/schema"
 	"rxdrag.com/entify/storage"
 )
 
@@ -215,7 +215,7 @@ func (h *Handler) ContextHandler(ctx context.Context, w http.ResponseWriter, r *
 	opts := NewRequestOptions(r)
 	// execute graphql query
 	params := graphql.Params{
-		Schema:         *schema.Get(appUuid).Schema(),
+		Schema:         *app.Get(appUuid).Schema(),
 		RequestString:  opts.Query,
 		VariableValues: opts.Variables,
 		OperationName:  opts.OperationName,

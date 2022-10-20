@@ -5,20 +5,18 @@ import (
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/repository"
 	"rxdrag.com/entify/schema"
-	"rxdrag.com/entify/schema/parser"
 )
 
 type AppSchema struct {
-	appId       uint64
-	model       *model.Model
-	modelParser parser.ModelParser
-	schema      *graphql.Schema
+	AppId  uint64
+	model  *model.Model
+	schema *graphql.Schema
 }
 
 //本函数要重写
 func NewAppSchema(appId uint64) *AppSchema {
 	appSchema := &AppSchema{
-		appId: appId,
+		AppId: appId,
 	}
 
 	if !Installed && appId != SYSTEM_APP_ID {
@@ -69,7 +67,7 @@ func (s *AppSchema) Schema() *graphql.Schema {
 }
 
 func (s *AppSchema) doMake() *graphql.Schema {
-	s.modelParser.ParseModel(s.model)
+	//s.modelParser.ParseModel(s.model)
 
 	schemaConfig := graphql.SchemaConfig{
 		//Query:    s.rootQuery(),
@@ -80,7 +78,7 @@ func (s *AppSchema) doMake() *graphql.Schema {
 				Locations: []string{graphql.DirectiveLocationField},
 			}),
 		},
-		Types: append(s.modelParser.EntityTypes()),
+		//Types: append(s.modelParser.EntityTypes()),
 	}
 	theSchema, err := graphql.NewSchema(schemaConfig)
 
