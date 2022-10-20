@@ -2,10 +2,10 @@ package logs
 
 import (
 	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify/app/model"
+	"rxdrag.com/entify/app/model/data"
+	"rxdrag.com/entify/app/model/graph"
 	"rxdrag.com/entify/common/contexts"
-	"rxdrag.com/entify/model"
-	"rxdrag.com/entify/model/data"
-	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/repository"
 )
 
