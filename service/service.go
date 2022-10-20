@@ -1,14 +1,15 @@
-package orm
+package service
 
 import (
 	"fmt"
 
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/model/graph"
+	"rxdrag.com/entify/orm"
 )
 
 func QueryInterface(intf *graph.Interface, args graph.QueryArg) map[string]interface{} {
-	session, err := Open()
+	session, err := orm.Open()
 	if err != nil {
 		panic(err.Error())
 	}
@@ -16,7 +17,7 @@ func QueryInterface(intf *graph.Interface, args graph.QueryArg) map[string]inter
 }
 
 func QueryOneInterface(intf *graph.Interface, args graph.QueryArg) interface{} {
-	session, err := Open()
+	session, err := orm.Open()
 	if err != nil {
 		panic(err.Error())
 	}
@@ -24,7 +25,7 @@ func QueryOneInterface(intf *graph.Interface, args graph.QueryArg) interface{} {
 }
 
 func QueryEntity(entity *graph.Entity, args graph.QueryArg) map[string]interface{} {
-	session, err := Open()
+	session, err := orm.Open()
 	if err != nil {
 		panic(err.Error())
 	}
@@ -32,7 +33,7 @@ func QueryEntity(entity *graph.Entity, args graph.QueryArg) map[string]interface
 }
 
 func QueryOneEntity(entity *graph.Entity, args graph.QueryArg) interface{} {
-	session, err := Open()
+	session, err := orm.Open()
 	if err != nil {
 		panic(err.Error())
 	}
@@ -40,7 +41,7 @@ func QueryOneEntity(entity *graph.Entity, args graph.QueryArg) interface{} {
 }
 
 func DeleteInstances(instances []*data.Instance) (interface{}, error) {
-	session, err := Open()
+	session, err := orm.Open()
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, err
@@ -70,7 +71,7 @@ func DeleteInstances(instances []*data.Instance) (interface{}, error) {
 }
 
 func DeleteInstance(instance *data.Instance) (interface{}, error) {
-	session, err := Open()
+	session, err := orm.Open()
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, err
@@ -92,7 +93,7 @@ func DeleteInstance(instance *data.Instance) (interface{}, error) {
 }
 
 func Save(instances []*data.Instance) ([]interface{}, error) {
-	session, err := Open()
+	session, err := orm.Open()
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, err
@@ -127,7 +128,7 @@ func Save(instances []*data.Instance) ([]interface{}, error) {
 }
 
 func SaveOne(instance *data.Instance) (interface{}, error) {
-	session, err := Open()
+	session, err := orm.Open()
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, err
@@ -154,7 +155,7 @@ func SaveOne(instance *data.Instance) (interface{}, error) {
 }
 
 func InsertOne(instance *data.Instance) (interface{}, error) {
-	session, err := Open()
+	session, err := orm.Open()
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, err
@@ -166,7 +167,7 @@ func InsertOne(instance *data.Instance) (interface{}, error) {
 		return nil, err
 	}
 
-	obj, err := session.doInsertOne(instance)
+	obj, err := session.InsertOne(instance)
 	if err != nil {
 		fmt.Println(err.Error())
 		session.Dbx.Rollback()
@@ -186,7 +187,7 @@ func BatchQueryAssociations(
 	ids []uint64,
 	args graph.QueryArg,
 ) []map[string]interface{} {
-	con, err := Open()
+	con, err := orm.Open()
 	if err != nil {
 		panic(err.Error())
 	}

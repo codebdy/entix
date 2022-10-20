@@ -1,6 +1,7 @@
 package install
 
 import (
+	"log"
 	"time"
 
 	"github.com/graphql-go/graphql"
@@ -14,6 +15,7 @@ import (
 	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/orm"
 	"rxdrag.com/entify/repository"
+	"rxdrag.com/entify/service"
 	"rxdrag.com/entify/utils"
 )
 
@@ -32,10 +34,23 @@ func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 		nextMeta := meta.SystemAppData["meta"].(meta.MetaContent)
 		app.PublishMeta(&meta.MetaContent{}, &nextMeta)
 
+		systemApp := app.GetSystemApp()
+
 		instance := data.NewInstance(
 			meta.SystemAppData,
-			model.Graph.GetEntityByName(consts.META_USER),
+			systemApp.GetEntityByName(meta.APP_ENTITY_NAME),
 		)
+
+		_, err := service.InsertOne(instance)
+
+		if err != nil {
+			log.Panic(err)
+		}
+
+	}
+	systemApp, err := app.Get(1)
+	if err != nil {
+		log.Panic(err)
 	}
 
 	input := InstallArg{}

@@ -233,7 +233,7 @@ func (con *Session) QueryOneEntity(entity *graph.Entity, args map[string]interfa
 	return convertValuesToEntity(values, entity)
 }
 
-func (con *Session) doInsertOne(instance *data.Instance) (interface{}, error) {
+func (con *Session) InsertOne(instance *data.Instance) (interface{}, error) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	saveStr := sqlBuilder.BuildInsertSQL(instance.Fields, instance.Table())
 	values := makeSaveValues(instance.Fields)
@@ -559,7 +559,7 @@ func (con *Session) DeleteAssociationPovit(povit *data.AssociationPovit) {
 
 func (con *Session) SaveOne(instance *data.Instance) (interface{}, error) {
 	if instance.IsInsert() {
-		return con.doInsertOne(instance)
+		return con.InsertOne(instance)
 	} else {
 		return con.doUpdateOne(instance)
 	}

@@ -8,6 +8,7 @@ import (
 	"github.com/graphql-go/graphql"
 	"github.com/opentracing/opentracing-go/log"
 	"rxdrag.com/entify/model"
+	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/model/meta"
 )
 
@@ -54,4 +55,8 @@ func GetSystemApp() *App {
 		AppId: meta.SystemAppData["id"].(uint64),
 		Model: model.New(meta.SystemAppData["meta"].(*meta.MetaContent)),
 	}
+}
+
+func (a *App) GetEntityByName(name string) *graph.Entity {
+	return a.Model.Graph.GetEntityByName(name)
 }

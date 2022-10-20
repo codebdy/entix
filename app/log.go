@@ -1,4 +1,4 @@
-package logs
+package app
 
 import (
 	"github.com/graphql-go/graphql"
@@ -6,10 +6,10 @@ import (
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/model/graph"
-	"rxdrag.com/entify/repository"
+	"rxdrag.com/entify/orm"
 )
 
-func WriteModelLog(
+func (a *App) WriteModelLog(
 	model *model.Model,
 	cls *graph.Class,
 	p graphql.ResolveParams,
@@ -17,8 +17,6 @@ func WriteModelLog(
 	result string,
 	message string,
 ) {
-	repos := repository.New(model)
-	repos.MakeSupperVerifier()
 	contextsValues := contexts.Values(p.Context)
 	logObject := map[string]interface{}{
 		"ip":          contextsValues.IP,
@@ -39,10 +37,14 @@ func WriteModelLog(
 	}
 
 	instance := data.NewInstance(logObject, model.Graph.GetEntityByName("ModelLog"))
-	repos.SaveOne(instance)
+	sesson, err := orm.Open()
+	if err != nil {
+		panic(err)
+	}
+	sesson.SaveOne(instance)
 }
 
-func WriteBusinessLog(
+func (a *App) WriteBusinessLog(
 	model *model.Model,
 	p graphql.ResolveParams,
 	operate string,
@@ -56,10 +58,10 @@ func WriteBusinessLog(
 		useId = contextsValues.Me.Id
 	}
 
-	WriteUserBusinessLog(useId, model, p, operate, result, message)
+	a.WriteUserBusinessLog(useId, model, p, operate, result, message)
 }
 
-func WriteUserBusinessLog(
+func (a *App) WriteUserBusinessLog(
 	useId string,
 	model *model.Model,
 	p graphql.ResolveParams,
@@ -67,8 +69,6 @@ func WriteUserBusinessLog(
 	result string,
 	message string,
 ) {
-	repos := repository.New(model)
-	repos.MakeSupperVerifier()
 	contextsValues := contexts.Values(p.Context)
 
 	logObject := map[string]interface{}{
@@ -87,5 +87,9 @@ func WriteUserBusinessLog(
 	}
 
 	instance := data.NewInstance(logObject, model.Graph.GetEntityByName("BusinessLog"))
-	repos.SaveOne(instance)
+	sesson, err := orm.Open()
+	if err != nil {
+		panic(err)
+	}
+	sesson.SaveOne(instance)
 }
