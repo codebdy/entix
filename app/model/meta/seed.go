@@ -3,7 +3,8 @@ package meta
 import "rxdrag.com/entify/consts"
 
 var SystemApp = map[string]interface{}{
-	"uuid": SYSTEM_APP_UUID,
+	"id":   SYSTEM_APP_ID,
+	"uuid": "SYSTEM-APP-UUID",
 	"name": "Appx",
 	"meta": MetaContent{
 		Packages: []PackageMeta{
