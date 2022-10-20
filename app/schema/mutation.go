@@ -2,16 +2,13 @@ package schema
 
 import (
 	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify/app/resolve"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
-	"rxdrag.com/entify/resolve"
 	"rxdrag.com/entify/scalars"
 )
 
-const INPUT = "input"
-
-func (a *AppSchema) rootMutation() *graphql.Object {
-	metaEntity := a.model.Graph.GetMetaEntity()
+func (a *AppSchema) mutationFields() graphql.Fields {
 	mutationFields := graphql.Fields{}
 
 	mutationFields[consts.UPLOAD] = &graphql.Field{
@@ -34,25 +31,17 @@ func (a *AppSchema) rootMutation() *graphql.Object {
 		Resolve: resolve.UploadPluginResolveResolve,
 	}
 
-	for _, entity := range a.model.Graph.RootEnities() {
+	for _, entity := range a.Model.Graph.RootEnities() {
 		if entity.Domain.Root {
 			a.appendEntityMutationToFields(entity, mutationFields)
 		}
 	}
 
-	for _, service := range a.model.Graph.Services {
+	for _, service := range a.Model.Graph.Services {
 		a.appendServiceMutationToFields(service, mutationFields)
 	}
 
-	a.appendAuthMutation(mutationFields)
-
-	rootMutation := graphql.ObjectConfig{
-		Name:        consts.ROOT_MUTATION_NAME,
-		Fields:      mutationFields,
-		Description: "Root mutation of entity engine.",
-	}
-
-	return graphql.NewObject(rootMutation)
+	return mutationFields
 }
 
 func (a *AppSchema) deleteArgs(entity *graph.Entity) graphql.FieldConfigArgument {
@@ -113,22 +102,22 @@ func (a *AppSchema) appendEntityMutationToFields(entity *graph.Entity, feilds gr
 	(feilds)[entity.DeleteName()] = &graphql.Field{
 		Type:    a.modelParser.MutationResponse(entity.Name()),
 		Args:    a.deleteArgs(entity),
-		Resolve: resolve.DeleteResolveFn(entity, a.Model()),
+		Resolve: resolve.DeleteResolveFn(entity, a.Model),
 	}
 	(feilds)[entity.DeleteByIdName()] = &graphql.Field{
 		Type:    a.modelParser.OutputType(entity.Name()),
 		Args:    deleteByIdArgs(),
-		Resolve: resolve.DeleteByIdResolveFn(entity, a.Model()),
+		Resolve: resolve.DeleteByIdResolveFn(entity, a.Model),
 	}
 	(feilds)[entity.UpsertName()] = &graphql.Field{
 		Type:    &graphql.List{OfType: a.modelParser.OutputType(entity.Name())},
 		Args:    a.upsertArgs(entity),
-		Resolve: resolve.PostResolveFn(entity, a.Model()),
+		Resolve: resolve.PostResolveFn(entity, a.Model),
 	}
 	(feilds)[entity.UpsertOneName()] = &graphql.Field{
 		Type:    a.modelParser.OutputType(entity.Name()),
 		Args:    a.upsertOneArgs(entity),
-		Resolve: resolve.PostOneResolveFn(entity, a.Model()),
+		Resolve: resolve.PostOneResolveFn(entity, a.Model),
 	}
 
 	updateInput := a.modelParser.SetInput(entity.Name())
@@ -136,7 +125,7 @@ func (a *AppSchema) appendEntityMutationToFields(entity *graph.Entity, feilds gr
 		(feilds)[entity.SetName()] = &graphql.Field{
 			Type:    a.modelParser.MutationResponse(entity.Name()),
 			Args:    a.setArgs(entity),
-			Resolve: resolve.SetResolveFn(entity, a.Model()),
+			Resolve: resolve.SetResolveFn(entity, a.Model),
 		}
 	}
 }
