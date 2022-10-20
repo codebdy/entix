@@ -16,7 +16,7 @@ import (
 	"rxdrag.com/entify/entry"
 	"rxdrag.com/entify/handler"
 	"rxdrag.com/entify/model/meta"
-	"rxdrag.com/entify/repository"
+	"rxdrag.com/entify/orm"
 )
 
 const PORT = 4000
@@ -43,7 +43,7 @@ func checkParams() {
 }
 
 func checkMetaInstall() {
-	if !repository.IsEntityExists(meta.APP_ENTITY_NAME) {
+	if !orm.IsEntityExists(meta.APP_ENTITY_NAME) {
 		app.Installed = false
 	} else {
 		app.Installed = true
@@ -81,8 +81,9 @@ func main() {
 	}
 
 	fmt.Println(fmt.Sprintf("🚀 Graphql server ready at http://localhost:%d/graphql", PORT))
-	err2 := http.ListenAndServe(fmt.Sprintf(":%d", PORT), nil)
-	if err2 != nil {
-		fmt.Printf("启动失败:%s", err2)
+	err := http.ListenAndServe(fmt.Sprintf(":%d", PORT), nil)
+	if err != nil {
+		fmt.Printf("启动失败:%s", err)
+		log.Panic(err)
 	}
 }
