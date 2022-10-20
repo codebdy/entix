@@ -6,6 +6,7 @@ import (
 
 	"github.com/graph-gophers/dataloader"
 	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/graph"
@@ -42,7 +43,8 @@ func CreateDataLoaders() *Loaders {
 }
 
 func (l *Loaders) GetLoader(p graphql.ResolveParams, association *graph.Association, args graph.QueryArg, model *model.Model) *dataloader.Loader {
-	loaderId := association.Path() + model.AppUuid
+	contextValues := contexts.Values(p.Context)
+	loaderId := fmt.Sprintf("%s%d", association.Path(), contextValues.AppId)
 	if l.loaders[loaderId] == nil {
 		l.loaders[loaderId] = dataloader.NewBatchedLoader(QueryBatchFn(p, association, args, model))
 	}
