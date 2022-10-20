@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -14,8 +13,8 @@ import (
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/graphql/gqlerrors"
 	"github.com/mitchellh/mapstructure"
-	"rxdrag.com/entify/app"
 	"rxdrag.com/entify/common/contexts"
+	"rxdrag.com/entify/entry"
 	"rxdrag.com/entify/storage"
 )
 
@@ -216,12 +215,9 @@ func (h *Handler) ContextHandler(ctx context.Context, w http.ResponseWriter, r *
 	// get query
 	opts := NewRequestOptions(appId, r)
 	// execute graphql query
-	app, err := app.Get(appId)
-	if err != nil {
-		log.Panic(err)
-	}
+
 	params := graphql.Params{
-		Schema:         *app.Schema,
+		Schema:         entry.GetSchema(ctx),
 		RequestString:  opts.Query,
 		VariableValues: opts.Variables,
 		OperationName:  opts.OperationName,
