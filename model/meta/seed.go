@@ -2,7 +2,7 @@ package meta
 
 import "rxdrag.com/entify/consts"
 
-var SystemApp = map[string]interface{}{
+var SystemAppData = map[string]interface{}{
 	"id":   SYSTEM_APP_ID,
 	"uuid": "SYSTEM-APP-UUID",
 	"name": "Appx",

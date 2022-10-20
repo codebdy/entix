@@ -29,8 +29,13 @@ const INPUT = "input"
 func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 	defer utils.PrintErrorStack()
 	if !orm.IsEntityExists(meta.APP_ENTITY_NAME) {
-		nextMeta := meta.SystemApp["meta"].(meta.MetaContent)
+		nextMeta := meta.SystemAppData["meta"].(meta.MetaContent)
 		app.PublishMeta(&meta.MetaContent{}, &nextMeta)
+
+		instance := data.NewInstance(
+			meta.SystemAppData,
+			model.Graph.GetEntityByName(consts.META_USER),
+		)
 	}
 
 	input := InstallArg{}

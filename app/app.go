@@ -7,14 +7,15 @@ import (
 
 	"github.com/graphql-go/graphql"
 	"github.com/opentracing/opentracing-go/log"
+	"rxdrag.com/entify/model"
+	"rxdrag.com/entify/model/meta"
 )
 
 var Installed = false
 
 type App struct {
-	AppId   uint64
-	AppUuid string
-	//Model   *model.Model
+	AppId  uint64
+	Model  *model.Model
 	Schema *graphql.Schema
 }
 
@@ -43,4 +44,14 @@ func Get(appId uint64) (*App, error) {
 	}
 
 	return appCache[appId], nil
+}
+
+func GetSystemApp() *App {
+	if appCache[1] != nil {
+		return appCache[1]
+	}
+	return &App{
+		AppId: meta.SystemAppData["id"].(uint64),
+		Model: model.New(meta.SystemAppData["meta"].(*meta.MetaContent)),
+	}
 }
