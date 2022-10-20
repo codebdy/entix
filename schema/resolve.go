@@ -2,8 +2,6 @@ package schema
 
 import (
 	"errors"
-	"fmt"
-	"strconv"
 
 	"github.com/graphql-go/graphql"
 	"github.com/opentracing/opentracing-go/log"
@@ -20,20 +18,9 @@ func publishResolve(p graphql.ResolveParams) (interface{}, error) {
 		log.Error(err)
 		return nil, err
 	}
-	appIdStr := p.Args[consts.APPID].(string)
 
-	appId, err := strconv.ParseUint(appIdStr, 10, 64)
-
+	app, err := app.GetAppByIdArg(p.Args[consts.APPID])
 	if err != nil {
-		err := errors.New(fmt.Sprintf("App id error:%s", appIdStr))
-		log.Error(err)
-		return nil, err
-	}
-	app := app.Get(appId)
-
-	if app == nil {
-		err := errors.New(fmt.Sprintf("Can not find app by id:%d", appId))
-		log.Error(err)
 		return nil, err
 	}
 	app.Publish()
