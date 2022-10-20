@@ -9,7 +9,7 @@ import (
 	"rxdrag.com/entify/authentication/jwt"
 	"rxdrag.com/entify/common/auth"
 	"rxdrag.com/entify/db/dialect"
-	"rxdrag.com/entify/repository"
+	"rxdrag.com/entify/orm"
 	"rxdrag.com/entify/utils"
 )
 
@@ -23,7 +23,7 @@ func New() *Authentication {
 }
 
 func (a *Authentication) loadUser(loginName string) *auth.User {
-	con, err := repository.Open(nil, 0)
+	session, err := orm.Open()
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
@@ -33,7 +33,7 @@ func (a *Authentication) loadUser(loginName string) *auth.User {
 	var isDemo sql.NullBool
 
 	sqlBuilder := dialect.GetSQLBuilder()
-	err = con.Dbx.QueryRow(sqlBuilder.BuildMeSQL(), loginName).Scan(
+	err = session.Dbx.QueryRow(sqlBuilder.BuildMeSQL(), loginName).Scan(
 		&user.Id,
 		&user.Name,
 		&user.LoginName,
@@ -50,7 +50,7 @@ func (a *Authentication) loadUser(loginName string) *auth.User {
 	user.IsSupper = isSupper.Bool
 	user.IsDemo = isDemo.Bool
 
-	rows, err := con.Dbx.Query(sqlBuilder.BuildRolesSQL(), user.Id)
+	rows, err := session.Dbx.Query(sqlBuilder.BuildRolesSQL(), user.Id)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -66,14 +66,14 @@ func (a *Authentication) loadUser(loginName string) *auth.User {
 }
 
 func (a *Authentication) CheckPassword(loginName, pwd string) (bool, error) {
-	con, err := repository.Open(nil, 0)
+	session, err := orm.Open()
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
 	}
 	sqlBuilder := dialect.GetSQLBuilder()
 	var password string
-	err = con.Dbx.QueryRow(sqlBuilder.BuildLoginSQL(), loginName).Scan(&password)
+	err = session.Dbx.QueryRow(sqlBuilder.BuildLoginSQL(), loginName).Scan(&password)
 	if err != nil {
 		fmt.Println(err)
 		return false, errors.New("Login failed!")
@@ -112,13 +112,13 @@ func (a *Authentication) ChangePassword(loginName, oldPassword, newPassword stri
 		return "", err
 	}
 
-	con, err := repository.Open(nil, 0)
+	session, err := orm.Open()
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
 	}
 	sqlBuilder := dialect.GetSQLBuilder()
-	result, err := con.Dbx.Exec(
+	result, err := session.Dbx.Exec(
 		sqlBuilder.BuildChangePasswordSQL(),
 		utils.BcryptEncode(newPassword),
 		loginName,

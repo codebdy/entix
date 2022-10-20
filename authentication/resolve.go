@@ -1,8 +1,8 @@
-package resolve
+package authentication
 
 import (
 	"github.com/graphql-go/graphql"
-	"rxdrag.com/entify/authentication"
+	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/logs"
 	"rxdrag.com/entify/model"
@@ -12,7 +12,7 @@ import (
 func LoginResolveFn(model *model.Model) func(p graphql.ResolveParams) (interface{}, error) {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
-		auth := authentication.New()
+		auth := New()
 		loginName := p.Args[consts.LOGIN_NAME].(string)
 		result, err := auth.Login(loginName, p.Args[consts.PASSWORD].(string))
 		if err != nil {
@@ -22,4 +22,17 @@ func LoginResolveFn(model *model.Model) func(p graphql.ResolveParams) (interface
 		}
 		return result, err
 	}
+}
+
+func LogoutResolveFn(model *model.Model) func(p graphql.ResolveParams) (interface{}, error) {
+	return func(p graphql.ResolveParams) (interface{}, error) {
+		defer utils.PrintErrorStack()
+		token := contexts.Values(p.Context).Token
+		if token != "" {
+			Logout(token)
+		}
+		logs.WriteBusinessLog(model, p, logs.LOGOUT, logs.SUCCESS, "")
+		return true, nil
+	}
+
 }
