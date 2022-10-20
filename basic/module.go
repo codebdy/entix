@@ -14,14 +14,14 @@ type BasicModule struct {
 }
 
 func (m BasicModule) QueryFields(ctx context.Context) []*graphql.Field {
-	if !app.Installed {
+	if app.Installed {
 		return []*graphql.Field{}
 	} else {
 		return installQueryFields()
 	}
 }
 func (m BasicModule) MutationFields(ctx context.Context) []*graphql.Field {
-	if !app.Installed {
+	if app.Installed {
 		return []*graphql.Field{}
 	} else {
 		return installMutationFields()
