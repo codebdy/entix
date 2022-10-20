@@ -98,7 +98,10 @@ func New(m *domain.Model) *Model {
 
 	for i := range model.Relations {
 		relation := model.Relations[i]
-		model.Tables = append(model.Tables, NewRelationTable(relation))
+		if relation.SourceMutiplicity == meta.ZERO_MANY && relation.TargetMultiplicity == meta.ZERO_MANY {
+			model.Tables = append(model.Tables, NewRelationTable(relation))
+		}
+		//**后面需要处理外部关联
 	}
 
 	return &model

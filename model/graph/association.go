@@ -54,6 +54,14 @@ func (a *Association) IsArray() bool {
 	}
 }
 
+func (a *Association) IsColumn() bool {
+	if a.IsSource() {
+		return a.Relation.TargetMultiplicity == meta.ZERO_ONE && a.Relation.SourceMutiplicity == meta.ZERO_MANY
+	} else {
+		return a.Relation.SourceMutiplicity == meta.ZERO_ONE && a.Relation.TargetMultiplicity == meta.ZERO_MANY
+	}
+}
+
 func (a *Association) IsSource() bool {
 	return a.Relation.SourceEntity.Uuid() == a.OwnerClassUuid
 }

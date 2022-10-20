@@ -6,6 +6,7 @@ import (
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/model/table"
+	"rxdrag.com/entify/utils"
 )
 
 func NewEntityTable(entity *Entity) *table.Table {
@@ -22,6 +23,15 @@ func NewEntityTable(entity *Entity) *table.Table {
 		table.Columns = append(table.Columns, NewAttributeColumn(attr))
 	}
 
+	allAssocs := entity.AllAssociations()
+
+	for i := range allAssocs {
+		assoc := allAssocs[i]
+		if assoc.IsColumn() {
+			table.Columns = append(table.Columns, NewAssociationColumn(assoc))
+		}
+	}
+
 	entity.Table = table
 	return table
 }
@@ -29,6 +39,17 @@ func NewEntityTable(entity *Entity) *table.Table {
 func NewAttributeColumn(attr *Attribute) *table.Column {
 	return &table.Column{
 		AttributeMeta: attr.AttributeMeta,
+	}
+}
+
+func NewAssociationColumn(assoc *Association) *table.Column {
+	return &table.Column{
+		AttributeMeta: meta.AttributeMeta{
+			Type:  meta.ID,
+			Uuid:  assoc.Name() + assoc.Relation.Uuid,
+			Name:  utils.SnakeString(assoc.Name()) + "_id",
+			Index: true,
+		},
 	}
 }
 
