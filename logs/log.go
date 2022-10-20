@@ -3,12 +3,14 @@ package logs
 import (
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/common/contexts"
+	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/service"
 )
 
 func WriteModelLog(
+	model *model.Model,
 	cls *graph.Class,
 	p graphql.ResolveParams,
 	operate string,
@@ -34,11 +36,12 @@ func WriteModelLog(
 		}
 	}
 
-	instance := data.NewInstance(logObject, a.GetEntityByName("ModelLog"))
+	instance := data.NewInstance(logObject, model.Graph.GetEntityByName("ModelLog"))
 	service.SaveOne(instance)
 }
 
 func WriteBusinessLog(
+	model *model.Model,
 	p graphql.ResolveParams,
 	operate string,
 	result string,
@@ -51,10 +54,11 @@ func WriteBusinessLog(
 		useId = contextsValues.Me.Id
 	}
 
-	a.WriteUserBusinessLog(useId, p, operate, result, message)
+	WriteUserBusinessLog(model, useId, p, operate, result, message)
 }
 
 func WriteUserBusinessLog(
+	model *model.Model,
 	useId string,
 	p graphql.ResolveParams,
 	operate string,
@@ -78,6 +82,6 @@ func WriteUserBusinessLog(
 		}
 	}
 
-	instance := data.NewInstance(logObject, a.GetEntityByName("BusinessLog"))
+	instance := data.NewInstance(logObject, model.Graph.GetEntityByName("BusinessLog"))
 	service.SaveOne(instance)
 }

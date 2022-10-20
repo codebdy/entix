@@ -7,14 +7,11 @@ import (
 	"github.com/graphql-go/graphql"
 	"github.com/mitchellh/mapstructure"
 	"rxdrag.com/entify/app"
-	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/logs"
-	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/orm"
-	"rxdrag.com/entify/repository"
 	"rxdrag.com/entify/service"
 	"rxdrag.com/entify/utils"
 )
@@ -30,122 +27,62 @@ const INPUT = "input"
 
 func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 	defer utils.PrintErrorStack()
-	if !orm.IsEntityExists(meta.APP_ENTITY_NAME) {
-		nextMeta := meta.SystemAppData["meta"].(meta.MetaContent)
-		app.PublishMeta(&meta.MetaContent{}, &nextMeta)
 
-		systemApp := app.GetSystemApp()
+	systemAppData := meta.SystemAppData
+	input := InstallArg{}
+	mapstructure.Decode(p.Args[INPUT], &input)
 
-		instance := data.NewInstance(
-			meta.SystemAppData,
-			systemApp.GetEntityByName(meta.APP_ENTITY_NAME),
-		)
-
-		_, err := service.InsertOne(instance)
-
-		if err != nil {
-			log.Panic(err)
-		}
-
+	if input.Meta != nil {
+		systemAppData = input.Meta
 	}
-	systemApp, err := app.Get(1)
+
+	nextMeta := systemAppData["meta"].(meta.MetaContent)
+	app.PublishMeta(&meta.MetaContent{}, &nextMeta)
+
+	systemApp := app.GetSystemApp()
+
+	instance := data.NewInstance(
+		systemAppData,
+		systemApp.GetEntityByName(meta.APP_ENTITY_NAME),
+	)
+
+	_, err := service.InsertOne(instance)
+
 	if err != nil {
 		log.Panic(err)
 	}
 
-	input := InstallArg{}
-	mapstructure.Decode(p.Args[INPUT], &input)
-
-	//repos := repository.New(model)
-	//repos.MakeSupperVerifier()
-
-	instance, err := addAndPublishMeta(input.Meta, model)
-
-	model = repos.LoadModel(contexts.Values(p.Context).AppId)
+	systemApp, err = app.Get(1)
+	if err != nil {
+		log.Panic(err)
+	}
 
 	if input.Admin != "" {
 		instance = data.NewInstance(
 			adminInstance(input.Admin, input.Password),
-			model.Graph.GetEntityByName(consts.META_USER),
+			systemApp.GetEntityByName(consts.META_USER),
 		)
-		_, err = repos.SaveOne(instance)
+		_, err = service.SaveOne(instance)
 		if err != nil {
-			logs.WriteBusinessLog(model, p, logs.INSTALL, logs.FAILURE, err.Error())
+			logs.WriteBusinessLog(systemApp.Model, p, logs.INSTALL, logs.FAILURE, err.Error())
 			return nil, err
 		}
 		if input.WithDemo {
 			instance = data.NewInstance(
 				demoInstance(),
-				model.Graph.GetEntityByName(consts.META_USER),
+				systemApp.GetEntityByName(consts.META_USER),
 			)
-			_, err = repos.SaveOne(instance)
+			_, err = service.SaveOne(instance)
 			if err != nil {
-				logs.WriteBusinessLog(model, p, logs.INSTALL, logs.FAILURE, err.Error())
+				logs.WriteBusinessLog(systemApp.Model, p, logs.INSTALL, logs.FAILURE, err.Error())
 				return nil, err
 			}
 		}
 	}
 	isExist := orm.IsEntityExists(meta.APP_ENTITY_NAME)
-	systemApp.WriteBusinessLog(p, logs.INSTALL, logs.SUCCESS, "")
+	logs.WriteBusinessLog(systemApp.Model, p, logs.INSTALL, logs.SUCCESS, "")
+	app.Installed = true
 	return isExist, nil
-}
-
-func addAndPublishMeta(meta utils.JSON, model *model.Model) (*data.Instance, error) {
-	appUuid := meta[consts.APPUUID].(string)
-	metaContent := meta["content"]
-	repos := repository.New(model)
-	repos.MakeSupperVerifier()
-	nextMeta := repos.QueryNextMeta(appUuid)
-	if nextMeta != nil {
-		panic("Please pushish meta first then install new function ")
-	}
-
-	publishedMeta := repos.QueryPublishedMeta(appUuid)
-
-	var createdAt interface{} = time.Now()
-	if publishedMeta != nil {
-		metaContent := *(publishedMeta.(map[string]interface{})[consts.META_CONTENT].(*utils.JSON))
-		createdAt = publishedMeta.(map[string]interface{})[consts.META_CREATEDAT]
-		clses := metaContent[consts.META_CLASSES].([]interface{})
-		if metaContent["classes"] != nil {
-			for i := range clses {
-				metaContent["classes"] = append(metaContent["classes"].([]utils.JSON), clses[i].(map[string]interface{}))
-			}
-		} else {
-			metaContent["classes"] = clses
-		}
-
-		relas := metaContent[consts.META_RELATIONS].([]interface{})
-		if metaContent["relations"] != nil {
-			for i := range relas {
-				metaContent["relations"] = append(metaContent["relations"].([]utils.JSON), relas[i].(map[string]interface{}))
-			}
-		} else {
-			metaContent["relations"] = relas
-		}
-
-	}
-
-	predefined := map[string]interface{}{
-		consts.APPUUID:        appUuid,
-		"content":             metaContent,
-		consts.META_CREATEDAT: createdAt,
-		consts.META_UPDATEDAT: time.Now(),
-	}
-
-	//创建实体
-	instance := data.NewInstance(predefined, model.Graph.GetMetaEntity())
-	_, err := repos.SaveOne(instance)
-
-	if err != nil {
-		return nil, err
-	}
-	err = doPublish(repos, consts.SYSTEM_APP_UUID)
-	if err != nil {
-		return nil, err
-	}
-
-	return instance, nil
 }
 
 func adminInstance(name string, password string) map[string]interface{} {
