@@ -2,8 +2,12 @@ package schema
 
 import (
 	"errors"
+	"fmt"
+	"strconv"
 
 	"github.com/graphql-go/graphql"
+	"github.com/opentracing/opentracing-go/log"
+	"rxdrag.com/entify/app"
 	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/repository"
@@ -11,17 +15,29 @@ import (
 )
 
 func publishResolve(p graphql.ResolveParams) (interface{}, error) {
-	if p.Args[consts.APPUUID] == nil {
-		return nil, errors.New("No appuuid!")
+	if p.Args[consts.APPID] == nil {
+		err := errors.New("No App Id!")
+		log.Error(err)
+		return nil, err
 	}
-	appUuid := p.Args[consts.APPUUID].(string)
-	appSchema := Get(appUuid)
-	result, err := resolve.PublishMetaResolve(p, appSchema.Model())
+	appIdStr := p.Args[consts.APPID].(string)
+
+	appId, err := strconv.ParseUint(appIdStr, 10, 64)
+
 	if err != nil {
-		return result, err
+		err := errors.New(fmt.Sprintf("App id error:%s", appIdStr))
+		log.Error(err)
+		return nil, err
 	}
-	appSchema.Make()
-	return result, nil
+	app := app.Get(appId)
+
+	if app == nil {
+		err := errors.New(fmt.Sprintf("Can not find app by id:%d", appId))
+		log.Error(err)
+		return nil, err
+	}
+	app.Publish()
+	return true, nil
 }
 
 func installResolve(p graphql.ResolveParams) (interface{}, error) {
