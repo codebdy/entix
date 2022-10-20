@@ -14,7 +14,8 @@ var Installed = false
 type App struct {
 	AppId   uint64
 	AppUuid string
-	Schema  *graphql.Schema
+	//Model   *model.Model
+	Schema *graphql.Schema
 }
 
 var appCache = map[uint64]*App{}

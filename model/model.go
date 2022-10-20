@@ -7,26 +7,19 @@ import (
 )
 
 type Model struct {
-	// AppUuid string
-	// AppId   uint64
 	Meta   *meta.Model
 	Domain *domain.Model
 	Graph  *graph.Model
-	//Schema  *graphql.Schema
 }
 
-func New(appUuid string, c *meta.MetaContent) *Model {
+func New(c *meta.MetaContent) *Model {
 	metaModel := meta.New(c)
 	domainModel := domain.New(metaModel)
 	grahpModel := graph.New(domainModel)
 	model := Model{
-		//AppUuid: appUuid,
 		Meta:   metaModel,
 		Domain: domainModel,
 		Graph:  grahpModel,
-		//Schema:  nil,
 	}
 	return &model
 }
-
-//var GlobalModel *Model
