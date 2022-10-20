@@ -10,7 +10,7 @@ import (
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/graph"
-	"rxdrag.com/entify/repository"
+	"rxdrag.com/entify/service"
 	"rxdrag.com/entify/utils"
 )
 
@@ -54,14 +54,14 @@ func (l *Loaders) GetLoader(p graphql.ResolveParams, association *graph.Associat
 func QueryBatchFn(p graphql.ResolveParams, association *graph.Association, args graph.QueryArg, model *model.Model) dataloader.BatchFunc {
 	return func(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
 		defer utils.PrintErrorStack()
-		repos := repository.New(model)
-		repos.MakeAssociAbilityVerifier(p, association)
+		//repos := repository.New(model)
+		//repos.MakeAssociAbilityVerifier(p, association)
 		results := make([]*dataloader.Result, len(keys))
 		ids := make([]uint64, len(keys))
 		for i := range ids {
 			ids[i] = keys[i].Raw().(uint64)
 		}
-		instances := repos.BatchQueryAssociations(association, ids, args)
+		instances := service.BatchQueryAssociations(association, ids, args)
 
 		for i := range results {
 			var data interface{}
