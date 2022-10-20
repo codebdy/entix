@@ -60,7 +60,7 @@ func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 	if input.Admin != "" {
 		instance = data.NewInstance(
 			adminInstance(input.Admin, input.Password),
-			systemApp.GetEntityByName(consts.META_USER),
+			systemApp.GetEntityByName(meta.USER_ENTITY_NAME),
 		)
 		_, err = service.SaveOne(instance)
 		if err != nil {
@@ -70,7 +70,7 @@ func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 		if input.WithDemo {
 			instance = data.NewInstance(
 				demoInstance(),
-				systemApp.GetEntityByName(consts.META_USER),
+				systemApp.GetEntityByName(meta.USER_ENTITY_NAME),
 			)
 			_, err = service.SaveOne(instance)
 			if err != nil {
