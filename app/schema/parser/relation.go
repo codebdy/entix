@@ -2,9 +2,9 @@ package parser
 
 import (
 	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify/app/resolve"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/graph"
-	"rxdrag.com/entify/resolve"
 )
 
 func (p *ModelParser) makeRelations(model *model.Model) {

@@ -2,8 +2,8 @@ package parser
 
 import (
 	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify/app/resolve"
 	"rxdrag.com/entify/consts"
-	"rxdrag.com/entify/resolve"
 )
 
 //var Cache TypeCache
