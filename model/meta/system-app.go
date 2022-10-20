@@ -11,6 +11,11 @@ var SystemApp = map[string]interface{}{
 				Uuid:   PACKAGE_SYSTEM_UUID,
 			},
 		},
-		Classes: []ClassMeta{},
+		Classes: []ClassMeta{
+			AppClass,
+			UserClass,
+			RoleClass,
+		},
+		Relations: Relations,
 	},
 }

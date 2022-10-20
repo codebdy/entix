@@ -16,59 +16,59 @@ var AppClass = ClassMeta{
 		{
 			Name:      consts.ID,
 			Primary:   true,
-			Type:      "ID",
-			TypeLabel: "ID",
+			Type:      ID,
+			TypeLabel: ID,
 			Uuid:      "APP_COLUMN_ID_UUID",
 			System:    true,
 		},
 		{
 			Name:      "uuid",
-			Type:      "String",
-			TypeLabel: "String",
+			Type:      String,
+			TypeLabel: String,
 			Uuid:      "APP_COLUMN_UUID_UUID",
 			System:    true,
 		},
 		{
 			Name:      "name",
-			Type:      "String",
-			TypeLabel: "String",
+			Type:      String,
+			TypeLabel: String,
 			Uuid:      "APP_COLUMN_NAME_UUID",
 			System:    true,
 		},
 		{
 			Name:      "meta",
-			Type:      "JSON",
-			TypeLabel: "JSON",
+			Type:      JSON,
+			TypeLabel: JSON,
 			Uuid:      "APP_COLUMN_META_UUID",
 			System:    true,
 		},
 		{
 			Name:      "publishedMeta",
-			Type:      "JSON",
-			TypeLabel: "JSON",
+			Type:      JSON,
+			TypeLabel: JSON,
 			Uuid:      "APP_COLUMN_PUBLISH_META_UUID",
 			System:    true,
 		},
 		{
 			Name:       "createdAt",
-			Type:       "Date",
-			TypeLabel:  "Date",
+			Type:       Date,
+			TypeLabel:  Date,
 			CreateDate: true,
 			Uuid:       "APP_COLUMN_CREATED_AT_UUID",
 			System:     true,
 		},
 		{
 			Name:       "saveMetaAt",
-			Type:       "Date",
-			TypeLabel:  "Date",
+			Type:       Date,
+			TypeLabel:  Date,
 			CreateDate: true,
 			Uuid:       "APP_COLUMN_SAVE_META_AT_UUID",
 			System:     true,
 		},
 		{
 			Name:       "publishMetaAt",
-			Type:       "Date",
-			TypeLabel:  "Date",
+			Type:       Date,
+			TypeLabel:  Date,
 			CreateDate: true,
 			Uuid:       "APP_COLUMN_PUBLISH_META_AT_UUID",
 			System:     true,
@@ -77,109 +77,136 @@ var AppClass = ClassMeta{
 	PackageUuid: PACKAGE_SYSTEM_UUID,
 }
 
-var EntityAuthSettingsClass = ClassMeta{
-	Name:    "EntityAuthSettings",
-	Uuid:    "META_ENTITY_AUTH_SETTINGS_UUID",
-	InnerId: ENTITY_AUTH_SETTINGS_INNER_ID,
-	Root:    true,
-	System:  true,
-	Attributes: []AttributeMeta{
+var UserClass = ClassMeta{
+	PackageUuid: PACKAGE_SYSTEM_UUID,
+	InnerId: USER_INNER_ID,
+	Name: USER_ENTITY_NAME,
+	Root: true,
+	StereoType: CLASSS_ENTITY,
+	Uuid: USER_ENTITY_UUID,
+	System: true,
+	Attributes: AttributeMeta{
 		{
-			Name:    consts.ID,
-			Type:    ID,
-			Uuid:    "RX_ENTITY_AUTH_SETTINGS_ID_UUID",
+			System: true,
+			Name: consts.ID,
 			Primary: true,
-			System:  true,
+			Type: ID,
+			TypeLabel: ID,
+			Uuid: "RX_USER_ID_UUID",
 		},
 		{
-			Name:   "entityUuid",
-			Type:   "String",
-			Uuid:   "RX_ENTITY_AUTH_SETTINGS_ENTITY_UUID_UUID",
 			System: true,
-			Unique: true,
+			Name: "name",
+			Nullable: true,
+			Type: String,
+			TypeLabel: String,
+			uuid: "RX_USER_NAME_UUID",
 		},
 		{
-			Name:   "expand",
-			Type:   "Boolean",
-			Uuid:   "RX_ENTITY_AUTH_SETTINGS_EXPAND_UUID",
 			System: true,
+			Length: 128,
+			Name: "loginName",
+			Type: String,
+			TypeLabel: String,
+			uuid: "RX_USER_LOGINNAME_UUID"
 		},
+		{
+			"System": true,
+			"length": 256,
+			"name": "password",
+			"type": "String",
+			"typeLabel": "String",
+			"uuid": "RX_USER_PASSWORD_UUID"
+		},
+		{
+			"System": true,
+			"name": "isSupper",
+			"nullable": true,
+			"type": "Boolean",
+			"typeLabel": "Boolean",
+			"uuid": "RX_USER_ISSUPPER_UUID"
+		},
+		{
+			"System": true,
+			"name": "isDemo",
+			"nullable": true,
+			"type": "Boolean",
+			"typeLabel": "Boolean",
+			"uuid": "RX_USER_ISDEMO_UUID"
+		},
+		{
+			"System": true,
+			"createDate": true,
+			"name": "createdAt",
+			"type": "Date",
+			"typeLabel": "Date",
+			"uuid": "RX_USER_CREATEDAT_UUID"
+		},
+		{
+			"System": true,
+			"name": "updatedAt",
+			"type": "Date",
+			"typeLabel": "Date",
+			"updateDate": true,
+			"uuid": "RX_USER_UPDATEDAT_UUID"
+		}
 	},
-	StereoType: "Entity",
 }
 
-var AbilityTypeEnum = ClassMeta{
-	Uuid:       META_ABILITY_TYPE_ENUM_UUID,
-	Name:       "AbilityType",
-	StereoType: ENUM,
-	Attributes: []AttributeMeta{
-		{
-			Name: META_ABILITY_TYPE_CREATE,
-		},
-		{
-			Name: META_ABILITY_TYPE_READ,
-		},
-		{
-			Name: META_ABILITY_TYPE_UPDATE,
-		},
-		{
-			Name: META_ABILITY_TYPE_DELETE,
-		},
-	},
+var RoleClass = ClassMeta{
+	PackageUuid: PACKAGE_SYSTEM_UUID,
 }
 
-var AbilityClass = ClassMeta{
-	Name:    "Ability",
-	Uuid:    ABILITY_UUID,
-	InnerId: Ability_INNER_ID,
-	Root:    true,
-	System:  true,
-	Attributes: []AttributeMeta{
+var Relations = []RelationMeta{}
+
+
+{
+	"System": true,
+	"attributes": [
 		{
-			Name:    consts.ID,
-			Type:    ID,
-			Uuid:    "RX_ABILITY_ID_UUID",
-			Primary: true,
-			System:  true,
+			"System": true,
+			"name": "id",
+			"primary": true,
+			"type": "ID",
+			"typeLabel": "ID",
+			"uuid": "RX_ROLE_ID_UUID"
 		},
 		{
-			Name:   "entityUuid",
-			Type:   "String",
-			Uuid:   "RX_ABILITY_ENTITY_UUID_UUID",
-			System: true,
+			"System": true,
+			"name": "name",
+			"type": "String",
+			"typeLabel": "String",
+			"uuid": "RX_ROLE_NAME_UUID"
 		},
 		{
-			Name:   "columnUuid",
-			Type:   "String",
-			Uuid:   "RX_ABILITY_COLUMN_UUID_UUID",
-			System: true,
+			"System": true,
+			"name": "description",
+			"nullable": true,
+			"type": "String",
+			"typeLabel": "String",
+			"uuid": "RX_ROLE_DESCRIPTION_UUID"
 		},
 		{
-			Name:   "can",
-			Type:   "Boolean",
-			Uuid:   "RX_ABILITY_CAN_UUID",
-			System: true,
+			"System": true,
+			"createDate": true,
+			"name": "createdAt",
+			"type": "Date",
+			"typeLabel": "Date",
+			"uuid": "RX_ROLE_CREATEDAT_UUID"
 		},
 		{
-			Name:   "expression",
-			Type:   "String",
-			Uuid:   "RX_ABILITY_EXPRESSION_UUID",
-			Length: 2000,
-			System: true,
-		},
-		{
-			Name:     "abilityType",
-			Type:     ENUM,
-			Uuid:     "RX_ABILITY_ABILITYTYPE_UUID",
-			System:   true,
-			TypeUuid: META_ABILITY_TYPE_ENUM_UUID,
-		},
-		{
-			Name:   "roleId",
-			Type:   ID,
-			Uuid:   "RX_ABILITY_ROLE_ID_UUID",
-			System: true,
-		},
-	},
-	StereoType: "Entity",
-}
+			"System": true,
+			"name": "updatedAt",
+			"type": "Date",
+			"typeLabel": "Date",
+			"updateDate": true,
+			"uuid": "RX_ROLE_META_UPDATEDAT_UUID"
+		}
+	],
+	"innerId": 5,
+	"name": "Role",
+	"packageUuid": "PACKAGE_SYSTEM_UUID",
+	"root": true,
+	"stereoType": "Entity",
+	"uuid": "META_ROLE_UUID"
+},
