@@ -56,7 +56,7 @@ func DeleteInstances(instances []*data.Instance) (interface{}, error) {
 
 	for i := range instances {
 		instance := instances[i]
-		session.doDeleteInstance(instance)
+		session.DeleteInstance(instance)
 		deletedIds = append(deletedIds, instance.Id)
 	}
 
@@ -70,7 +70,7 @@ func DeleteInstances(instances []*data.Instance) (interface{}, error) {
 }
 
 func DeleteInstance(instance *data.Instance) (interface{}, error) {
-	session, err := Open(r.V, r.Model.AppId)
+	session, err := Open()
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, err
@@ -81,7 +81,7 @@ func DeleteInstance(instance *data.Instance) (interface{}, error) {
 		return nil, err
 	}
 	defer session.ClearTx()
-	session.doDeleteInstance(instance)
+	session.DeleteInstance(instance)
 
 	err = session.Dbx.Commit()
 	if err != nil {
@@ -107,7 +107,7 @@ func Save(instances []*data.Instance) ([]interface{}, error) {
 	saved := []interface{}{}
 
 	for i := range instances {
-		obj, err := session.doSaveOne(instances[i])
+		obj, err := session.SaveOne(instances[i])
 		if err != nil {
 			fmt.Println(err.Error())
 			session.Dbx.Rollback()
@@ -139,7 +139,7 @@ func SaveOne(instance *data.Instance) (interface{}, error) {
 		return nil, err
 	}
 
-	obj, err := session.doSaveOne(instance)
+	obj, err := session.SaveOne(instance)
 	if err != nil {
 		fmt.Println(err.Error())
 		session.Dbx.Rollback()
@@ -190,5 +190,5 @@ func BatchQueryAssociations(
 	if err != nil {
 		panic(err.Error())
 	}
-	return con.doBatchRealAssociations(association, ids, args)
+	return con.BatchRealAssociations(association, ids, args)
 }

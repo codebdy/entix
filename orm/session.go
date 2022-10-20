@@ -7,13 +7,12 @@ import (
 	"rxdrag.com/entify/config"
 	"rxdrag.com/entify/db"
 	"rxdrag.com/entify/db/dialect"
-	"rxdrag.com/entify/model"
 )
 
 type Session struct {
 	idSeed int //use for sql join table
-	model  *model.Model
-	Dbx    *db.Dbx
+	//model  *model.Model
+	Dbx *db.Dbx
 }
 
 func (c *Session) BeginTx() error {

@@ -137,7 +137,7 @@ func (con *Session) QueryInterface(intf *graph.Interface, args map[string]interf
 
 	for i := range intf.Children {
 		child := intf.Children[i]
-		oneEntityInstances := con.doQueryByIds(child, instancesIds)
+		oneEntityInstances := con.QueryByIds(child, instancesIds)
 		merageInstances(instances, oneEntityInstances)
 	}
 
@@ -147,7 +147,7 @@ func (con *Session) QueryInterface(intf *graph.Interface, args map[string]interf
 	}
 }
 
-func (con *Session) doQueryEntity(entity *graph.Entity, args map[string]interface{}) map[string]interface{} {
+func (con *Session) QueryEntity(entity *graph.Entity, args map[string]interface{}) map[string]interface{} {
 	if !con.v.CanReadEntity(entity.Uuid()) {
 		panic(consts.NO_PERMISSION)
 	}
