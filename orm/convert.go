@@ -1,4 +1,4 @@
-package repository
+package orm
 
 import (
 	"database/sql"
@@ -37,7 +37,7 @@ func makeSaveValues(appId uint64, fields []*data.Field) []interface{} {
 			value = jsonString
 		} else if column.Type == meta.FILE {
 			file := value.(storage.File)
-			jsonString, err := json.Marshal(file.Save(appId, consts.UPLOAD_PATH))
+			jsonString, err := json.Marshal(file.Save(consts.UPLOAD_PATH))
 			if err != nil {
 				panic(err.Error())
 			}
