@@ -13,6 +13,7 @@ import (
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/db"
 	"rxdrag.com/entify/handler"
+	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/repository"
 	"rxdrag.com/entify/resolve"
 	"rxdrag.com/entify/schema"
@@ -42,7 +43,7 @@ func checkParams() {
 }
 
 func checkMetaInstall() {
-	if !repository.IsEntityExists(consts.META_ENTITY_NAME) {
+	if !repository.IsEntityExists(meta.APP_ENTITY_NAME) {
 		schema.Installed = false
 	} else {
 		schema.Installed = true

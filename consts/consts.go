@@ -1,7 +1,7 @@
 package consts
 
 const LOADERS = "loaders"
-const HEADER_APPX_APPUUID = "Appx-appuuid"
+const HEADER_APPX_APPID = "Appx-appid"
 const APPUUID = "appUuid"
 const TABLE_PREFIX = "a"
 

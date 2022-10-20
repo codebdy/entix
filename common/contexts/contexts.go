@@ -8,11 +8,11 @@ import (
 )
 
 type ContextValues struct {
-	Token   string
-	Me      *auth.User
-	AppUuid string
-	Host    string
-	IP      string
+	Token string
+	Me    *auth.User
+	AppId uint64
+	Host  string
+	IP    string
 }
 
 func Values(ctx context.Context) ContextValues {

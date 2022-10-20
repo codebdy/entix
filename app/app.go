@@ -19,3 +19,7 @@ func Get(appId uint64) *AppSchema {
 
 	return appCache[appId]
 }
+
+func GetSystemApp() *AppSchema {
+	return &AppSchema{}
+}

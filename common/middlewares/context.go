@@ -3,10 +3,12 @@ package middlewares
 import (
 	"context"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/thinkeridea/go-extend/exnet"
+	"rxdrag.com/entify/app"
 	"rxdrag.com/entify/authentication"
 	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/consts"
@@ -33,11 +35,14 @@ func ContextMiddleware(next http.Handler) http.Handler {
 				v.Me = me
 			}
 		}
-		appUuid := r.Header.Get(consts.HEADER_APPX_APPUUID)
-		if appUuid == "" {
-			appUuid = consts.SYSTEM_APP_UUID
+		appId := r.Header.Get(consts.HEADER_APPX_APPID)
+		if appId == "" {
+			v.AppId = app.GetSystemApp().Model().AppId
+		} else {
+			intAppId, _ := strconv.ParseUint(appId, 10, 64)
+			v.AppId = intAppId
 		}
-		v.AppUuid = appUuid
+
 		v.Host = r.Host
 		ip := exnet.ClientPublicIP(r)
 		if ip == "" {

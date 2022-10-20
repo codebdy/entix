@@ -2,7 +2,6 @@ package app
 
 import (
 	"github.com/graphql-go/graphql"
-	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/repository"
 	"rxdrag.com/entify/schema"
@@ -53,7 +52,7 @@ func (s *AppSchema) Make() {
 
 	//第二步， 取系统应用，以此为基础，进一步取数据。
 	//   保证取APPID时，能拿到App实体
-	s.model = repos.LoadModel(consts.SYSTEM_APP_UUID)
+	//s.model = repos.LoadModel(consts.SYSTEM_APP_UUID)
 	repos = repository.New(s.Model())
 	repos.MakeSupperVerifier()
 

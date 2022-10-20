@@ -46,7 +46,7 @@ func (r *Repository) InitVerifier(p graphql.ResolveParams, entityUuids []interfa
 		r.V.RoleIds = append(r.V.RoleIds, consts.GUEST_ROLE_ID)
 	}
 
-	appUuid := contexts.Values(p.Context).AppUuid
+	appUuid := contexts.Values(p.Context).AppId
 
 	r.queryRolesAbilities(entityUuids, appUuid)
 }

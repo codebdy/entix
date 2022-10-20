@@ -22,7 +22,7 @@ func WriteModelLog(
 	contextsValues := contexts.Values(p.Context)
 	logObject := map[string]interface{}{
 		"ip":          contextsValues.IP,
-		"appUuid":     contextsValues.AppUuid,
+		"appUuid":     contextsValues.AppId,
 		"operateType": operate,
 		"classUuid":   cls.Uuid(),
 		"className":   cls.Name(),
@@ -73,7 +73,7 @@ func WriteUserBusinessLog(
 
 	logObject := map[string]interface{}{
 		"ip":          contextsValues.IP,
-		"appUuid":     contextsValues.AppUuid,
+		"appUuid":     contextsValues.AppId,
 		"operateType": operate,
 		"result":      result,
 		"message":     message,

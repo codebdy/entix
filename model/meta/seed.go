@@ -4,7 +4,7 @@ import "rxdrag.com/entify/consts"
 
 var SystemApp = map[string]interface{}{
 	"uuid": SYSTEM_APP_UUID,
-	"name": "Apper",
+	"name": "Appx",
 	"meta": MetaContent{
 		Packages: []PackageMeta{
 			{
