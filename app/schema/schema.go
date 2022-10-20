@@ -1,28 +1,20 @@
 package schema
 
 import (
-	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify/app/schema/parser"
+	"rxdrag.com/entify/model"
 )
 
-func MakeSchema() *graphql.Schema {
-	s.modelParser.ParseModel(s.model)
+type AppSchema struct {
+	Model       *model.Model
+	modelParser parser.ModelParser
+}
 
-	schemaConfig := graphql.SchemaConfig{
-		Query:    s.rootQuery(),
-		Mutation: s.rootMutation(),
-		Directives: []*graphql.Directive{
-			graphql.NewDirective(graphql.DirectiveConfig{
-				Name:      "forEdit",
-				Locations: []string{graphql.DirectiveLocationField},
-			}),
-		},
-		Types: append(s.modelParser.EntityTypes()),
+func New(model *model.Model) *AppSchema {
+	appSchema := &AppSchema{
+		Model: model,
 	}
-	theSchema, err := graphql.NewSchema(schemaConfig)
 
-	if err != nil {
-		panic(err)
-		//log.Fatalf("failed to create new schema, error: %v", err)
-	}
-	return &theSchema
+	appSchema.modelParser.ParseModel(model)
+	return appSchema
 }
