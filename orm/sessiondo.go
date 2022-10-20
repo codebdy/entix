@@ -22,7 +22,7 @@ func (con *Session) buildQueryInterfaceSQL(intf *graph.Interface, args map[strin
 	builder := dialect.GetSQLBuilder()
 	for i := range intf.Children {
 		entity := intf.Children[i]
-		whereArgs := con.v.WeaveAuthInArgs(entity.Uuid(), args[consts.ARG_WHERE])
+		whereArgs := args[consts.ARG_WHERE]
 		argEntity := graph.BuildArgEntity(
 			entity,
 			whereArgs,
@@ -74,7 +74,7 @@ func (con *Session) buildQueryEntitySQL(
 }
 
 func (con *Session) buildQueryEntityRecordsSQL(entity *graph.Entity, args map[string]interface{}) (string, []interface{}) {
-	whereArgs := con.v.WeaveAuthInArgs(entity.Uuid(), args[consts.ARG_WHERE])
+	whereArgs := args[consts.ARG_WHERE]
 	argEntity := graph.BuildArgEntity(
 		entity,
 		whereArgs,
@@ -95,7 +95,7 @@ func (con *Session) buildQueryEntityRecordsSQL(entity *graph.Entity, args map[st
 }
 
 func (con *Session) buildQueryEntityCountSQL(entity *graph.Entity, args map[string]interface{}) (string, []interface{}) {
-	whereArgs := con.v.WeaveAuthInArgs(entity.Uuid(), args[consts.ARG_WHERE])
+	whereArgs := args[consts.ARG_WHERE]
 	argEntity := graph.BuildArgEntity(
 		entity,
 		whereArgs,
@@ -148,9 +148,6 @@ func (con *Session) QueryInterface(intf *graph.Interface, args map[string]interf
 }
 
 func (con *Session) QueryEntity(entity *graph.Entity, args map[string]interface{}) map[string]interface{} {
-	if !con.v.CanReadEntity(entity.Uuid()) {
-		panic(consts.NO_PERMISSION)
-	}
 	sqlStr, params := con.buildQueryEntityRecordsSQL(entity, args)
 	fmt.Println("doQueryEntity SQL:", sqlStr, params)
 	rows, err := con.Dbx.Query(sqlStr, params...)
@@ -188,7 +185,7 @@ func (con *Session) QueryEntity(entity *graph.Entity, args map[string]interface{
 }
 
 func (con *Session) QueryOneEntityById(entity *graph.Entity, id interface{}) interface{} {
-	return con.doQueryOneEntity(entity, graph.QueryArg{
+	return con.QueryOneEntity(entity, graph.QueryArg{
 		consts.ARG_WHERE: graph.QueryArg{
 			consts.ID: graph.QueryArg{
 				consts.ARG_EQ: id,
@@ -212,7 +209,7 @@ func (con *Session) QueryOneInterface(intf *graph.Interface, args map[string]int
 	instance := convertValuesToInterface(values, intf)
 	for i := range intf.Children {
 		child := intf.Children[i]
-		oneEntityInstances := con.doQueryByIds(child, []interface{}{instance[consts.ID]})
+		oneEntityInstances := con.QueryByIds(child, []interface{}{instance[consts.ID]})
 		if len(oneEntityInstances) > 0 {
 			return oneEntityInstances[0]
 		}
@@ -239,7 +236,7 @@ func (con *Session) QueryOneEntity(entity *graph.Entity, args map[string]interfa
 func (con *Session) doInsertOne(instance *data.Instance) (interface{}, error) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	saveStr := sqlBuilder.BuildInsertSQL(instance.Fields, instance.Table())
-	values := makeSaveValues(con.appId, instance.Fields)
+	values := makeSaveValues(instance.Fields)
 	result, err := con.Dbx.Exec(saveStr, values...)
 	if err != nil {
 		fmt.Println("Insert data failed:", err.Error())
@@ -318,14 +315,13 @@ func (con *Session) BatchRealAssociations(
 	association *graph.Association,
 	ids []uint64,
 	args graph.QueryArg,
-	v *AbilityVerifier,
 ) []InsanceData {
 	var instances []map[string]interface{}
 	var paramsList []interface{}
 
 	builder := dialect.GetSQLBuilder()
 	typeEntity := association.TypeEntity()
-	whereArgs := con.v.WeaveAuthInArgs(typeEntity.Uuid(), args[consts.ARG_WHERE])
+	whereArgs := args[consts.ARG_WHERE]
 	argEntity := graph.BuildArgEntity(
 		typeEntity,
 		whereArgs,
@@ -390,7 +386,7 @@ func (con *Session) doUpdateOne(instance *data.Instance) (interface{}, error) {
 	sqlBuilder := dialect.GetSQLBuilder()
 
 	saveStr := sqlBuilder.BuildUpdateSQL(instance.Id, instance.Fields, instance.Table())
-	values := makeSaveValues(con.appId, instance.Fields)
+	values := makeSaveValues(instance.Fields)
 	fmt.Println(saveStr)
 	_, err := con.Dbx.Exec(saveStr, values...)
 	if err != nil {
@@ -423,7 +419,7 @@ func newAssociationPovit(r *data.Reference, ownerId uint64, tarId uint64) *data.
 func (con *Session) saveAssociationInstance(ins *data.Instance) (interface{}, error) {
 	targetData := InsanceData{consts.ID: ins.Id}
 
-	saved, err := con.doSaveOne(ins)
+	saved, err := con.SaveOne(ins)
 	if err != nil {
 		return nil, err
 	}
@@ -436,10 +432,10 @@ func (con *Session) doSaveAssociation(r *data.Reference, ownerId uint64) error {
 
 	for _, ins := range r.Deleted() {
 		if r.Cascade() {
-			con.doDeleteInstance(ins)
+			con.DeleteInstance(ins)
 		} else {
 			povit := newAssociationPovit(r, ownerId, ins.Id)
-			con.doDeleteAssociationPovit(povit)
+			con.DeleteAssociationPovit(povit)
 		}
 	}
 
@@ -452,7 +448,7 @@ func (con *Session) doSaveAssociation(r *data.Reference, ownerId uint64) error {
 			if savedIns, ok := targetData.(InsanceData); ok {
 				tarId := savedIns[consts.ID].(uint64)
 				relationInstance := newAssociationPovit(r, ownerId, tarId)
-				con.doSaveAssociationPovit(relationInstance)
+				con.SaveAssociationPovit(relationInstance)
 			} else {
 				panic("Save Association error")
 			}
@@ -472,7 +468,7 @@ func (con *Session) doSaveAssociation(r *data.Reference, ownerId uint64) error {
 				tarId := savedIns[consts.ID].(uint64)
 				relationInstance := newAssociationPovit(r, ownerId, tarId)
 
-				con.doSaveAssociationPovit(relationInstance)
+				con.SaveAssociationPovit(relationInstance)
 			} else {
 				panic("Save Association error")
 			}
@@ -502,7 +498,7 @@ func (con *Session) doSaveAssociation(r *data.Reference, ownerId uint64) error {
 			}
 		}
 		relationInstance := newAssociationPovit(r, ownerId, targetId)
-		con.doSaveAssociationPovit(relationInstance)
+		con.SaveAssociationPovit(relationInstance)
 	}
 
 	return nil
@@ -531,7 +527,7 @@ func (con *Session) deleteAssociatedInstances(r *data.Reference, ownerId uint64)
 	associatedInstances := con.QueryAssociatedInstances(r, ownerId)
 	for i := range associatedInstances {
 		ins := data.NewInstance(associatedInstances[i], typeEntity)
-		con.doDeleteInstance(ins)
+		con.DeleteInstance(ins)
 	}
 }
 
