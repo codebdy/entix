@@ -1,32 +1,53 @@
 package meta
 
 import (
+	"encoding/json"
+	"io/ioutil"
+	"log"
+
 	"rxdrag.com/entify/consts"
 )
 
-var SystemAppData = map[string]interface{}{
-	"id":            SYSTEM_APP_ID,
-	"uuid":          "SYSTEM-APP-UUID",
-	"name":          "Appx",
-	"meta":          systemAppMeta,
-	"publishedMeta": systemAppMeta,
+func readContentFromJson() MetaContent {
+	data, err := ioutil.ReadFile("./jsons/meta.json")
+	content := MetaContent{}
+	if nil != err {
+		log.Panic(err)
+	} else {
+		err = json.Unmarshal(data, &content)
+	}
+
+	return content
 }
 
-var systemAppMeta = MetaContent{
-	Packages: []PackageMeta{
-		{
-			Name:   "System",
-			System: true,
-			Uuid:   PACKAGE_SYSTEM_UUID,
-		},
-	},
-	Classes: []ClassMeta{
-		AppClass,
-		UserClass,
-		RoleClass,
-	},
-	Relations: Relations,
+var SystemAppData map[string]interface{}
+
+func init() {
+	content := readContentFromJson()
+	SystemAppData = map[string]interface{}{
+		"id":            SYSTEM_APP_ID,
+		"uuid":          "SYSTEM-APP-UUID",
+		"name":          "Appx",
+		"meta":          content,
+		"publishedMeta": content,
+	}
 }
+
+// var systemAppMeta = MetaContent{
+// 	Packages: []PackageMeta{
+// 		{
+// 			Name:   "System",
+// 			System: true,
+// 			Uuid:   PACKAGE_SYSTEM_UUID,
+// 		},
+// 	},
+// 	Classes: []ClassMeta{
+// 		AppClass,
+// 		UserClass,
+// 		RoleClass,
+// 	},
+// 	Relations: Relations,
+// }
 
 var AppClass = ClassMeta{
 	Uuid:       APP_ENTITY_UUID,
