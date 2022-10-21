@@ -1,26 +1,31 @@
 package meta
 
-import "rxdrag.com/entify/consts"
+import (
+	"rxdrag.com/entify/consts"
+)
 
 var SystemAppData = map[string]interface{}{
-	"id":   SYSTEM_APP_ID,
-	"uuid": "SYSTEM-APP-UUID",
-	"name": "Appx",
-	"meta": MetaContent{
-		Packages: []PackageMeta{
-			{
-				Name:   "System",
-				System: true,
-				Uuid:   PACKAGE_SYSTEM_UUID,
-			},
+	"id":            SYSTEM_APP_ID,
+	"uuid":          "SYSTEM-APP-UUID",
+	"name":          "Appx",
+	"meta":          systemAppMeta,
+	"publishedMeta": systemAppMeta,
+}
+
+var systemAppMeta = MetaContent{
+	Packages: []PackageMeta{
+		{
+			Name:   "System",
+			System: true,
+			Uuid:   PACKAGE_SYSTEM_UUID,
 		},
-		Classes: []ClassMeta{
-			AppClass,
-			UserClass,
-			RoleClass,
-		},
-		Relations: Relations,
 	},
+	Classes: []ClassMeta{
+		AppClass,
+		UserClass,
+		RoleClass,
+	},
+	Relations: Relations,
 }
 
 var AppClass = ClassMeta{
@@ -60,6 +65,7 @@ var AppClass = ClassMeta{
 			TypeLabel: JSON,
 			Uuid:      "APP_COLUMN_META_UUID",
 			System:    true,
+			Nullable:  true,
 		},
 		{
 			Name:      "publishedMeta",
@@ -67,6 +73,7 @@ var AppClass = ClassMeta{
 			TypeLabel: JSON,
 			Uuid:      "APP_COLUMN_PUBLISH_META_UUID",
 			System:    true,
+			Nullable:  true,
 		},
 		{
 			Name:       "createdAt",
@@ -77,20 +84,29 @@ var AppClass = ClassMeta{
 			System:     true,
 		},
 		{
-			Name:       "saveMetaAt",
+			Name:       "updatedAt",
 			Type:       DATE,
 			TypeLabel:  DATE,
-			CreateDate: true,
-			Uuid:       "APP_COLUMN_SAVE_META_AT_UUID",
+			UpdateDate: true,
+			Uuid:       "APP_COLUMN_CREATED_AT_UUID",
 			System:     true,
+			Nullable:   true,
 		},
 		{
-			Name:       "publishMetaAt",
-			Type:       DATE,
-			TypeLabel:  DATE,
-			CreateDate: true,
-			Uuid:       "APP_COLUMN_PUBLISH_META_AT_UUID",
-			System:     true,
+			Name:      "saveMetaAt",
+			Type:      DATE,
+			TypeLabel: DATE,
+			Uuid:      "APP_COLUMN_SAVE_META_AT_UUID",
+			System:    true,
+			Nullable:  true,
+		},
+		{
+			Name:      "publishMetaAt",
+			Type:      DATE,
+			TypeLabel: DATE,
+			Uuid:      "APP_COLUMN_PUBLISH_META_AT_UUID",
+			System:    true,
+			Nullable:  true,
 		},
 	},
 	PackageUuid: PACKAGE_SYSTEM_UUID,

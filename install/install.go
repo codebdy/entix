@@ -102,6 +102,9 @@ func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 
 	systemApp := app.GetSystemApp()
 
+	now := time.Now()
+	systemAppData["saveMetaAt"] = now
+	systemAppData["publishMetaAt"] = now
 	instance := data.NewInstance(
 		systemAppData,
 		systemApp.GetEntityByName(meta.APP_ENTITY_NAME),
@@ -113,7 +116,7 @@ func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 		log.Panic(err)
 	}
 
-	systemApp, err = app.Get(1)
+	systemApp, err = app.Get(meta.SYSTEM_APP_ID)
 	if err != nil {
 		log.Panic(err)
 	}
