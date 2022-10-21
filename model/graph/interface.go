@@ -14,16 +14,6 @@ func NewInterface(c *domain.Class) *Interface {
 	}
 }
 
-func (f *Interface) IsInterface() bool {
-	return true
-}
-func (f *Interface) Interface() *Interface {
-	return f
-}
-func (f *Interface) Entity() *Entity {
-	return nil
-}
-
 func (f *Interface) AllAttributes() []*Attribute {
 	attrs := []*Attribute{}
 	attrs = append(attrs, f.attributes...)

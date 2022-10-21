@@ -129,13 +129,6 @@ func (m *Model) makeRelation(relation *domain.Relation) {
 		targetEntity,
 	)
 	m.Relations = append(m.Relations, r)
-
-	sourceEntity.AddAssociation(NewAssociation(r, sourceEntity.Uuid()))
-	if relation.RelationType == meta.TWO_WAY_AGGREGATION ||
-		relation.RelationType == meta.TWO_WAY_ASSOCIATION ||
-		relation.RelationType == meta.TWO_WAY_COMBINATION {
-		targetEntity.AddAssociation(NewAssociation(r, targetEntity.Uuid()))
-	}
 }
 
 func (m *Model) makeAssociations(relation *Relation) {

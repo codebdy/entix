@@ -4,6 +4,7 @@ import (
 	"rxdrag.com/entify/model/domain"
 	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/model/table"
+	"rxdrag.com/entify/utils"
 )
 
 type Relation struct {
@@ -29,14 +30,25 @@ func NewRelation(
 	sourceEntity *Entity,
 	targetEntity *Entity,
 ) *Relation {
+	roleOfTarget := r.RoleOfTarget
+	roleOfSource := r.RoleOfSource
+
+	if sourceEntity.Uuid() != r.Source.Uuid {
+		roleOfSource = roleOfSource + utils.FirstUpper(sourceEntity.Name())
+	}
+
+	if targetEntity.Uuid() != r.Target.Uuid {
+		roleOfTarget = roleOfTarget + utils.FirstUpper(targetEntity.Name())
+	}
+
 	relation := &Relation{
 		Uuid:                   r.Uuid,
 		InnerId:                r.InnerId,
 		RelationType:           r.RelationType,
 		SourceEntity:           sourceEntity,
 		TargetEntity:           targetEntity,
-		RoleOfTarget:           r.RoleOfTarget,
-		RoleOfSource:           r.RoleOfSource,
+		RoleOfTarget:           roleOfTarget,
+		RoleOfSource:           roleOfSource,
 		DescriptionOnSource:    r.DescriptionOnSource,
 		DescriptionOnTarget:    r.DescriptionOnTarget,
 		SourceMutiplicity:      r.SourceMutiplicity,

@@ -49,7 +49,7 @@ func (a *ArgEntity) GetWithMakeAssociation(name string, ider Ider) *ArgAssociati
 			return a.Associations[i]
 		}
 	}
-	allAssociations := a.Entity.AllAssociations()
+	allAssociations := a.Entity.associations
 	for i := range allAssociations {
 		if allAssociations[i].Name() == name {
 			asso := &ArgAssociation{

@@ -23,7 +23,7 @@ func NewEntityTable(entity *Entity) *table.Table {
 		table.Columns = append(table.Columns, NewAttributeColumn(attr))
 	}
 
-	allAssocs := entity.AllAssociations()
+	allAssocs := entity.associations
 
 	for i := range allAssocs {
 		assoc := allAssocs[i]

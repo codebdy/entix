@@ -62,22 +62,23 @@ func (e *Entity) AllMethods() []*Method {
 }
 
 //包含继承来的
-func (e *Entity) AllAssociations() []*Association {
-	associas := []*Association{}
-	associas = append(associas, e.associations...)
-	for i := range e.Interfaces {
-		for j := range e.Interfaces[i].associations {
-			asso := e.Interfaces[i].associations[j]
-			if findAssociation(asso.Name(), associas) == nil {
-				associas = append(associas, asso)
-			}
-		}
-	}
-	return associas
-}
+// func (e *Entity) AllAssociations() []*Association {
+// 	associas := []*Association{}
+// 	associas = append(associas, e.associations...)
+// 	for i := range e.Interfaces {
+// 		for j := range e.Interfaces[i].associations {
+// 			asso := e.Interfaces[i].associations[j]
+// 			if findAssociation(asso.Name(), associas) == nil {
+// 				associas = append(associas, asso)
+// 			}
+// 		}
+// 	}
+// 	return associas
+// }
 
 func (e *Entity) GetAssociationByName(name string) *Association {
-	associations := e.AllAssociations()
+	//associations := e.AllAssociations()
+	associations := e.associations
 	for i := range associations {
 		if associations[i].Name() == name {
 			return associations[i]
@@ -88,7 +89,7 @@ func (e *Entity) GetAssociationByName(name string) *Association {
 }
 
 func (e *Entity) IsEmperty() bool {
-	return len(e.AllAttributes()) < 1 && len(e.AllAssociations()) < 1
+	return len(e.AllAttributes()) < 1 && len(e.associations) < 1
 }
 
 func (e *Entity) AllAttributeNames() []string {
