@@ -58,7 +58,7 @@ func (a *Association) IsColumn() bool {
 	if a.IsSource() {
 		return a.Relation.TargetMultiplicity == meta.ZERO_ONE
 	} else {
-		return a.Relation.SourceMutiplicity == meta.ZERO_ONE &&
+		return (a.Relation.SourceMutiplicity == meta.ZERO_ONE && a.Relation.TargetMultiplicity == meta.ZERO_MANY) &&
 			a.Relation.RelationType != meta.ONE_WAY_ASSOCIATION //单向关联
 	}
 }

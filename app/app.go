@@ -51,9 +51,12 @@ func GetSystemApp() *App {
 	if appCache[meta.SYSTEM_APP_ID] != nil {
 		return appCache[meta.SYSTEM_APP_ID]
 	}
+
+	metaConent := meta.SystemAppData["meta"].(meta.MetaContent)
+
 	return &App{
 		AppId: meta.SystemAppData["id"].(uint64),
-		Model: model.New(meta.SystemAppData["meta"].(*meta.MetaContent), meta.SYSTEM_APP_ID),
+		Model: model.New(&metaConent, meta.SYSTEM_APP_ID),
 	}
 }
 
