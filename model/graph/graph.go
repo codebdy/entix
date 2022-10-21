@@ -113,22 +113,50 @@ func New(m *domain.Model) *Model {
 }
 
 func (m *Model) makeRelation(relation *domain.Relation) {
+	sourceEntities := []*Entity{}
+	targetEntities := []*Entity{}
 	sourceEntity := m.GetEntityByUuid(relation.Source.Uuid)
+	if sourceEntity != nil {
+		sourceEntities = append(sourceEntities, sourceEntity)
+	} else {
+		sourceInterface := m.GetInterfaceByUuid(relation.Source.Uuid)
 
-	if sourceEntity == nil {
-		panic("Can not find souce by uuid:" + relation.Source.Uuid)
+		if sourceInterface == nil {
+			panic("Can not find souce by uuid:" + relation.Source.Uuid)
+		} else {
+			sourceEntities = sourceInterface.Children
+		}
 	}
+
 	targetEntity := m.GetEntityByUuid(relation.Target.Uuid)
+	if targetEntity != nil {
+		targetEntities = append(targetEntities, targetEntity)
+	} else {
+		targetInterface := m.GetInterfaceByUuid(relation.Target.Uuid)
 
-	if targetEntity == nil {
-		panic("Can not find target by uuid:" + relation.Target.Uuid)
+		if targetInterface == nil {
+			panic("Can not find target by uuid:" + relation.Target.Uuid)
+		} else {
+			targetEntities = targetInterface.Children
+		}
 	}
-	r := NewRelation(
-		relation,
-		sourceEntity,
-		targetEntity,
-	)
-	m.Relations = append(m.Relations, r)
+
+	if len(sourceEntities) == 0 || len(targetEntities) == 0 {
+		return
+	}
+
+	for i := range sourceEntities {
+		source := sourceEntities[i]
+		for j := range targetEntities {
+			target := targetEntities[j]
+			r := NewRelation(
+				relation,
+				source,
+				target,
+			)
+			m.Relations = append(m.Relations, r)
+		}
+	}
 }
 
 func (m *Model) makeAssociations(relation *Relation) {
