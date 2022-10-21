@@ -1,0 +1,3047 @@
+{
+  "appUuid": "SYSTEM",
+  "content": {
+    "packages": [
+      {
+        "appUuid": "SYSTEM",
+        "name": "$inline:{\"zh-CN\":\"系统\",\"en-US\":\"System\"}",
+        "sharable": true,
+        "system": true,
+        "uuid": "PACKAGE_SYSTEM_UUID"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "name": "Appx",
+        "sharable": false,
+        "system": true,
+        "uuid": "PACKAGE_APPX_UUID"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "name": "$inline:{\"zh-CN\":\"工作流\",\"en-US\":\"Processes\"}",
+        "sharable": true,
+        "uuid": "bebc8345-a0e4-41ed-8743-93c00604260c"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "name": "$inline:{\"zh-CN\":\"Camunda\"}",
+        "stereoType": "ThirdParty",
+        "tokenScript": "goFetch(\"http://localhost:18080/auth/realms/camunda-platform/protocol/openid-connect/token\", \r\n    {\r\n      method: 'POST',\r\n      headers: {\r\n        \"Content-Type\": \"application/x-www-form-urlencoded\"\r\n      },\r\n      body: \"client_id=appx&client_secret=bx5Ono2y0FYEVRWB7zw6S55pOEmKQ2kW&grant_type=client_credentials\",\r\n    }\r\n  )\r\n  .then(result => callback(result))\r\n  .catch(error => callback('error'+error.message));",
+        "uuid": "f7624c29-88cc-44de-a108-94af9f54d4e4"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "name": "$inline:{\"zh-CN\":\"辅助\"}",
+        "stereoType": "Normal",
+        "uuid": "8ff26c85-bd4c-49fa-9c9f-c2a736767936"
+      }
+    ],
+    "classes": [
+      {
+        "System": true,
+        "attributes": [
+          {
+            "System": true,
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "RX_USER_ID_UUID"
+          },
+          {
+            "System": true,
+            "label": "$inline:{\"zh-CN\":\"名称\"}",
+            "name": "name",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "RX_USER_NAME_UUID"
+          },
+          {
+            "System": true,
+            "label": "$inline:{\"zh-CN\":\"登录名\"}",
+            "length": 128,
+            "name": "loginName",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "RX_USER_LOGINNAME_UUID"
+          },
+          {
+            "System": true,
+            "label": "$inline:{\"zh-CN\":\"密码\"}",
+            "length": 256,
+            "name": "password",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "RX_USER_PASSWORD_UUID"
+          },
+          {
+            "System": true,
+            "label": "$inline:{\"zh-CN\":\"是超级管理员\"}",
+            "name": "isSupper",
+            "nullable": true,
+            "type": "Boolean",
+            "typeLabel": "Boolean",
+            "uuid": "RX_USER_ISSUPPER_UUID"
+          },
+          {
+            "System": true,
+            "label": "$inline:{\"zh-CN\":\"演示账号\"}",
+            "name": "isDemo",
+            "nullable": true,
+            "type": "Boolean",
+            "typeLabel": "Boolean",
+            "uuid": "RX_USER_ISDEMO_UUID"
+          },
+          {
+            "System": true,
+            "createDate": true,
+            "label": "$inline:{\"zh-CN\":\"创建时间\"}",
+            "name": "createdAt",
+            "type": "Date",
+            "typeLabel": "Date",
+            "uuid": "RX_USER_CREATEDAT_UUID"
+          },
+          {
+            "System": true,
+            "label": "$inline:{\"zh-CN\":\"更新时间\"}",
+            "name": "updatedAt",
+            "type": "Date",
+            "typeLabel": "Date",
+            "updateDate": true,
+            "uuid": "RX_USER_UPDATEDAT_UUID"
+          },
+          {
+            "label": "$inline:{\"zh-CN\":\"状态\"}",
+            "name": "status",
+            "nullable": true,
+            "type": "Enum",
+            "typeLabel": "",
+            "typeUuid": "1da63391-ef0d-4276-9a41-79108e8f30ce",
+            "uuid": "3d415817-c9de-4d0f-bf72-3580210baa5b"
+          },
+          {
+            "label": "$inline:{\"zh-CN\":\"头像\"}",
+            "name": "avatarUrl",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "403b942f-19e6-4380-8b4c-39829e1d5598"
+          }
+        ],
+        "innerId": 4,
+        "label": "$inline:{\"zh-CN\":\"用户\",\"en-US\":\"User\"}",
+        "name": "User",
+        "packageUuid": "PACKAGE_SYSTEM_UUID",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "META_USER_UUID"
+      },
+      {
+        "System": true,
+        "attributes": [
+          {
+            "System": true,
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "RX_ROLE_ID_UUID"
+          },
+          {
+            "System": true,
+            "label": "$inline:{\"zh-CN\":\"名称\"}",
+            "name": "name",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "RX_ROLE_NAME_UUID"
+          },
+          {
+            "System": true,
+            "label": "$inline:{\"zh-CN\":\"描述\"}",
+            "name": "description",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "RX_ROLE_DESCRIPTION_UUID"
+          },
+          {
+            "System": true,
+            "createDate": true,
+            "label": "$inline:{\"zh-CN\":\"创建日期\"}",
+            "name": "createdAt",
+            "type": "Date",
+            "typeLabel": "Date",
+            "uuid": "RX_ROLE_CREATEDAT_UUID"
+          },
+          {
+            "System": true,
+            "label": "$inline:{\"zh-CN\":\"更新日期\"}",
+            "name": "updatedAt",
+            "type": "Date",
+            "typeLabel": "Date",
+            "updateDate": true,
+            "uuid": "RX_ROLE_META_UPDATEDAT_UUID"
+          }
+        ],
+        "innerId": 5,
+        "name": "Role",
+        "packageUuid": "PACKAGE_SYSTEM_UUID",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "META_ROLE_UUID"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "c0702129-6e3a-4549-bd7b-c87f2129db3a"
+          },
+          {
+            "name": "uuid",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "83b44412-a76d-4c9d-baeb-84d4c1c62665"
+          },
+          {
+            "name": "imageUrl",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "67e158ca-2f85-4e15-bd2d-30a700987f86"
+          }
+        ],
+        "idNoShift": true,
+        "innerId": 1001,
+        "label": "$inline:{\"zh-CN\":\"应用\"}",
+        "methods": [],
+        "name": "App",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "2082d665-e503-402a-a089-678115c5ed3e"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "6970a84b-a192-4431-9bd0-2e14e6b7e5f0"
+          },
+          {
+            "name": "orderNum",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "typeUuid": "096f252a-5e35-4e49-8dce-297b2f16374f",
+            "uuid": "b063950e-f5e1-4c9c-815b-f3e283cb5ed4"
+          }
+        ],
+        "innerId": 1002,
+        "label": "$inline:{\"zh-CN\":\"页面\",\"en-US\":\"Page\"}",
+        "methods": [],
+        "name": "Page",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "f9288fd0-2747-4fa0-8b3d-4c8bdaeb5dd8"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "d41a058a-cef4-4444-bbb2-67d03bddf680"
+          },
+          {
+            "name": "orderNum",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "cd3ef55a-ceaa-423c-9768-d1c6d3cc5df2"
+          },
+          {
+            "name": "device",
+            "type": "Enum",
+            "typeLabel": "Device",
+            "typeUuid": "65dc043c-daaf-408c-b74c-f6ff4952bd5a",
+            "uuid": "fcdbc399-e651-4b35-8b9b-bf3882324bf6"
+          }
+        ],
+        "innerId": 1004,
+        "methods": [],
+        "name": "PageCategory",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "e90f69e9-1be0-45e2-95a6-269da4d2fada"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "fd9383b4-b31a-4ae6-93b4-bf1dc0cd0c28"
+          }
+        ],
+        "innerId": 1005,
+        "label": "$inline:{\"zh-CN\":\"菜单\"}",
+        "methods": [],
+        "name": "Menu",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "660a55fe-c2f1-4b17-921e-38aa14737a1c"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "ef57e146-3faf-4ffc-ade7-4344d2c717ae"
+          },
+          {
+            "name": "title",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "296d7cc8-16a0-49b9-a407-ee17cb04850c"
+          }
+        ],
+        "innerId": 1006,
+        "methods": [],
+        "name": "TitleAble",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": false,
+        "stereoType": "Abstract",
+        "uuid": "6be09899-afed-4115-b214-4511adc0e813"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "9416ad58-4c54-4c81-8839-2fd9b9eabd20"
+          },
+          {
+            "name": "schemaJson",
+            "nullable": true,
+            "type": "JSON",
+            "typeLabel": "JSON",
+            "uuid": "94f1a640-4279-409e-b1aa-340093028ea0"
+          },
+          {
+            "name": "device",
+            "type": "Enum",
+            "typeLabel": "Device",
+            "typeUuid": "65dc043c-daaf-408c-b74c-f6ff4952bd5a",
+            "uuid": "95009bc6-dfa7-4e3a-9037-192c5aa83725"
+          }
+        ],
+        "innerId": 1007,
+        "methods": [],
+        "name": "SchemaAble",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": false,
+        "stereoType": "Abstract",
+        "uuid": "087b2915-5582-496d-bafb-ae2f5623a70d"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "4414cf06-c3ee-4ecd-9ef9-6f83177ca2b7"
+          },
+          {
+            "name": "name",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "4cfe85c6-38dc-4902-9f54-1d1c983488e0"
+          },
+          {
+            "name": "schemaJson",
+            "type": "JSON",
+            "typeLabel": "JSON",
+            "uuid": "2732ca02-363f-4782-b15e-aaa5a1e1c162"
+          },
+          {
+            "name": "appUuid",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "71d3349a-1baf-4263-acf7-70355f55ab71"
+          }
+        ],
+        "innerId": 1008,
+        "methods": [],
+        "name": "LangLocal",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "ddbecde2-3e2d-4391-a327-63d4c8c6a2c3"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "9c910040-cb77-4ada-a1f4-ccd582688a00"
+          },
+          {
+            "name": "appUuid",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "25b04ce0-73d2-4021-8c08-7c885de6885e"
+          }
+        ],
+        "innerId": 1009,
+        "methods": [],
+        "name": "AppConfig",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "c19d7f61-6a73-408c-b272-284ee374d5ce"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "5f465593-71d8-4c10-ac2d-720fed999811"
+          },
+          {
+            "name": "device",
+            "type": "Enum",
+            "typeLabel": "Device",
+            "typeUuid": "65dc043c-daaf-408c-b74c-f6ff4952bd5a",
+            "uuid": "01da62ca-ad8d-4306-9420-732e779a8b83"
+          }
+        ],
+        "innerId": 1010,
+        "methods": [],
+        "name": "UserConfig",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "de56ae19-aaac-4479-8bf9-6573ad22a482"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "bb753f0d-e374-49ea-abee-5814815010b5"
+          },
+          {
+            "name": "schemaJson",
+            "type": "JSON",
+            "typeLabel": "JSON",
+            "uuid": "bbfdcfa8-5ace-4c64-bea2-e417e024f435"
+          }
+        ],
+        "innerId": 1011,
+        "methods": [],
+        "name": "Config",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": false,
+        "stereoType": "Abstract",
+        "uuid": "db282fa2-db28-4a99-badd-f53cc8fb0862"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "83901029-953a-4a4a-b791-8e2cd1cc8640"
+          },
+          {
+            "name": "appUuid",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "cad6209d-86c9-43b6-bde4-d5c3d4af892b"
+          },
+          {
+            "name": "device",
+            "type": "Enum",
+            "typeLabel": "Device",
+            "typeUuid": "65dc043c-daaf-408c-b74c-f6ff4952bd5a",
+            "uuid": "c4b1d4ec-5cfc-4cbf-b695-c35650400ab7"
+          }
+        ],
+        "innerId": 1012,
+        "methods": [],
+        "name": "AppDeviceConfig",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "0e31f942-ce6f-4f6e-bd1b-0a5eb126d204"
+      },
+      {
+        "attributes": [
+          {
+            "label": "$inline:{\"zh-CN\":\"正常\"}",
+            "name": "normal",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "b6a9d5a2-159f-4e21-b721-a907d3bcca37"
+          },
+          {
+            "label": "$inline:{\"zh-CN\":\"禁用\"}",
+            "name": "forbid",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "cfdf2f6a-e21f-4694-ad64-80daea7ec196"
+          }
+        ],
+        "innerId": 1013,
+        "label": "$inline:{\"zh-CN\":\"用户状态\"}",
+        "methods": [],
+        "name": "UserStatus",
+        "packageUuid": "PACKAGE_SYSTEM_UUID",
+        "root": false,
+        "stereoType": "Enum",
+        "uuid": "1da63391-ef0d-4276-9a41-79108e8f30ce"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "addb88e1-34df-419d-b6bc-eb2f6982612c"
+          },
+          {
+            "name": "appUuid",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "cc42e281-1ef4-4e2a-a786-5baccc359941"
+          },
+          {
+            "label": "$inline:{\"zh-CN\":\"内容\"}",
+            "length": 20000,
+            "name": "content",
+            "nullable": false,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "b483e05d-caaf-4cd6-b628-666525f87cba"
+          },
+          {
+            "label": "$inline:{\"zh-CN\":\"类型\"}",
+            "name": "type",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "ae41faa0-0eec-4145-b7b9-444f9954033b"
+          },
+          {
+            "name": "entityUuid",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "7ee38627-25ef-498f-b2e2-d893ef62a8c9"
+          },
+          {
+            "label": "$inline:{\"zh-CN\":\"已读\"}",
+            "name": "read",
+            "nullable": true,
+            "type": "Boolean",
+            "typeLabel": "Boolean",
+            "uuid": "4cc58493-1857-47d2-8cba-4733e68a3a04"
+          }
+        ],
+        "description": "消息定义类",
+        "innerId": 1014,
+        "label": "$inline:{\"zh-CN\":\"消息\",\"en-US\":\"Message\"}",
+        "methods": [],
+        "name": "Notification",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "b635e48d-f4fe-4470-ae77-0bb5dd2f0daa"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "181a3430-8203-440f-bd70-0629299f6f1e"
+          },
+          {
+            "name": "appUuid",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "dc007c8d-1262-4be6-bab7-5a0198982621"
+          }
+        ],
+        "innerId": 1015,
+        "label": "$inline:{\"zh-CN\":\"定时任务\"}",
+        "methods": [],
+        "name": "ScheduledTask",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": false,
+        "stereoType": "Entity",
+        "uuid": "ff1086b1-5b14-4290-884e-a8a716a2b72e"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "26b07dab-072d-4a1c-ae0d-65fe0d98b160"
+          },
+          {
+            "name": "title",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "8e1c83bd-a9e1-48da-968f-9ea4ccb7c879"
+          },
+          {
+            "name": "description",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "65c06c27-7d95-4337-b036-ab08cb7dfc0a"
+          },
+          {
+            "label": "$inline:{\"zh-CN\":\"图像\"}",
+            "name": "imageUrl",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "74d97d91-2545-4b09-9324-54949431db2e"
+          }
+        ],
+        "innerId": 1016,
+        "label": "$inline:{\"zh-CN\":\"页面框架\"}",
+        "methods": [],
+        "name": "PageFrame",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "3a450ffa-e784-415f-b6c2-bc415e2dfd8c"
+      },
+      {
+        "attributes": [
+          {
+            "name": "Pc",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "19a70dae-3082-4894-9878-e06df10a9d5d"
+          },
+          {
+            "name": "Mobile",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "65455c43-c2f1-4004-82e5-6f79e76b04b0"
+          },
+          {
+            "name": "Website",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "e6d41e6b-5d19-4e60-bef4-3a43e11b131c"
+          }
+        ],
+        "innerId": 1003,
+        "methods": [],
+        "name": "Device",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": false,
+        "stereoType": "Enum",
+        "uuid": "65dc043c-daaf-408c-b74c-f6ff4952bd5a"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "9570e280-e2ad-44b0-9d92-163abbdb33aa"
+          },
+          {
+            "label": "$inline:{\"zh-CN\":\"资源地址\"}",
+            "name": "url",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "7cfe36cb-e8f4-413c-bff3-20290662459d"
+          },
+          {
+            "name": "appUuid",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "06af7a45-a782-41a6-b7d9-9981a331450d"
+          },
+          {
+            "name": "title",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "17de6a6d-5733-4a61-b491-089a8361c801"
+          },
+          {
+            "name": "pluginId",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "18e20f85-be4a-4bd2-ac38-2c0ec3ee301d"
+          },
+          {
+            "name": "type",
+            "type": "Enum",
+            "typeLabel": "PluginType",
+            "typeUuid": "58d3b299-cd9a-4066-929f-26341023a62a",
+            "uuid": "cf0398e7-8dbc-4053-9db7-512b3fb115ec"
+          },
+          {
+            "label": "$inline:{\"zh-CN\":\"介绍\"}",
+            "name": "description",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "77dcb51c-e52e-4e73-bf9f-fdaf8a5abef0"
+          },
+          {
+            "name": "version",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "510d473b-c4e8-44b9-a55a-a8607135d9d1"
+          }
+        ],
+        "innerId": 1017,
+        "label": "$inline:{\"zh-CN\":\"物料\"}",
+        "methods": [],
+        "name": "PluginInfo",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "f0fa4b0f-4b91-4092-a93b-beaa13896e86"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "7346a7a6-dadc-471c-a1d6-cbe95ba92848"
+          },
+          {
+            "name": "appUuid",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "ab71d680-f700-4985-a569-1dfcd552966f"
+          }
+        ],
+        "innerId": 1018,
+        "label": "$inline:{\"zh-CN\":\"物料配置\"}",
+        "methods": [],
+        "name": "MaterialConfig",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "51d35ee7-6757-4e1f-8a08-13b274bbaf3d"
+      },
+      {
+        "attributes": [
+          {
+            "name": "normal",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "1df08808-9edf-44f7-8f2b-472fff0eb7b7"
+          },
+          {
+            "name": "debug",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "ae9c29c7-c4a5-45ad-8179-ed17612fc744"
+          }
+        ],
+        "innerId": 1019,
+        "label": "$inline:{\"zh-CN\":\"插件类型\"}",
+        "methods": [],
+        "name": "PluginType",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": false,
+        "stereoType": "Enum",
+        "uuid": "58d3b299-cd9a-4066-929f-26341023a62a"
+      },
+      {
+        "attributes": [],
+        "innerId": 1020,
+        "methods": [
+          {
+            "args": [
+              {
+                "index": 0,
+                "name": "arg1",
+                "type": "Int",
+                "typeLabel": "Int",
+                "uuid": "434a382c-cc7c-4157-a7bc-b904396d805e"
+              },
+              {
+                "index": 1,
+                "name": "arg2",
+                "type": "Int",
+                "typeLabel": "Int",
+                "uuid": "e43ce8ff-3491-4eb1-9d5a-c03d2d875ed2"
+              }
+            ],
+            "name": "firstMethod",
+            "operateType": "query",
+            "script": "let result = iFetch(\"http://localhost:18080/auth/realms/camunda-platform/protocol/openid-connect/token\", \r\n    {\r\n      method: 'POST',\r\n      headers: {\r\n        \"Content-Type\": \"application/x-www-form-urlencoded\"\r\n      },\r\n      body: \"client_id=appx&client_secret=bx5Ono2y0FYEVRWB7zw6S55pOEmKQ2kW&grant_type=client_credentials\",\r\n    }\r\n  )\r\nreturn result;",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "e6affd42-a603-4da7-985f-802981e6b624"
+          },
+          {
+            "args": [],
+            "name": "test",
+            "operateType": "query",
+            "script": "const t = new Test2();\r\nreturn t.test();",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "3c72362e-1fc4-4f99-8264-91b02e671a53"
+          }
+        ],
+        "name": "Test",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": true,
+        "stereoType": "Service",
+        "uuid": "0afeac65-c0f6-48c1-846c-922e156307f5"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "175c19f1-a818-40d6-aecd-7055a3cfc869"
+          },
+          {
+            "name": "name",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "fe250d6c-0a83-47a5-919a-2e76c9e51d02"
+          },
+          {
+            "name": "type",
+            "type": "Enum",
+            "typeLabel": "ProcessType",
+            "typeUuid": "d5400697-5fe9-4aa3-a8b5-a0854b184d56",
+            "uuid": "730429d6-db33-4c06-9808-41bccb0c267d"
+          },
+          {
+            "length": 50000,
+            "name": "xml",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "58d10573-64d6-4916-8842-be0f92792a50"
+          }
+        ],
+        "innerId": 1023,
+        "methods": [],
+        "name": "Process",
+        "packageUuid": "bebc8345-a0e4-41ed-8743-93c00604260c",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "692bf0ad-532b-4720-9427-a7a0fc70a418"
+      },
+      {
+        "attributes": [
+          {
+            "name": "approvalFlow",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "796e1a59-8b17-40a0-a657-8832638aa6bb"
+          },
+          {
+            "name": "workFlow",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "cdc17359-8392-42c5-8d40-9a3bc2e00d80"
+          }
+        ],
+        "innerId": 1021,
+        "methods": [],
+        "name": "ProcessType",
+        "packageUuid": "bebc8345-a0e4-41ed-8743-93c00604260c",
+        "root": false,
+        "stereoType": "Enum",
+        "uuid": "d5400697-5fe9-4aa3-a8b5-a0854b184d56"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "851f2c5c-a504-428d-a51a-fabe59c5ba95"
+          },
+          {
+            "name": "status",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "32ef28b8-2335-4e9b-bf28-39e6db79a6a3"
+          }
+        ],
+        "innerId": 1022,
+        "methods": [
+          {
+            "args": [],
+            "name": "newMethod1",
+            "operateType": "query",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "18db9225-b791-4206-9059-b3d5028faf8b"
+          },
+          {
+            "args": [],
+            "name": "newMethod2",
+            "operateType": "query",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "9d5dd263-1c91-40e5-ac7a-160c62d1c887"
+          }
+        ],
+        "name": "ProcessInstance",
+        "packageUuid": "bebc8345-a0e4-41ed-8743-93c00604260c",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "dcd6fd70-eac1-4853-9dd2-62ab2b2d4fe1"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "c14e9d40-7868-4d6c-9748-19d75811a2b4"
+          },
+          {
+            "name": "bpmnProcessId",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "6e7e1fac-9ad0-457d-9b1b-2d5ec36d32d5"
+          },
+          {
+            "name": "endDate",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "8516f664-d424-4def-a96a-6d07db4f7add"
+          },
+          {
+            "name": "key",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "bf8b3209-8c6a-44b8-aab2-f2dc0dc7edcf"
+          },
+          {
+            "name": "processDefinitionKey",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "ed3eb7ce-3582-46a8-8519-d3b6cdba8814"
+          },
+          {
+            "name": "processVersion",
+            "type": "Int",
+            "typeLabel": "Int",
+            "uuid": "557cf61d-2149-45fe-9b39-c012a1f4456d"
+          },
+          {
+            "name": "startDate",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "1fefd672-2a71-4082-966a-73f2d3908a04"
+          },
+          {
+            "name": "state",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "d453d3a2-5528-4030-a40d-bc3dc2cda518"
+          }
+        ],
+        "innerId": 1024,
+        "methods": [],
+        "mutationScript": "",
+        "name": "ProcessDefination",
+        "packageUuid": "f7624c29-88cc-44de-a108-94af9f54d4e4",
+        "queryScript": "const token = getToken()\r\n\r\nconst result =  JSON.parse(\r\n    searchProcesses(\r\n        token,\r\n        JSON.stringify({}),\r\n    )\r\n)\r\n\r\nreturn {\r\n    nodes:result?.items?.map(item=>{\r\n        return{\r\n            ...item,\r\n            id:item.key\r\n        }\r\n    }),\r\n    total:result?.total,\r\n}",
+        "root": true,
+        "script": "test",
+        "stereoType": "ThirdParty",
+        "uuid": "f00fe4ad-70b8-4339-96b9-ca2f50cc1a15"
+      },
+      {
+        "attributes": [],
+        "innerId": 1025,
+        "methods": [
+          {
+            "args": [],
+            "name": "first",
+            "operateType": "query",
+            "script": "const token = getToken()\r\n\r\nconst tokenObj = JSON.parse(token)\r\n\r\nreturn  JSON.parse(getProcesses(tokenObj.token_type + \" \" + tokenObj.access_token))",
+            "type": "JSON",
+            "typeLabel": "JSON",
+            "uuid": "fdb6973f-c6cf-4447-a68a-946f4789aff9"
+          }
+        ],
+        "name": "CodeTest",
+        "packageUuid": "f7624c29-88cc-44de-a108-94af9f54d4e4",
+        "root": true,
+        "stereoType": "Service",
+        "uuid": "d786be1a-75c5-4e92-86e8-657eb2accd09"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "515157fe-e062-45ca-8b9c-61655b776660"
+          },
+          {
+            "name": "canCreate",
+            "nullable": true,
+            "type": "Boolean",
+            "typeLabel": "Boolean",
+            "uuid": "d9ee98d4-f3f5-44c0-a305-0d2fcbc2b4b2"
+          },
+          {
+            "name": "createExpression",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "45ac296c-d8b4-4633-92ec-cf0005e1e484"
+          },
+          {
+            "name": "expanded",
+            "nullable": true,
+            "type": "Boolean",
+            "typeLabel": "Boolean",
+            "uuid": "2e0dd1b1-ced7-4b99-977e-e13de57599b5"
+          },
+          {
+            "name": "canDelete",
+            "nullable": true,
+            "type": "Boolean",
+            "typeLabel": "Boolean",
+            "uuid": "484a5138-dcd3-43e2-8bd6-7466c96ce2ac"
+          },
+          {
+            "name": "deleteExpression",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "4e689ec7-6258-4202-9087-903e94a000d6"
+          }
+        ],
+        "innerId": 1026,
+        "methods": [],
+        "name": "ClassAuthConfig",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "42252d97-5b4c-40bc-8117-3fd4b7e92926"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "c0df5a91-6102-412f-a317-f7e60d65eac0"
+          },
+          {
+            "name": "propertyUuid",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "176ae195-9d91-4a32-b9fc-8f40532a9f6b"
+          }
+        ],
+        "innerId": 1027,
+        "methods": [],
+        "name": "PropertyAuthConfig",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "106e8308-4f13-48bc-917a-938aa5542ac5"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "dae1f4a3-9358-4df7-9c52-77450e51f0ec"
+          },
+          {
+            "name": "canRead",
+            "nullable": true,
+            "type": "Boolean",
+            "typeLabel": "Boolean",
+            "uuid": "6bfd8a41-8d95-4de7-8529-cf68e3cce702"
+          },
+          {
+            "name": "readExpression",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "16bcc331-b85c-432f-926e-44de32aef197"
+          },
+          {
+            "name": "canUpdate",
+            "nullable": true,
+            "type": "Boolean",
+            "typeLabel": "Boolean",
+            "uuid": "cfb6f371-b565-4a8e-838f-8926025b7f2e"
+          },
+          {
+            "name": "updateExpression",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "d546740f-9d40-4cd1-b579-9c9f56b403cb"
+          },
+          {
+            "name": "classUuid",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "7f3eb084-24d0-4ccc-868c-958bf9dcb757"
+          }
+        ],
+        "innerId": 1028,
+        "methods": [],
+        "name": "ModelAuthConfig",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": false,
+        "stereoType": "Abstract",
+        "uuid": "3fd0b1e1-b2ee-491d-be5a-a40109f3c65a"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "01445fc0-728a-4110-9bf0-a7d704f4e47f"
+          },
+          {
+            "name": "appUuid",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "961029a7-4736-4194-8a88-b1833059e772"
+          },
+          {
+            "name": "roleId",
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "76afd151-b970-43a6-827f-ace04922513f"
+          }
+        ],
+        "innerId": 1029,
+        "methods": [],
+        "name": "AuthConfig",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": false,
+        "stereoType": "Abstract",
+        "uuid": "3502291d-5e64-4c31-82b0-c04c6c70e6a7"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "764c7350-a4ff-4d86-9f7b-b81e219215ff"
+          },
+          {
+            "name": "menuItemUuid",
+            "nullable": false,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "5c9c59ce-4cd9-48c2-9265-a5acc5ef27eb"
+          }
+        ],
+        "innerId": 1030,
+        "methods": [],
+        "name": "MenuAuthConfig",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "8f77f9f7-a39d-4f9e-8c21-023a48e4858d"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "3281ee44-7526-4ba8-b0ab-70a26ae7e954"
+          },
+          {
+            "name": "componentId",
+            "nullable": false,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "9628272d-a24e-4630-97a2-2db6bf22ce70"
+          }
+        ],
+        "innerId": 1031,
+        "methods": [],
+        "name": "ComponentAuthConfig",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "4a0a79fa-70ba-4297-a71f-a28336b1b7e5"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "96a2fdad-b742-48ac-94ef-52c63e77eb40"
+          },
+          {
+            "name": "device",
+            "type": "Enum",
+            "typeLabel": "Device",
+            "typeUuid": "65dc043c-daaf-408c-b74c-f6ff4952bd5a",
+            "uuid": "b51ccaf1-fbca-4215-a53b-322cd6fa006f"
+          },
+          {
+            "name": "refused",
+            "nullable": true,
+            "type": "Boolean",
+            "typeLabel": "Boolean",
+            "uuid": "3fcf0901-7871-4eb8-875c-6a419cd4d1ea"
+          }
+        ],
+        "innerId": 1032,
+        "methods": [],
+        "name": "UiAuthConfig",
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "root": false,
+        "stereoType": "Abstract",
+        "uuid": "02e50e9a-23e2-4b69-81d6-22de373a35d6"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "c5f97c87-ce73-4853-bd0d-a055ef769a6b"
+          },
+          {
+            "name": "appUuid",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "8aed8ca4-e4a8-4e3f-82e1-c00b5819b70b"
+          },
+          {
+            "name": "entityUuid",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "e653d43e-07e7-4540-8231-a5e6e50e9186"
+          },
+          {
+            "name": "version",
+            "type": "String",
+            "typeLabel": "String",
+            "unique": true,
+            "uuid": "7695ac18-0b57-496a-8c7b-92c23d4e92be"
+          },
+          {
+            "name": "content",
+            "type": "JSON",
+            "typeLabel": "JSON",
+            "uuid": "0dbfa8cb-339c-4011-9fad-e4e2fd978cb8"
+          },
+          {
+            "name": "description",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "50847440-7e02-403a-88e4-ad934a4739d0"
+          },
+          {
+            "createDate": true,
+            "name": "createdAt",
+            "type": "Date",
+            "typeLabel": "Date",
+            "uuid": "10db4f63-fbff-4eb4-a723-4418be1e1c30"
+          }
+        ],
+        "innerId": 1034,
+        "methods": [],
+        "name": "Snapshot",
+        "packageUuid": "8ff26c85-bd4c-49fa-9c9f-c2a736767936",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "bab7e61b-bbf2-42e7-a765-e2387ad21b35"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "bdaaecee-1b6f-4597-bda7-4a40d40a36f0"
+          },
+          {
+            "name": "ip",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "40f49e7d-12fa-41f6-84bb-52b4daa1a6b3"
+          },
+          {
+            "createDate": true,
+            "name": "createdAt",
+            "type": "Date",
+            "typeLabel": "Date",
+            "uuid": "56ec4ddb-fff1-41dc-a18e-21eca22b3988"
+          },
+          {
+            "name": "appUuid",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "c1a70ce7-f5a3-4374-a3fc-678ba10fd1c5"
+          },
+          {
+            "name": "message",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "a58aa981-12de-4c87-b362-79e6f18f2bda"
+          },
+          {
+            "name": "result",
+            "nullable": true,
+            "type": "Enum",
+            "typeLabel": "OperateResult",
+            "typeUuid": "55907de3-802b-4e36-868c-3afc57813f20",
+            "uuid": "52ea1805-49f0-4c6d-8a21-f67b87379e55"
+          }
+        ],
+        "innerId": 1035,
+        "methods": [],
+        "name": "Log",
+        "packageUuid": "8ff26c85-bd4c-49fa-9c9f-c2a736767936",
+        "root": false,
+        "stereoType": "Abstract",
+        "uuid": "1f3ff909-3661-4cbe-b590-0b30b81052f9"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "a5b70e8a-295a-46ab-bca8-5634eaa22b8c"
+          },
+          {
+            "name": "operateType",
+            "type": "Enum",
+            "typeLabel": "BusinessOperateType",
+            "typeUuid": "20b0c3e1-5957-4767-a1dd-68a18f27f93b",
+            "uuid": "2f016ad5-4201-4856-a600-97786642ba69"
+          }
+        ],
+        "innerId": 1036,
+        "methods": [],
+        "name": "BusinessLog",
+        "packageUuid": "8ff26c85-bd4c-49fa-9c9f-c2a736767936",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "513dadfc-512f-46ee-8bf7-0fab8a4c6cc7"
+      },
+      {
+        "attributes": [
+          {
+            "name": "id",
+            "primary": true,
+            "type": "ID",
+            "typeLabel": "ID",
+            "uuid": "45089fcc-a865-454a-a18a-9a6f7d7dd47b"
+          },
+          {
+            "name": "operateType",
+            "type": "Enum",
+            "typeLabel": "ModelOperateType",
+            "typeUuid": "bf869bf6-c2cf-47cd-b3b4-eae98a46fb74",
+            "uuid": "5005620b-4892-422f-8fbf-9c6121d67d5d"
+          },
+          {
+            "name": "classUuid",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "72c05005-6630-43fe-b839-2b7cecf18955"
+          },
+          {
+            "name": "className",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "1c629044-0a3a-41da-86f6-bac2683ab5e5"
+          },
+          {
+            "length": 1000,
+            "name": "gql",
+            "nullable": true,
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "9faaf732-07fe-4d3e-94a6-85979f150174"
+          },
+          {
+            "name": "variables",
+            "nullable": true,
+            "type": "JSON",
+            "typeLabel": "JSON",
+            "uuid": "ca3c17e3-f5a8-4ea9-b1b2-cfac9ad69033"
+          }
+        ],
+        "innerId": 1037,
+        "methods": [],
+        "name": "ModelLog",
+        "packageUuid": "8ff26c85-bd4c-49fa-9c9f-c2a736767936",
+        "root": true,
+        "stereoType": "Entity",
+        "uuid": "15245179-1a12-4feb-8c7c-543f60350415"
+      },
+      {
+        "attributes": [
+          {
+            "name": "query",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "328bc178-fbd8-4d79-aaf4-e06bd539267c"
+          },
+          {
+            "name": "upsert",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "40c8e068-a9b4-44a5-b85f-e0a01efad7d2"
+          },
+          {
+            "name": "delete",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "bcac19d9-b125-41e5-9b8a-ee54bff8fa49"
+          },
+          {
+            "name": "inovkeMethod",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "b437c699-d51e-4e27-a1fb-89fc6fdb0c9e"
+          }
+        ],
+        "innerId": 1038,
+        "methods": [],
+        "name": "ModelOperateType",
+        "packageUuid": "8ff26c85-bd4c-49fa-9c9f-c2a736767936",
+        "root": false,
+        "stereoType": "Enum",
+        "uuid": "bf869bf6-c2cf-47cd-b3b4-eae98a46fb74"
+      },
+      {
+        "attributes": [
+          {
+            "name": "login",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "fe4c2739-c266-4edc-8b8d-32957d9e0378"
+          },
+          {
+            "name": "logout",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "323301df-3914-4138-ad4a-d4bd342548b7"
+          },
+          {
+            "name": "deployProcess",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "43245232-5832-41b4-bad7-12e3df7f12ec"
+          },
+          {
+            "name": "startProcess",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "3058f0e5-4aa1-4a44-a51d-c546bd940cc7"
+          },
+          {
+            "name": "complateJob",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "da527a14-fd62-48ed-b50e-fffbe4980e39"
+          },
+          {
+            "name": "publishMeta",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "abb7f314-0aa8-48e8-96b0-75eb1db40653"
+          }
+        ],
+        "innerId": 1039,
+        "methods": [],
+        "name": "BusinessOperateType",
+        "packageUuid": "8ff26c85-bd4c-49fa-9c9f-c2a736767936",
+        "root": false,
+        "stereoType": "Enum",
+        "uuid": "20b0c3e1-5957-4767-a1dd-68a18f27f93b"
+      },
+      {
+        "attributes": [
+          {
+            "name": "success",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "b0063ec6-3ce8-474c-a4e1-04c1282ba53e"
+          },
+          {
+            "name": "failure",
+            "type": "String",
+            "typeLabel": "String",
+            "uuid": "97476319-5ef0-49e4-aa7b-816b98f40c42"
+          }
+        ],
+        "innerId": 1041,
+        "methods": [],
+        "name": "OperateResult",
+        "packageUuid": "8ff26c85-bd4c-49fa-9c9f-c2a736767936",
+        "root": false,
+        "stereoType": "Enum",
+        "uuid": "55907de3-802b-4e36-868c-3afc57813f20"
+      }
+    ],
+    "relations": [
+      {
+        "innerId": 101,
+        "labelOfSource": "$inline:{\"zh-CN\":\"角色\"}",
+        "relationType": "twoWayAssociation",
+        "roleOfSource": "roles",
+        "roleOfTarget": "users",
+        "sourceId": "META_ROLE_UUID",
+        "sourceMutiplicity": "0..*",
+        "targetId": "META_USER_UUID",
+        "targetMultiplicity": "0..*",
+        "uuid": "META_RELATION_USER_ROLE_UUID"
+      },
+      {
+        "innerId": 0,
+        "relationType": "inherit",
+        "sourceId": "2082d665-e503-402a-a089-678115c5ed3e",
+        "sourceMutiplicity": "0..1",
+        "targetId": "6be09899-afed-4115-b214-4511adc0e813",
+        "targetMultiplicity": "0..1",
+        "uuid": "77e5f307-a1c1-4022-a1bf-9f6004889e8a"
+      },
+      {
+        "innerId": 0,
+        "relationType": "inherit",
+        "sourceId": "f9288fd0-2747-4fa0-8b3d-4c8bdaeb5dd8",
+        "sourceMutiplicity": "0..1",
+        "targetId": "6be09899-afed-4115-b214-4511adc0e813",
+        "targetMultiplicity": "0..1",
+        "uuid": "ae68f127-5d2d-41a3-a905-bc5279ea0520"
+      },
+      {
+        "innerId": 0,
+        "relationType": "inherit",
+        "sourceId": "f9288fd0-2747-4fa0-8b3d-4c8bdaeb5dd8",
+        "sourceMutiplicity": "0..1",
+        "targetId": "087b2915-5582-496d-bafb-ae2f5623a70d",
+        "targetMultiplicity": "0..1",
+        "uuid": "c921aa03-3be8-4650-91ad-e7f8cb552b8b"
+      },
+      {
+        "innerId": 0,
+        "relationType": "inherit",
+        "sourceId": "660a55fe-c2f1-4b17-921e-38aa14737a1c",
+        "sourceMutiplicity": "0..1",
+        "targetId": "087b2915-5582-496d-bafb-ae2f5623a70d",
+        "targetMultiplicity": "0..1",
+        "uuid": "0b456cb0-ffcf-4bb6-a0c9-84524bbdc7b3"
+      },
+      {
+        "innerId": 1001,
+        "relationType": "twoWayCombination",
+        "roleOfSource": "app",
+        "roleOfTarget": "pages",
+        "sourceId": "2082d665-e503-402a-a089-678115c5ed3e",
+        "sourceMutiplicity": "0..1",
+        "targetId": "f9288fd0-2747-4fa0-8b3d-4c8bdaeb5dd8",
+        "targetMultiplicity": "0..*",
+        "uuid": "5563d5ee-2846-4360-8f39-cfa18864ac2e"
+      },
+      {
+        "innerId": 1002,
+        "relationType": "twoWayCombination",
+        "roleOfSource": "app",
+        "roleOfTarget": "menus",
+        "sourceId": "2082d665-e503-402a-a089-678115c5ed3e",
+        "sourceMutiplicity": "0..1",
+        "targetId": "660a55fe-c2f1-4b17-921e-38aa14737a1c",
+        "targetMultiplicity": "0..*",
+        "uuid": "963e03f6-c6c8-4e91-8912-4f64697a9b1f"
+      },
+      {
+        "innerId": 1003,
+        "relationType": "twoWayCombination",
+        "roleOfSource": "app",
+        "roleOfTarget": "pageCategories",
+        "sourceId": "2082d665-e503-402a-a089-678115c5ed3e",
+        "sourceMutiplicity": "0..1",
+        "targetId": "e90f69e9-1be0-45e2-95a6-269da4d2fada",
+        "targetMultiplicity": "0..*",
+        "uuid": "3ad27c5f-73b1-4064-8f39-86381e35457a"
+      },
+      {
+        "innerId": 1005,
+        "relationType": "oneWayAssociation",
+        "roleOfTarget": "owner",
+        "sourceId": "2082d665-e503-402a-a089-678115c5ed3e",
+        "sourceMutiplicity": "0..*",
+        "targetId": "META_USER_UUID",
+        "targetMultiplicity": "0..1",
+        "uuid": "2b499cf1-f6b5-4ea6-bebf-e50ce165cb03"
+      },
+      {
+        "innerId": 0,
+        "relationType": "inherit",
+        "sourceId": "e90f69e9-1be0-45e2-95a6-269da4d2fada",
+        "sourceMutiplicity": "0..1",
+        "targetId": "6be09899-afed-4115-b214-4511adc0e813",
+        "targetMultiplicity": "0..1",
+        "uuid": "8071bddb-8af0-486f-9f3f-3b67e49a4540"
+      },
+      {
+        "innerId": 1004,
+        "relationType": "twoWayAssociation",
+        "roleOfSource": "category",
+        "roleOfTarget": "pages",
+        "sourceId": "e90f69e9-1be0-45e2-95a6-269da4d2fada",
+        "sourceMutiplicity": "0..1",
+        "targetId": "f9288fd0-2747-4fa0-8b3d-4c8bdaeb5dd8",
+        "targetMultiplicity": "0..*",
+        "uuid": "3547c38a-2780-4024-98e9-81b4e47d85e6"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 0,
+        "relationType": "inherit",
+        "sourceId": "c19d7f61-6a73-408c-b272-284ee374d5ce",
+        "sourceMutiplicity": "0..1",
+        "targetId": "db282fa2-db28-4a99-badd-f53cc8fb0862",
+        "targetMultiplicity": "0..1",
+        "uuid": "d1f962f6-6736-460a-a6b8-40aae2e0be0f"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 0,
+        "relationType": "inherit",
+        "sourceId": "de56ae19-aaac-4479-8bf9-6573ad22a482",
+        "sourceMutiplicity": "0..1",
+        "targetId": "db282fa2-db28-4a99-badd-f53cc8fb0862",
+        "targetMultiplicity": "0..1",
+        "uuid": "a566c34c-66f3-4c63-a095-c7a968c7f279"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 1008,
+        "labelOfSource": "$inline:{\"zh-CN\":\"用户\",\"en-US\":\"user\"}",
+        "relationType": "twoWayCombination",
+        "roleOfSource": "user",
+        "roleOfTarget": "config",
+        "sourceId": "META_USER_UUID",
+        "sourceMutiplicity": "0..1",
+        "targetId": "de56ae19-aaac-4479-8bf9-6573ad22a482",
+        "targetMultiplicity": "0..*",
+        "uuid": "32bbc048-107d-4397-bf87-2a4d55c0bb48"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 0,
+        "relationType": "inherit",
+        "sourceId": "0e31f942-ce6f-4f6e-bd1b-0a5eb126d204",
+        "sourceMutiplicity": "0..1",
+        "targetId": "db282fa2-db28-4a99-badd-f53cc8fb0862",
+        "targetMultiplicity": "0..1",
+        "uuid": "0ffd3870-c7ab-4971-beca-7b597629e6cb"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 1006,
+        "relationType": "twoWayAssociation",
+        "roleOfSource": "userConfigs",
+        "roleOfTarget": "app",
+        "sourceId": "de56ae19-aaac-4479-8bf9-6573ad22a482",
+        "sourceMutiplicity": "0..*",
+        "targetId": "2082d665-e503-402a-a089-678115c5ed3e",
+        "targetMultiplicity": "0..1",
+        "uuid": "d76aa042-9c3c-4e44-9a8d-58a756621c7b"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 1007,
+        "labelOfSource": "$inline:{\"zh-CN\":\"接收者\"}",
+        "labelOfTarget": "$inline:{\"zh-CN\":\"通知\"}",
+        "relationType": "twoWayCombination",
+        "roleOfSource": "receiver",
+        "roleOfTarget": "notifications",
+        "sourceId": "META_USER_UUID",
+        "sourceMutiplicity": "0..1",
+        "targetId": "b635e48d-f4fe-4470-ae77-0bb5dd2f0daa",
+        "targetMultiplicity": "0..*",
+        "uuid": "6d5a249a-dd94-4e29-8191-212235cc195a"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 1009,
+        "labelOfSource": "$inline:{\"zh-CN\":\"拥有者\"}",
+        "labelOfTarget": "$inline:{\"zh-CN\":\"定时任务\"}",
+        "relationType": "twoWayCombination",
+        "roleOfSource": "owner",
+        "roleOfTarget": "scheduledTasks",
+        "sourceId": "META_USER_UUID",
+        "sourceMutiplicity": "0..1",
+        "targetId": "ff1086b1-5b14-4290-884e-a8a716a2b72e",
+        "targetMultiplicity": "0..*",
+        "uuid": "ad19521d-e39d-4758-bfa8-311557dda77e"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 0,
+        "relationType": "inherit",
+        "sourceId": "3a450ffa-e784-415f-b6c2-bc415e2dfd8c",
+        "sourceMutiplicity": "0..1",
+        "targetId": "087b2915-5582-496d-bafb-ae2f5623a70d",
+        "targetMultiplicity": "0..1",
+        "uuid": "0d6955d4-4aa2-4fd5-8af9-92a117812d96"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 1010,
+        "relationType": "twoWayAssociation",
+        "roleOfSource": "app",
+        "roleOfTarget": "pageFrames",
+        "sourceId": "2082d665-e503-402a-a089-678115c5ed3e",
+        "sourceMutiplicity": "0..1",
+        "targetId": "3a450ffa-e784-415f-b6c2-bc415e2dfd8c",
+        "targetMultiplicity": "0..*",
+        "uuid": "49fbf19d-aa17-424d-8afa-a82d9e34e01e"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 0,
+        "relationType": "inherit",
+        "sourceId": "51d35ee7-6757-4e1f-8a08-13b274bbaf3d",
+        "sourceMutiplicity": "0..1",
+        "targetId": "087b2915-5582-496d-bafb-ae2f5623a70d",
+        "targetMultiplicity": "0..1",
+        "uuid": "84c75916-0791-4787-bbc2-a35e76a182e6"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 1011,
+        "relationType": "twoWayCombination",
+        "roleOfSource": "app",
+        "roleOfTarget": "processes",
+        "sourceId": "2082d665-e503-402a-a089-678115c5ed3e",
+        "sourceMutiplicity": "0..1",
+        "targetId": "692bf0ad-532b-4720-9427-a7a0fc70a418",
+        "targetMultiplicity": "0..*",
+        "uuid": "5cdb2011-4d46-44b3-94ae-4867be39e84a"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 1012,
+        "relationType": "twoWayCombination",
+        "roleOfSource": "process",
+        "roleOfTarget": "instances",
+        "sourceId": "692bf0ad-532b-4720-9427-a7a0fc70a418",
+        "sourceMutiplicity": "0..1",
+        "targetId": "dcd6fd70-eac1-4853-9dd2-62ab2b2d4fe1",
+        "targetMultiplicity": "0..*",
+        "uuid": "e59908e2-381c-409e-8b6e-d6fd8beeb59c"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 0,
+        "relationType": "inherit",
+        "sourceId": "42252d97-5b4c-40bc-8117-3fd4b7e92926",
+        "sourceMutiplicity": "0..1",
+        "targetId": "3fd0b1e1-b2ee-491d-be5a-a40109f3c65a",
+        "targetMultiplicity": "0..1",
+        "uuid": "8b78e9e4-ae05-4581-9f31-3adabc11dabe"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 0,
+        "relationType": "inherit",
+        "sourceId": "106e8308-4f13-48bc-917a-938aa5542ac5",
+        "sourceMutiplicity": "0..1",
+        "targetId": "3fd0b1e1-b2ee-491d-be5a-a40109f3c65a",
+        "targetMultiplicity": "0..1",
+        "uuid": "65301629-3710-4f9e-aa21-09eb208762e2"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 0,
+        "relationType": "inherit",
+        "sourceId": "3fd0b1e1-b2ee-491d-be5a-a40109f3c65a",
+        "sourceMutiplicity": "0..1",
+        "targetId": "3502291d-5e64-4c31-82b0-c04c6c70e6a7",
+        "targetMultiplicity": "0..1",
+        "uuid": "31faad2a-ca4e-47e3-823a-348a31ee04ee"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 0,
+        "relationType": "inherit",
+        "sourceId": "8f77f9f7-a39d-4f9e-8c21-023a48e4858d",
+        "sourceMutiplicity": "0..1",
+        "targetId": "02e50e9a-23e2-4b69-81d6-22de373a35d6",
+        "targetMultiplicity": "0..1",
+        "uuid": "b2998d74-dafa-405f-bc09-b2dd160299cd"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 0,
+        "relationType": "inherit",
+        "sourceId": "4a0a79fa-70ba-4297-a71f-a28336b1b7e5",
+        "sourceMutiplicity": "0..1",
+        "targetId": "02e50e9a-23e2-4b69-81d6-22de373a35d6",
+        "targetMultiplicity": "0..1",
+        "uuid": "086ba83d-042f-4bd8-aeaf-2c06a38740b3"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 0,
+        "relationType": "inherit",
+        "sourceId": "02e50e9a-23e2-4b69-81d6-22de373a35d6",
+        "sourceMutiplicity": "0..1",
+        "targetId": "3502291d-5e64-4c31-82b0-c04c6c70e6a7",
+        "targetMultiplicity": "0..1",
+        "uuid": "274cb5fb-362a-4769-be10-62be85ffb498"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 0,
+        "relationType": "inherit",
+        "sourceId": "513dadfc-512f-46ee-8bf7-0fab8a4c6cc7",
+        "sourceMutiplicity": "0..1",
+        "targetId": "1f3ff909-3661-4cbe-b590-0b30b81052f9",
+        "targetMultiplicity": "0..1",
+        "uuid": "5126fcc8-d75e-4014-9f2a-a41dbd751426"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 0,
+        "relationType": "inherit",
+        "sourceId": "15245179-1a12-4feb-8c7c-543f60350415",
+        "sourceMutiplicity": "0..1",
+        "targetId": "1f3ff909-3661-4cbe-b590-0b30b81052f9",
+        "targetMultiplicity": "0..1",
+        "uuid": "387b84ce-f6d6-4200-97ac-00cec82ddbd4"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 1013,
+        "relationType": "twoWayAssociation",
+        "roleOfSource": "modelLogs",
+        "roleOfTarget": "user",
+        "sourceId": "15245179-1a12-4feb-8c7c-543f60350415",
+        "sourceMutiplicity": "0..*",
+        "targetId": "META_USER_UUID",
+        "targetMultiplicity": "0..1",
+        "uuid": "17ed6b43-3fc8-41a4-9010-5c6a55011c2d"
+      },
+      {
+        "appUuid": "SYSTEM",
+        "innerId": 1014,
+        "relationType": "twoWayAssociation",
+        "roleOfSource": "businessLogs",
+        "roleOfTarget": "user",
+        "sourceId": "513dadfc-512f-46ee-8bf7-0fab8a4c6cc7",
+        "sourceMutiplicity": "0..*",
+        "targetId": "META_USER_UUID",
+        "targetMultiplicity": "0..1",
+        "uuid": "98c01d23-1003-4b92-87bc-d4b7ddaf3bf9"
+      }
+    ],
+    "diagrams": [
+      {
+        "edges": [],
+        "name": "$inline:{\"zh-CN\":\"Appx类图\"}",
+        "nodes": [],
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "uuid": "8518245f-af73-43b5-a17f-468eefce5acc"
+      },
+      {
+        "edges": [],
+        "name": "$inline:{\"zh-CN\":\"多语言配置\"}",
+        "nodes": [],
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "uuid": "31fc35da-2b84-4108-bf1c-e701513db91a"
+      },
+      {
+        "edges": [],
+        "name": "$inline:{\"zh-CN\":\"用户页面配置\"}",
+        "nodes": [],
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "uuid": "bd5c2470-2d87-47b8-8fdc-40cedce87375"
+      },
+      {
+        "edges": [],
+        "name": "$inline:{\"zh-CN\":\"用户\"}",
+        "nodes": [],
+        "packageUuid": "PACKAGE_SYSTEM_UUID",
+        "uuid": "4910a0fd-a454-4882-8250-88d77b5144aa"
+      },
+      {
+        "edges": [],
+        "name": "消息引擎",
+        "nodes": [],
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "uuid": "bdc2b39a-b054-4cb1-9af1-2041ad08beee"
+      },
+      {
+        "edges": [],
+        "name": "定时任务",
+        "nodes": [],
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "uuid": "40e28c05-3afb-4fea-a088-6aecd22b8085"
+      },
+      {
+        "edges": [],
+        "name": "$inline:{\"zh-CN\":\"物料插件\"}",
+        "nodes": [],
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "uuid": "33546200-9c95-4747-94ee-a7198b6bd85c"
+      },
+      {
+        "edges": [],
+        "name": "service测试",
+        "nodes": [],
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "uuid": "67a8ae11-8160-4555-97bb-bcd3c4d36ed5"
+      },
+      {
+        "edges": [],
+        "name": "$inline:{\"zh-CN\":\"工作流\"}",
+        "nodes": [],
+        "packageUuid": "bebc8345-a0e4-41ed-8743-93c00604260c",
+        "uuid": "ce4ca6f6-78b5-4c27-a515-14936ce70b39"
+      },
+      {
+        "edges": [],
+        "name": "新建类图1",
+        "nodes": [],
+        "packageUuid": "f7624c29-88cc-44de-a108-94af9f54d4e4",
+        "uuid": "941a738c-98e6-4eb4-be3c-b045d27c75b4"
+      },
+      {
+        "edges": [],
+        "name": "$inline:{\"zh-CN\":\"模型权限配置\"}",
+        "nodes": [],
+        "packageUuid": "PACKAGE_APPX_UUID",
+        "uuid": "875b48cc-3aa7-40dd-a92d-cf042f0d6826"
+      },
+      {
+        "edges": [],
+        "name": "$inline:{\"zh-CN\":\"日志\"}",
+        "nodes": [],
+        "packageUuid": "8ff26c85-bd4c-49fa-9c9f-c2a736767936",
+        "uuid": "8389303f-3593-4ae3-ba2f-14a6d9bf1ac2"
+      },
+      {
+        "edges": [],
+        "name": "$inline:{\"zh-CN\":\"版本快照\"}",
+        "nodes": [],
+        "packageUuid": "8ff26c85-bd4c-49fa-9c9f-c2a736767936",
+        "uuid": "b461d043-93be-4b0e-99cd-c96df8862b54"
+      }
+    ],
+    "codes": [
+      {
+        "code": "\r\n\r\nfunction converToken(tokenObj) {\r\n  return tokenObj.token_type + \" \" + tokenObj.access_token;\r\n}\r\nfunction getToken() {\r\n  const tokenCache = readFromCache(\"camundaToken\");\r\n\r\n  if (tokenCache) {\r\n    if (tokenCache.value.expires_in > Date.now() - tokenCache.createdAt + 10) {\r\n      return converToken(tokenCache.value)\r\n    }\r\n  }\r\n  const result = iFetch(\"http://localhost:18080/auth/realms/camunda-platform/protocol/openid-connect/token\",\r\n    {\r\n      method: 'POST',\r\n      headers: {\r\n        \"Content-Type\": \"application/x-www-form-urlencoded\"\r\n      },\r\n      body: \"client_id=appx&client_secret=bx5Ono2y0FYEVRWB7zw6S55pOEmKQ2kW&grant_type=client_credentials\",\r\n    }\r\n  )\r\n  const tokenObj = JSON.parse(result)\r\n  writeToCache(\"camundaToken\", {\r\n    value: tokenObj,\r\n    createdAt: Date.now(),\r\n  })\r\n  return converToken(tokenObj);\r\n}\r\n\r\nfunction searchProcesses(token, body) {\r\n  let result = iFetch(\"http://localhost:8081/v1/process-instances/search\",\r\n    {\r\n      method: 'POST',\r\n      headers: {\r\n        \"Content-Type\": \"application/json\",\r\n        \"accept\": \"application/json\",\r\n        \"Authorization\": token,\r\n      },\r\n      body: body,\r\n    }\r\n  )\r\n  return result;\r\n}\r\n",
+        "name": "$inline:{\"zh-CN\":\"取数据\"}",
+        "packageUuid": "f7624c29-88cc-44de-a108-94af9f54d4e4",
+        "uuid": "79b29a66-9a09-40d9-898c-01eadc68add6"
+      }
+    ],
+    "x6Nodes": [
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "height": 120,
+        "id": "2082d665-e503-402a-a089-678115c5ed3e",
+        "width": 180,
+        "x": -480,
+        "y": -10
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "height": 120,
+        "id": "f9288fd0-2747-4fa0-8b3d-4c8bdaeb5dd8",
+        "width": 180,
+        "x": 140,
+        "y": 0
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "height": 120,
+        "id": "e90f69e9-1be0-45e2-95a6-269da4d2fada",
+        "width": 180,
+        "x": -220,
+        "y": 0
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "height": 120,
+        "id": "660a55fe-c2f1-4b17-921e-38aa14737a1c",
+        "width": 180,
+        "x": 400,
+        "y": 30
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "height": 120,
+        "id": "6be09899-afed-4115-b214-4511adc0e813",
+        "width": 180,
+        "x": -220,
+        "y": -210
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "height": 120,
+        "id": "087b2915-5582-496d-bafb-ae2f5623a70d",
+        "width": 180,
+        "x": 140,
+        "y": -210
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "height": 80,
+        "id": "META_USER_UUID",
+        "width": 160,
+        "x": -800.0000000000002,
+        "y": 10
+      },
+      {
+        "diagramUuid": "31fc35da-2b84-4108-bf1c-e701513db91a",
+        "height": 210,
+        "id": "ddbecde2-3e2d-4391-a327-63d4c8c6a2c3",
+        "width": 190,
+        "x": -380.0000000000001,
+        "y": 110.00000000000024
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "height": 120,
+        "id": "c19d7f61-6a73-408c-b272-284ee374d5ce",
+        "width": 180,
+        "x": -790.0000000000002,
+        "y": 150
+      },
+      {
+        "diagramUuid": "bd5c2470-2d87-47b8-8fdc-40cedce87375",
+        "height": 370,
+        "id": "META_USER_UUID",
+        "width": 180,
+        "x": -950,
+        "y": -80
+      },
+      {
+        "diagramUuid": "bd5c2470-2d87-47b8-8fdc-40cedce87375",
+        "height": 150,
+        "id": "de56ae19-aaac-4479-8bf9-6573ad22a482",
+        "width": 180,
+        "x": -590,
+        "y": 25
+      },
+      {
+        "diagramUuid": "bd5c2470-2d87-47b8-8fdc-40cedce87375",
+        "height": 120,
+        "id": "db282fa2-db28-4a99-badd-f53cc8fb0862",
+        "width": 180,
+        "x": -590,
+        "y": -200
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "height": 96,
+        "id": "db282fa2-db28-4a99-badd-f53cc8fb0862",
+        "width": 180,
+        "x": -1031,
+        "y": 10
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "height": 120,
+        "id": "0e31f942-ce6f-4f6e-bd1b-0a5eb126d204",
+        "width": 180,
+        "x": -1261,
+        "y": 150
+      },
+      {
+        "diagramUuid": "bd5c2470-2d87-47b8-8fdc-40cedce87375",
+        "height": 122,
+        "id": "2082d665-e503-402a-a089-678115c5ed3e",
+        "width": 180,
+        "x": -590,
+        "y": 320
+      },
+      {
+        "diagramUuid": "4910a0fd-a454-4882-8250-88d77b5144aa",
+        "height": 340,
+        "id": "META_USER_UUID",
+        "width": 180,
+        "x": 89.99999999999989,
+        "y": 210
+      },
+      {
+        "diagramUuid": "4910a0fd-a454-4882-8250-88d77b5144aa",
+        "height": 120,
+        "id": "1da63391-ef0d-4276-9a41-79108e8f30ce",
+        "width": 180,
+        "x": 510,
+        "y": 90
+      },
+      {
+        "diagramUuid": "4910a0fd-a454-4882-8250-88d77b5144aa",
+        "height": 200,
+        "id": "META_ROLE_UUID",
+        "width": 180,
+        "x": 450,
+        "y": 280
+      },
+      {
+        "diagramUuid": "bdc2b39a-b054-4cb1-9af1-2041ad08beee",
+        "height": 210,
+        "id": "b635e48d-f4fe-4470-ae77-0bb5dd2f0daa",
+        "width": 180,
+        "x": 320,
+        "y": 160
+      },
+      {
+        "diagramUuid": "bdc2b39a-b054-4cb1-9af1-2041ad08beee",
+        "height": 330,
+        "id": "META_USER_UUID",
+        "width": 180,
+        "x": -50,
+        "y": 100
+      },
+      {
+        "diagramUuid": "40e28c05-3afb-4fea-a088-6aecd22b8085",
+        "height": 170,
+        "id": "ff1086b1-5b14-4290-884e-a8a716a2b72e",
+        "width": 180,
+        "x": 270,
+        "y": 190
+      },
+      {
+        "diagramUuid": "40e28c05-3afb-4fea-a088-6aecd22b8085",
+        "height": 330,
+        "id": "META_USER_UUID",
+        "width": 180,
+        "x": -140,
+        "y": 110
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "height": 190,
+        "id": "3a450ffa-e784-415f-b6c2-bc415e2dfd8c",
+        "width": 180,
+        "x": 650,
+        "y": 30.000000000000057
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "height": 170,
+        "id": "65dc043c-daaf-408c-b74c-f6ff4952bd5a",
+        "width": 180,
+        "x": -730,
+        "y": -330
+      },
+      {
+        "diagramUuid": "33546200-9c95-4747-94ee-a7198b6bd85c",
+        "height": 280,
+        "id": "f0fa4b0f-4b91-4092-a93b-beaa13896e86",
+        "width": 180,
+        "x": -1100,
+        "y": -201.9999999999998
+      },
+      {
+        "diagramUuid": "33546200-9c95-4747-94ee-a7198b6bd85c",
+        "height": 120,
+        "id": "51d35ee7-6757-4e1f-8a08-13b274bbaf3d",
+        "width": 180,
+        "x": -850,
+        "y": -130
+      },
+      {
+        "diagramUuid": "33546200-9c95-4747-94ee-a7198b6bd85c",
+        "height": 148,
+        "id": "087b2915-5582-496d-bafb-ae2f5623a70d",
+        "width": 180,
+        "x": -850,
+        "y": -350
+      },
+      {
+        "diagramUuid": "33546200-9c95-4747-94ee-a7198b6bd85c",
+        "height": 120,
+        "id": "58d3b299-cd9a-4066-929f-26341023a62a",
+        "width": 180,
+        "x": -1100,
+        "y": -364
+      },
+      {
+        "diagramUuid": "67a8ae11-8160-4555-97bb-bcd3c4d36ed5",
+        "height": 120,
+        "id": "0afeac65-c0f6-48c1-846c-922e156307f5",
+        "width": 360,
+        "x": -930,
+        "y": -500
+      },
+      {
+        "diagramUuid": "ce4ca6f6-78b5-4c27-a515-14936ce70b39",
+        "height": 170,
+        "id": "692bf0ad-532b-4720-9427-a7a0fc70a418",
+        "width": 180,
+        "x": 400,
+        "y": -41
+      },
+      {
+        "diagramUuid": "ce4ca6f6-78b5-4c27-a515-14936ce70b39",
+        "height": 120,
+        "id": "d5400697-5fe9-4aa3-a8b5-a0854b184d56",
+        "width": 180,
+        "x": 230,
+        "y": -200
+      },
+      {
+        "diagramUuid": "ce4ca6f6-78b5-4c27-a515-14936ce70b39",
+        "height": 148,
+        "id": "2082d665-e503-402a-a089-678115c5ed3e",
+        "width": 180,
+        "x": -46,
+        "y": -30
+      },
+      {
+        "diagramUuid": "ce4ca6f6-78b5-4c27-a515-14936ce70b39",
+        "height": 180,
+        "id": "dcd6fd70-eac1-4853-9dd2-62ab2b2d4fe1",
+        "width": 180,
+        "x": 773,
+        "y": -46
+      },
+      {
+        "diagramUuid": "941a738c-98e6-4eb4-be3c-b045d27c75b4",
+        "height": 290,
+        "id": "f00fe4ad-70b8-4339-96b9-ca2f50cc1a15",
+        "width": 210,
+        "x": 149.9999999999997,
+        "y": 100.00000000000024
+      },
+      {
+        "diagramUuid": "941a738c-98e6-4eb4-be3c-b045d27c75b4",
+        "height": 120,
+        "id": "d786be1a-75c5-4e92-86e8-657eb2accd09",
+        "width": 180,
+        "x": 410,
+        "y": 90
+      },
+      {
+        "diagramUuid": "875b48cc-3aa7-40dd-a92d-cf042f0d6826",
+        "height": 210,
+        "id": "42252d97-5b4c-40bc-8117-3fd4b7e92926",
+        "width": 180,
+        "x": -1100,
+        "y": 175
+      },
+      {
+        "diagramUuid": "875b48cc-3aa7-40dd-a92d-cf042f0d6826",
+        "height": 120,
+        "id": "106e8308-4f13-48bc-917a-938aa5542ac5",
+        "width": 240,
+        "x": -820,
+        "y": 175
+      },
+      {
+        "diagramUuid": "875b48cc-3aa7-40dd-a92d-cf042f0d6826",
+        "height": 210,
+        "id": "3fd0b1e1-b2ee-491d-be5a-a40109f3c65a",
+        "width": 180,
+        "x": -940,
+        "y": -150.00000000000006
+      },
+      {
+        "diagramUuid": "875b48cc-3aa7-40dd-a92d-cf042f0d6826",
+        "height": 120,
+        "id": "3502291d-5e64-4c31-82b0-c04c6c70e6a7",
+        "width": 180,
+        "x": -660,
+        "y": -370
+      },
+      {
+        "diagramUuid": "875b48cc-3aa7-40dd-a92d-cf042f0d6826",
+        "height": 120,
+        "id": "8f77f9f7-a39d-4f9e-8c21-023a48e4858d",
+        "width": 210,
+        "x": -490,
+        "y": 140
+      },
+      {
+        "diagramUuid": "875b48cc-3aa7-40dd-a92d-cf042f0d6826",
+        "height": 120,
+        "id": "4a0a79fa-70ba-4297-a71f-a28336b1b7e5",
+        "width": 240,
+        "x": -190,
+        "y": 140
+      },
+      {
+        "diagramUuid": "875b48cc-3aa7-40dd-a92d-cf042f0d6826",
+        "height": 150,
+        "id": "02e50e9a-23e2-4b69-81d6-22de373a35d6",
+        "width": 180,
+        "x": -340,
+        "y": -150
+      },
+      {
+        "diagramUuid": "b461d043-93be-4b0e-99cd-c96df8862b54",
+        "height": 240,
+        "id": "bab7e61b-bbf2-42e7-a765-e2387ad21b35",
+        "width": 180,
+        "x": 310,
+        "y": 30
+      },
+      {
+        "diagramUuid": "8389303f-3593-4ae3-ba2f-14a6d9bf1ac2",
+        "height": 200,
+        "id": "1f3ff909-3661-4cbe-b590-0b30b81052f9",
+        "width": 180,
+        "x": 340,
+        "y": -95
+      },
+      {
+        "diagramUuid": "8389303f-3593-4ae3-ba2f-14a6d9bf1ac2",
+        "height": 120,
+        "id": "513dadfc-512f-46ee-8bf7-0fab8a4c6cc7",
+        "width": 230,
+        "x": 134.99999999999994,
+        "y": 275.0000000000002
+      },
+      {
+        "diagramUuid": "8389303f-3593-4ae3-ba2f-14a6d9bf1ac2",
+        "height": 230,
+        "id": "15245179-1a12-4feb-8c7c-543f60350415",
+        "width": 210,
+        "x": 515,
+        "y": 220.00000000000023
+      },
+      {
+        "diagramUuid": "8389303f-3593-4ae3-ba2f-14a6d9bf1ac2",
+        "height": 110,
+        "id": "META_USER_UUID",
+        "width": 160,
+        "x": 800,
+        "y": 220
+      },
+      {
+        "id": "bf869bf6-c2cf-47cd-b3b4-eae98a46fb74",
+        "x": 646,
+        "y": -60.000000000000014,
+        "width": 180,
+        "height": 200,
+        "diagramUuid": "8389303f-3593-4ae3-ba2f-14a6d9bf1ac2"
+      },
+      {
+        "id": "20b0c3e1-5957-4767-a1dd-68a18f27f93b",
+        "x": 40,
+        "y": -40,
+        "width": 180,
+        "height": 220,
+        "diagramUuid": "8389303f-3593-4ae3-ba2f-14a6d9bf1ac2"
+      },
+      {
+        "id": "55907de3-802b-4e36-868c-3afc57813f20",
+        "x": 910,
+        "y": -40,
+        "width": 180,
+        "height": 120,
+        "diagramUuid": "8389303f-3593-4ae3-ba2f-14a6d9bf1ac2"
+      }
+    ],
+    "x6Edges": [
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "id": "77e5f307-a1c1-4022-a1bf-9f6004889e8a",
+        "vertices": [
+          {
+            "x": -390,
+            "y": -150
+          }
+        ]
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "id": "ae68f127-5d2d-41a3-a905-bc5279ea0520",
+        "sourceAnchor": {
+          "args": {
+            "dx": "17%",
+            "dy": "50%",
+            "rotate": true
+          },
+          "name": "topLeft"
+        },
+        "vertices": [
+          {
+            "x": 170,
+            "y": -70
+          },
+          {
+            "x": 50,
+            "y": -70
+          },
+          {
+            "x": 50,
+            "y": -150
+          }
+        ]
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "id": "c921aa03-3be8-4650-91ad-e7f8cb552b8b",
+        "vertices": []
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "id": "0b456cb0-ffcf-4bb6-a0c9-84524bbdc7b3",
+        "vertices": [
+          {
+            "x": 490,
+            "y": -30
+          },
+          {
+            "x": 230,
+            "y": -30
+          }
+        ]
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "id": "5563d5ee-2846-4360-8f39-cfa18864ac2e",
+        "roleOnSourcePosition": {
+          "angle": 0,
+          "distance": 0.048681541582150094,
+          "offset": 19.999999999999943
+        },
+        "roleOnTargetPosition": {
+          "distance": -40,
+          "offset": 20
+        },
+        "sourceAnchor": {
+          "args": {
+            "dx": "61%",
+            "dy": "50%",
+            "rotate": true
+          },
+          "name": "topLeft"
+        },
+        "sourceMultiplicityPosition": {
+          "angle": 0,
+          "distance": 0.048681541582150094,
+          "offset": -20.000000000000057
+        },
+        "targetAnchor": {
+          "args": {
+            "dx": "50%",
+            "dy": "50%",
+            "rotate": true
+          },
+          "name": "topLeft"
+        },
+        "targetMultiplicityPosition": {
+          "distance": -40,
+          "offset": -20
+        },
+        "vertices": [
+          {
+            "x": -370,
+            "y": 300
+          },
+          {
+            "x": 230,
+            "y": 300
+          }
+        ]
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "id": "963e03f6-c6c8-4e91-8912-4f64697a9b1f",
+        "roleOnSourcePosition": {
+          "angle": 0,
+          "distance": 0.01990554277953037,
+          "offset": 19.85806038333852
+        },
+        "roleOnTargetPosition": {
+          "distance": -40,
+          "offset": 20
+        },
+        "sourceAnchor": {
+          "args": {
+            "dx": "39%",
+            "dy": "50%",
+            "rotate": true
+          },
+          "name": "topLeft"
+        },
+        "sourceMultiplicityPosition": {
+          "angle": 0,
+          "distance": 0.019923897292542337,
+          "offset": -20.14193129200226
+        },
+        "targetMultiplicityPosition": {
+          "distance": -40,
+          "offset": -20
+        },
+        "vertices": [
+          {
+            "x": -410,
+            "y": 360
+          },
+          {
+            "x": 490,
+            "y": 360
+          }
+        ]
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "id": "3ad27c5f-73b1-4064-8f39-86381e35457a",
+        "roleOnSourcePosition": {
+          "angle": 0,
+          "distance": 0.14898755516065196,
+          "offset": 19.812403259985917
+        },
+        "roleOnTargetPosition": {
+          "angle": 0,
+          "distance": 0.9816513793688436,
+          "offset": 50
+        },
+        "sourceAnchor": {
+          "args": {
+            "dx": "89%",
+            "dy": "50%",
+            "rotate": true
+          },
+          "name": "topLeft"
+        },
+        "sourceMultiplicityPosition": {
+          "angle": 0,
+          "distance": 0.14926167625347575,
+          "offset": -20.187401428944604
+        },
+        "targetAnchor": {
+          "args": {
+            "dx": "50%",
+            "dy": "50%",
+            "rotate": true
+          },
+          "name": "topLeft"
+        },
+        "targetMultiplicityPosition": {
+          "distance": -40,
+          "offset": -20
+        },
+        "vertices": [
+          {
+            "x": -320,
+            "y": 240
+          },
+          {
+            "x": -130,
+            "y": 240
+          }
+        ]
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "id": "2b499cf1-f6b5-4ea6-bebf-e50ce165cb03",
+        "roleOnSourcePosition": {
+          "distance": 40,
+          "offset": 20
+        },
+        "roleOnTargetPosition": {
+          "distance": -40,
+          "offset": 20
+        },
+        "sourceMultiplicityPosition": {
+          "distance": 40,
+          "offset": -20
+        },
+        "targetMultiplicityPosition": {
+          "distance": -40,
+          "offset": -20
+        },
+        "vertices": []
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "id": "8071bddb-8af0-486f-9f3f-3b67e49a4540",
+        "vertices": []
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "id": "3547c38a-2780-4024-98e9-81b4e47d85e6",
+        "vertices": []
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "id": "d1f962f6-6736-460a-a6b8-40aae2e0be0f",
+        "vertices": [
+          {
+            "x": -941,
+            "y": 210
+          }
+        ]
+      },
+      {
+        "diagramUuid": "bd5c2470-2d87-47b8-8fdc-40cedce87375",
+        "id": "a566c34c-66f3-4c63-a095-c7a968c7f279",
+        "vertices": []
+      },
+      {
+        "diagramUuid": "bd5c2470-2d87-47b8-8fdc-40cedce87375",
+        "id": "32bbc048-107d-4397-bf87-2a4d55c0bb48",
+        "roleOnSourcePosition": {
+          "distance": 40,
+          "offset": 20
+        },
+        "roleOnTargetPosition": {
+          "distance": -40,
+          "offset": 20
+        },
+        "sourceMultiplicityPosition": {
+          "distance": 40,
+          "offset": -20
+        },
+        "targetMultiplicityPosition": {
+          "distance": -40,
+          "offset": -20
+        },
+        "vertices": []
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "id": "0ffd3870-c7ab-4971-beca-7b597629e6cb",
+        "vertices": [
+          {
+            "x": -941,
+            "y": 210
+          }
+        ]
+      },
+      {
+        "diagramUuid": "bd5c2470-2d87-47b8-8fdc-40cedce87375",
+        "id": "d76aa042-9c3c-4e44-9a8d-58a756621c7b",
+        "roleOnSourcePosition": {
+          "angle": 0,
+          "distance": 0.17482517482517482,
+          "offset": 50
+        },
+        "roleOnTargetPosition": {
+          "angle": 0,
+          "distance": 0.8741258741258742,
+          "offset": 20
+        },
+        "sourceMultiplicityPosition": {
+          "angle": 0,
+          "distance": 0.17482517482517482,
+          "offset": -30
+        },
+        "targetMultiplicityPosition": {
+          "angle": 0,
+          "distance": 0.8741258741258742,
+          "offset": -20
+        },
+        "vertices": []
+      },
+      {
+        "diagramUuid": "bdc2b39a-b054-4cb1-9af1-2041ad08beee",
+        "id": "6d5a249a-dd94-4e29-8191-212235cc195a",
+        "roleOnSourcePosition": {
+          "distance": 40,
+          "offset": 20
+        },
+        "roleOnTargetPosition": {
+          "distance": -40,
+          "offset": 20
+        },
+        "sourceMultiplicityPosition": {
+          "distance": 40,
+          "offset": -20
+        },
+        "targetMultiplicityPosition": {
+          "distance": -40,
+          "offset": -20
+        },
+        "vertices": []
+      },
+      {
+        "diagramUuid": "40e28c05-3afb-4fea-a088-6aecd22b8085",
+        "id": "ad19521d-e39d-4758-bfa8-311557dda77e",
+        "roleOnSourcePosition": {
+          "distance": 40,
+          "offset": 20
+        },
+        "roleOnTargetPosition": {
+          "distance": -40,
+          "offset": 20
+        },
+        "sourceMultiplicityPosition": {
+          "distance": 40,
+          "offset": -20
+        },
+        "targetMultiplicityPosition": {
+          "distance": -40,
+          "offset": -20
+        },
+        "vertices": []
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "id": "0d6955d4-4aa2-4fd5-8af9-92a117812d96",
+        "vertices": [
+          {
+            "x": 740,
+            "y": -150
+          }
+        ]
+      },
+      {
+        "diagramUuid": "8518245f-af73-43b5-a17f-468eefce5acc",
+        "id": "49fbf19d-aa17-424d-8afa-a82d9e34e01e",
+        "roleOnSourcePosition": {
+          "distance": 40,
+          "offset": 20
+        },
+        "roleOnTargetPosition": {
+          "angle": 0,
+          "distance": 0.9787472040701548,
+          "offset": 70
+        },
+        "sourceAnchor": {
+          "args": {
+            "dx": "11%",
+            "dy": "50%",
+            "rotate": true
+          },
+          "name": "topLeft"
+        },
+        "sourceMultiplicityPosition": {
+          "distance": 40,
+          "offset": -20
+        },
+        "targetMultiplicityPosition": {
+          "distance": -40,
+          "offset": -20
+        },
+        "vertices": [
+          {
+            "x": -460,
+            "y": 420
+          },
+          {
+            "x": 740,
+            "y": 420
+          }
+        ]
+      },
+      {
+        "diagramUuid": "33546200-9c95-4747-94ee-a7198b6bd85c",
+        "id": "84c75916-0791-4787-bbc2-a35e76a182e6",
+        "vertices": []
+      },
+      {
+        "diagramUuid": "ce4ca6f6-78b5-4c27-a515-14936ce70b39",
+        "id": "5cdb2011-4d46-44b3-94ae-4867be39e84a",
+        "roleOnSourcePosition": {
+          "distance": 40,
+          "offset": 20
+        },
+        "roleOnTargetPosition": {
+          "distance": -40,
+          "offset": 20
+        },
+        "sourceMultiplicityPosition": {
+          "distance": 40,
+          "offset": -20
+        },
+        "targetMultiplicityPosition": {
+          "distance": -40,
+          "offset": -20
+        },
+        "vertices": []
+      },
+      {
+        "diagramUuid": "ce4ca6f6-78b5-4c27-a515-14936ce70b39",
+        "id": "e59908e2-381c-409e-8b6e-d6fd8beeb59c",
+        "roleOnSourcePosition": {
+          "distance": 40,
+          "offset": 20
+        },
+        "roleOnTargetPosition": {
+          "distance": -40,
+          "offset": 20
+        },
+        "sourceMultiplicityPosition": {
+          "distance": 40,
+          "offset": -20
+        },
+        "targetMultiplicityPosition": {
+          "distance": -40,
+          "offset": -20
+        },
+        "vertices": []
+      },
+      {
+        "diagramUuid": "875b48cc-3aa7-40dd-a92d-cf042f0d6826",
+        "id": "8b78e9e4-ae05-4581-9f31-3adabc11dabe",
+        "vertices": [
+          {
+            "x": -1010,
+            "y": 130
+          },
+          {
+            "x": -850,
+            "y": 130
+          }
+        ]
+      },
+      {
+        "diagramUuid": "875b48cc-3aa7-40dd-a92d-cf042f0d6826",
+        "id": "65301629-3710-4f9e-aa21-09eb208762e2",
+        "vertices": [
+          {
+            "x": -700,
+            "y": 130
+          },
+          {
+            "x": -850,
+            "y": 130
+          }
+        ]
+      },
+      {
+        "diagramUuid": "875b48cc-3aa7-40dd-a92d-cf042f0d6826",
+        "id": "31faad2a-ca4e-47e3-823a-348a31ee04ee",
+        "vertices": [
+          {
+            "x": -850,
+            "y": -190
+          },
+          {
+            "x": -570,
+            "y": -190
+          }
+        ]
+      },
+      {
+        "diagramUuid": "875b48cc-3aa7-40dd-a92d-cf042f0d6826",
+        "id": "b2998d74-dafa-405f-bc09-b2dd160299cd",
+        "vertices": [
+          {
+            "x": -385,
+            "y": 70
+          },
+          {
+            "x": -250,
+            "y": 70
+          }
+        ]
+      },
+      {
+        "diagramUuid": "875b48cc-3aa7-40dd-a92d-cf042f0d6826",
+        "id": "086ba83d-042f-4bd8-aeaf-2c06a38740b3",
+        "vertices": [
+          {
+            "x": -70,
+            "y": 70
+          },
+          {
+            "x": -250,
+            "y": 70
+          }
+        ]
+      },
+      {
+        "diagramUuid": "875b48cc-3aa7-40dd-a92d-cf042f0d6826",
+        "id": "274cb5fb-362a-4769-be10-62be85ffb498",
+        "vertices": [
+          {
+            "x": -250,
+            "y": -190
+          },
+          {
+            "x": -570,
+            "y": -190
+          }
+        ]
+      },
+      {
+        "diagramUuid": "8389303f-3593-4ae3-ba2f-14a6d9bf1ac2",
+        "id": "5126fcc8-d75e-4014-9f2a-a41dbd751426",
+        "vertices": [
+          {
+            "x": 250,
+            "y": 160
+          },
+          {
+            "x": 430,
+            "y": 160
+          }
+        ]
+      },
+      {
+        "diagramUuid": "8389303f-3593-4ae3-ba2f-14a6d9bf1ac2",
+        "id": "387b84ce-f6d6-4200-97ac-00cec82ddbd4",
+        "vertices": [
+          {
+            "x": 620,
+            "y": 160
+          },
+          {
+            "x": 430,
+            "y": 160
+          }
+        ]
+      },
+      {
+        "diagramUuid": "8389303f-3593-4ae3-ba2f-14a6d9bf1ac2",
+        "id": "17ed6b43-3fc8-41a4-9010-5c6a55011c2d",
+        "roleOnSourcePosition": {
+          "angle": 0,
+          "distance": 0.06550218340611354,
+          "offset": 56
+        },
+        "roleOnTargetPosition": {
+          "distance": -40,
+          "offset": 20
+        },
+        "sourceMultiplicityPosition": {
+          "angle": 0,
+          "distance": 0.06564551422319474,
+          "offset": -24
+        },
+        "targetAnchor": {
+          "args": {
+            "dx": "25%",
+            "dy": "50%",
+            "rotate": true
+          },
+          "name": "topLeft"
+        },
+        "targetMultiplicityPosition": {
+          "distance": -40,
+          "offset": -20
+        },
+        "vertices": [
+          {
+            "x": 620,
+            "y": 490
+          },
+          {
+            "x": 840,
+            "y": 490
+          }
+        ]
+      },
+      {
+        "diagramUuid": "8389303f-3593-4ae3-ba2f-14a6d9bf1ac2",
+        "id": "98c01d23-1003-4b92-87bc-d4b7ddaf3bf9",
+        "roleOnSourcePosition": {
+          "angle": 0,
+          "distance": 0.03645199032576402,
+          "offset": 50
+        },
+        "roleOnTargetPosition": {
+          "distance": -40,
+          "offset": 20
+        },
+        "sourceMultiplicityPosition": {
+          "angle": 0,
+          "distance": 0.03645199032576402,
+          "offset": -30
+        },
+        "targetAnchor": {
+          "args": {
+            "dx": "69%",
+            "dy": "50%",
+            "rotate": true
+          },
+          "name": "topLeft"
+        },
+        "targetMultiplicityPosition": {
+          "distance": -40,
+          "offset": -20
+        },
+        "vertices": [
+          {
+            "x": 250,
+            "y": 510
+          },
+          {
+            "x": 910.4,
+            "y": 510
+          }
+        ]
+      }
+    ]
+  }
+}
