@@ -9,7 +9,7 @@ import (
 )
 
 func readContentFromJson() MetaContent {
-	data, err := ioutil.ReadFile("./jsons/meta.json")
+	data, err := ioutil.ReadFile("./seeds/meta.json")
 	content := MetaContent{}
 	if nil != err {
 		log.Panic(err)
@@ -49,6 +49,7 @@ func init() {
 // 	Relations: Relations,
 // }
 
+//=============>以下定义只是备份，暂时使用seeds JSON文件中的定义
 var AppClass = ClassMeta{
 	Uuid:       APP_ENTITY_UUID,
 	Name:       APP_ENTITY_NAME,
