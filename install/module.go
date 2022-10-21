@@ -10,30 +10,31 @@ import (
 )
 
 type BasicModule struct {
-	Name string
 }
 
-func (m BasicModule) QueryFields(ctx context.Context) []*graphql.Field {
+func (m BasicModule) Init(ctx context.Context) {
+}
+func (m BasicModule) QueryFields() []*graphql.Field {
 	if app.Installed {
 		return []*graphql.Field{}
 	} else {
 		return installQueryFields()
 	}
 }
-func (m BasicModule) MutationFields(ctx context.Context) []*graphql.Field {
+func (m BasicModule) MutationFields() []*graphql.Field {
 	if app.Installed {
 		return []*graphql.Field{}
 	} else {
 		return installMutationFields()
 	}
 }
-func (m BasicModule) SubscriptionFields(ctx context.Context) []*graphql.Field {
+func (m BasicModule) SubscriptionFields() []*graphql.Field {
 	return []*graphql.Field{}
 }
-func (m BasicModule) Directives(ctx context.Context) []*graphql.Directive {
+func (m BasicModule) Directives() []*graphql.Directive {
 	return []*graphql.Directive{}
 }
-func (m BasicModule) Types(ctx context.Context) []graphql.Type {
+func (m BasicModule) Types() []graphql.Type {
 	return []graphql.Type{}
 }
 func (m BasicModule) Middlewares() []func(next http.Handler) http.Handler {
@@ -41,7 +42,5 @@ func (m BasicModule) Middlewares() []func(next http.Handler) http.Handler {
 }
 
 func init() {
-	entry.AddModuler(BasicModule{
-		Name: "BasicModule",
-	})
+	entry.AddModuler(BasicModule{})
 }

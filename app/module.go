@@ -2,29 +2,63 @@ package app
 
 import (
 	"context"
+	"log"
 	"net/http"
 
 	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/entry"
 )
 
 type AppModule struct {
+	app *App
 }
 
-func (m AppModule) QueryFields(ctx context.Context) []*graphql.Field {
-	return []*graphql.Field{}
+func (m AppModule) Init(ctx context.Context) {
+	if contexts.Values(ctx).AppId == 0 {
+		return
+	}
+	app, err := Get(contexts.Values(ctx).AppId)
+	if err != nil {
+		log.Panic(err)
+	}
+	m.app = app
 }
-func (m AppModule) MutationFields(ctx context.Context) []*graphql.Field {
-	return []*graphql.Field{}
+
+func (m AppModule) QueryFields() []*graphql.Field {
+	if m.app != nil {
+		return m.app.Schema.QueryFields
+	} else {
+		return []*graphql.Field{}
+	}
 }
-func (m AppModule) SubscriptionFields(ctx context.Context) []*graphql.Field {
-	return []*graphql.Field{}
+func (m AppModule) MutationFields() []*graphql.Field {
+	if m.app != nil {
+		return m.app.Schema.MutationFields
+	} else {
+		return []*graphql.Field{}
+	}
 }
-func (m AppModule) Directives(ctx context.Context) []*graphql.Directive {
-	return []*graphql.Directive{}
+func (m AppModule) SubscriptionFields() []*graphql.Field {
+	if m.app != nil {
+		return m.app.Schema.SubscriptionFields
+	} else {
+		return []*graphql.Field{}
+	}
 }
-func (m AppModule) Types(ctx context.Context) []graphql.Type {
-	return []graphql.Type{}
+func (m AppModule) Directives() []*graphql.Directive {
+	if m.app != nil {
+		return m.app.Schema.Directives
+	} else {
+		return []*graphql.Directive{}
+	}
+}
+func (m AppModule) Types() []graphql.Type {
+	if m.app != nil {
+		return m.app.Schema.Types
+	} else {
+		return []graphql.Type{}
+	}
 }
 func (m AppModule) Middlewares() []func(next http.Handler) http.Handler {
 	return []func(next http.Handler) http.Handler{
