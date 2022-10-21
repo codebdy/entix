@@ -74,7 +74,6 @@ func New(m *domain.Model) *Model {
 	//处理关联
 	for i := range m.Relations {
 		relation := m.Relations[i]
-		//增加派生关联
 		model.makeRelation(relation)
 	}
 

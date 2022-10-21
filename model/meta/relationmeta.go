@@ -37,3 +37,10 @@ type RelationMeta struct {
 	System                 bool             `json:"system"`
 	AppId                  uint64
 }
+
+func (r *RelationMeta) IsAbsract(m *Model) bool {
+	if m.GetExtractClassByUuid(r.SourceId) != nil || m.GetExtractClassByUuid(r.TargetId) != nil {
+		return true
+	}
+	return false
+}

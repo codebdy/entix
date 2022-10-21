@@ -39,8 +39,12 @@ func New(m *meta.Model) *Model {
 			src.parents = append(src.parents, tar)
 			tar.Children = append(tar.Children, src)
 		} else {
-			r := NewRelation(relation, src, tar)
-			model.Relations = append(model.Relations, r)
+			//关联两端无虚类
+			if !relation.IsAbsract(m) {
+				r := NewRelation(relation, src, tar)
+				model.Relations = append(model.Relations, r)
+			}
+			//关联两端有虚类
 		}
 	}
 

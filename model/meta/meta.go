@@ -43,3 +43,22 @@ func (m *Model) GetPackageByUuid(uuid string) *PackageMeta {
 	}
 	return nil
 }
+
+func (m *Model) GetClassByUuid(uuid string) *ClassMeta {
+	for i := range m.Classes {
+		if m.Classes[i].Uuid == uuid {
+			return m.Classes[i]
+		}
+	}
+
+	return nil
+}
+
+func (m *Model) GetExtractClassByUuid(uuid string) *ClassMeta {
+	for i := range m.Classes {
+		if m.Classes[i].Uuid == uuid && m.Classes[i].StereoType == CLASSS_ABSTRACT {
+			return m.Classes[i]
+		}
+	}
+	return nil
+}
