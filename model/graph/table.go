@@ -45,10 +45,11 @@ func NewAttributeColumn(attr *Attribute) *table.Column {
 func NewAssociationColumn(assoc *Association) *table.Column {
 	return &table.Column{
 		AttributeMeta: meta.AttributeMeta{
-			Type:  meta.ID,
-			Uuid:  assoc.Name() + assoc.Relation.Uuid,
-			Name:  utils.SnakeString(assoc.Name()) + "_id",
-			Index: true,
+			Type:     meta.ID,
+			Uuid:     assoc.Name() + assoc.Relation.Uuid,
+			Name:     utils.SnakeString(assoc.Name()) + "_id",
+			Index:    true,
+			Nullable: true,
 		},
 	}
 }
