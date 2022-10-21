@@ -160,6 +160,7 @@ func InsertOne(instance *data.Instance) (interface{}, error) {
 		fmt.Println(err.Error())
 		return nil, err
 	}
+	session.BeginTx()
 	defer session.ClearTx()
 	if err != nil {
 		fmt.Println(err.Error())
