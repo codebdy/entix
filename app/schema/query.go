@@ -9,7 +9,7 @@ import (
 	"rxdrag.com/entify/orm"
 )
 
-func (a *AppSchema) QueryFields() graphql.Fields {
+func (a *AppProcessor) QueryFields() []*graphql.Field {
 	queryFields := graphql.Fields{}
 
 	for _, intf := range a.Model.Graph.RootInterfaces() {
@@ -29,14 +29,15 @@ func (a *AppSchema) QueryFields() graphql.Fields {
 	if orm.IsEntityExists(meta.USER_ENTITY_NAME) {
 		a.appendMeToQuery(queryFields)
 	}
-	return queryFields
+
+	return convertFieldsArray(queryFields)
 }
 
-func (a *AppSchema) QueryResponseType(class *graph.Class) graphql.Output {
+func (a *AppProcessor) QueryResponseType(class *graph.Class) graphql.Output {
 	return a.modelParser.ClassListType(class)
 }
 
-func (a *AppSchema) appendInterfaceToQueryFields(intf *graph.Interface, fields graphql.Fields) {
+func (a *AppProcessor) appendInterfaceToQueryFields(intf *graph.Interface, fields graphql.Fields) {
 	(fields)[intf.QueryName()] = &graphql.Field{
 		Type:    a.QueryResponseType(&intf.Class),
 		Args:    a.modelParser.QueryArgs(intf.Name()),
@@ -49,7 +50,7 @@ func (a *AppSchema) appendInterfaceToQueryFields(intf *graph.Interface, fields g
 	}
 }
 
-func (a *AppSchema) appendEntityToQueryFields(entity *graph.Entity, fields graphql.Fields) {
+func (a *AppProcessor) appendEntityToQueryFields(entity *graph.Entity, fields graphql.Fields) {
 	(fields)[entity.QueryName()] = &graphql.Field{
 		Type:    a.QueryResponseType(&entity.Class),
 		Args:    a.modelParser.QueryArgs(entity.Name()),
@@ -68,7 +69,7 @@ func (a *AppSchema) appendEntityToQueryFields(entity *graph.Entity, fields graph
 	}
 }
 
-func (a *AppSchema) appendThirdPartyToQueryFields(third *graph.ThirdParty, fields graphql.Fields) {
+func (a *AppProcessor) appendThirdPartyToQueryFields(third *graph.ThirdParty, fields graphql.Fields) {
 	(fields)[third.QueryName()] = &graphql.Field{
 		Type:    a.QueryResponseType(&third.Class),
 		Args:    a.modelParser.QueryArgs(third.Name()),
@@ -82,7 +83,7 @@ func (a *AppSchema) appendThirdPartyToQueryFields(third *graph.ThirdParty, field
 
 }
 
-func (a *AppSchema) appendServiceToQueryFields(service *graph.Service, fields graphql.Fields) {
+func (a *AppProcessor) appendServiceToQueryFields(service *graph.Service, fields graphql.Fields) {
 	for _, method := range service.QueryMethods() {
 		fields[service.Name()+"_"+method.GetName()] = &graphql.Field{
 			Type:        a.modelParser.PropertyType(method.GetType()),
@@ -93,7 +94,7 @@ func (a *AppSchema) appendServiceToQueryFields(service *graph.Service, fields gr
 	}
 }
 
-func (a *AppSchema) appendMeToQuery(fields graphql.Fields) {
+func (a *AppProcessor) appendMeToQuery(fields graphql.Fields) {
 	fields[consts.ME] = &graphql.Field{
 		Type:    a.modelParser.OutputType(meta.USER_ENTITY_NAME),
 		Resolve: resolve.Me,

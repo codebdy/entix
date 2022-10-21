@@ -6,8 +6,8 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/graphql-go/graphql"
 	"github.com/mitchellh/mapstructure"
+	"rxdrag.com/entify/app/schema"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/graph"
@@ -16,12 +16,13 @@ import (
 	"rxdrag.com/entify/service"
 )
 
+//节省开支，运行时使用，初始化时请使用orm.IsEntityExists
 var Installed = false
 
 type App struct {
 	AppId  uint64
 	Model  *model.Model
-	Schema *graphql.Schema
+	Schema schema.AppGraphqlSchema
 }
 
 var appCache = map[uint64]*App{}
@@ -102,9 +103,11 @@ func NewApp(appId uint64) *App {
 			content = MergeSystemModel(content)
 		}
 
+		model := model.New(content, appId)
 		return &App{
-			AppId: appId,
-			Model: model.New(content, appId),
+			AppId:  appId,
+			Model:  model,
+			Schema: schema.New(model),
 		}
 	}
 

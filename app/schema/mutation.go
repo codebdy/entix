@@ -8,7 +8,7 @@ import (
 	"rxdrag.com/entify/scalars"
 )
 
-func (a *AppSchema) mutationFields() graphql.Fields {
+func (a *AppProcessor) mutationFields() []*graphql.Field {
 	mutationFields := graphql.Fields{}
 
 	mutationFields[consts.UPLOAD] = &graphql.Field{
@@ -41,10 +41,10 @@ func (a *AppSchema) mutationFields() graphql.Fields {
 		a.appendServiceMutationToFields(service, mutationFields)
 	}
 
-	return mutationFields
+	return convertFieldsArray(mutationFields)
 }
 
-func (a *AppSchema) deleteArgs(entity *graph.Entity) graphql.FieldConfigArgument {
+func (a *AppProcessor) deleteArgs(entity *graph.Entity) graphql.FieldConfigArgument {
 	return graphql.FieldConfigArgument{
 		consts.ARG_WHERE: &graphql.ArgumentConfig{
 			Type: a.modelParser.WhereExp(entity.Name()),
@@ -60,7 +60,7 @@ func deleteByIdArgs() graphql.FieldConfigArgument {
 	}
 }
 
-func (a *AppSchema) upsertArgs(entity *graph.Entity) graphql.FieldConfigArgument {
+func (a *AppProcessor) upsertArgs(entity *graph.Entity) graphql.FieldConfigArgument {
 	return graphql.FieldConfigArgument{
 		consts.ARG_OBJECTS: &graphql.ArgumentConfig{
 			Type: &graphql.NonNull{
@@ -74,7 +74,7 @@ func (a *AppSchema) upsertArgs(entity *graph.Entity) graphql.FieldConfigArgument
 	}
 }
 
-func (a *AppSchema) upsertOneArgs(entity *graph.Entity) graphql.FieldConfigArgument {
+func (a *AppProcessor) upsertOneArgs(entity *graph.Entity) graphql.FieldConfigArgument {
 	return graphql.FieldConfigArgument{
 		consts.ARG_OBJECT: &graphql.ArgumentConfig{
 			Type: &graphql.NonNull{
@@ -84,7 +84,7 @@ func (a *AppSchema) upsertOneArgs(entity *graph.Entity) graphql.FieldConfigArgum
 	}
 }
 
-func (a *AppSchema) setArgs(entity *graph.Entity) graphql.FieldConfigArgument {
+func (a *AppProcessor) setArgs(entity *graph.Entity) graphql.FieldConfigArgument {
 	updateInput := a.modelParser.SetInput(entity.Name())
 	return graphql.FieldConfigArgument{
 		consts.ARG_SET: &graphql.ArgumentConfig{
@@ -98,7 +98,7 @@ func (a *AppSchema) setArgs(entity *graph.Entity) graphql.FieldConfigArgument {
 	}
 }
 
-func (a *AppSchema) appendEntityMutationToFields(entity *graph.Entity, feilds graphql.Fields) {
+func (a *AppProcessor) appendEntityMutationToFields(entity *graph.Entity, feilds graphql.Fields) {
 	(feilds)[entity.DeleteName()] = &graphql.Field{
 		Type:    a.modelParser.MutationResponse(entity.Name()),
 		Args:    a.deleteArgs(entity),
@@ -130,7 +130,7 @@ func (a *AppSchema) appendEntityMutationToFields(entity *graph.Entity, feilds gr
 	}
 }
 
-func (a *AppSchema) appendServiceMutationToFields(service *graph.Service, feilds graphql.Fields) {
+func (a *AppProcessor) appendServiceMutationToFields(service *graph.Service, feilds graphql.Fields) {
 
 	// (feilds)[service.DeleteName()] = &graphql.Field{
 	// 	Type: a.modelParser.MutationResponse(service.Name()),

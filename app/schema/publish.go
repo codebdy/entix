@@ -6,7 +6,7 @@ import (
 	"rxdrag.com/entify/consts"
 )
 
-func (a *AppSchema) publishField() *graphql.Field {
+func (a *AppProcessor) publishField() *graphql.Field {
 	return &graphql.Field{
 		Type: graphql.Boolean,
 		Args: graphql.FieldConfigArgument{
