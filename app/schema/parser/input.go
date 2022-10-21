@@ -91,7 +91,7 @@ func (p *ModelParser) makeEntityInputRelations() {
 		input := p.setInputMap[entity.Name()]
 		update := p.saveInputMap[entity.Name()]
 
-		associas := entity.AllAssociations()
+		associas := entity.Associations()
 
 		for i := range associas {
 			assoc := associas[i]

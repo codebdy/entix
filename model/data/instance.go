@@ -50,7 +50,7 @@ func NewInstance(object map[string]interface{}, entity *graph.Entity) *Instance 
 			})
 		}
 	}
-	allAssociation := entity.AllAssociations()
+	allAssociation := entity.Associations()
 	for i := range allAssociation {
 		asso := allAssociation[i]
 		value := object[asso.Name()]

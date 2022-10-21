@@ -61,20 +61,19 @@ func (e *Entity) AllMethods() []*Method {
 	return methods
 }
 
-//包含继承来的
-// func (e *Entity) AllAssociations() []*Association {
-// 	associas := []*Association{}
-// 	associas = append(associas, e.associations...)
-// 	for i := range e.Interfaces {
-// 		for j := range e.Interfaces[i].associations {
-// 			asso := e.Interfaces[i].associations[j]
-// 			if findAssociation(asso.Name(), associas) == nil {
-// 				associas = append(associas, asso)
-// 			}
-// 		}
-// 	}
-// 	return associas
-// }
+func (e *Entity) Associations() []*Association {
+	// associas := []*Association{}
+	// associas = append(associas, e.associations...)
+	// for i := range e.Interfaces {
+	// 	for j := range e.Interfaces[i].associations {
+	// 		asso := e.Interfaces[i].associations[j]
+	// 		if findAssociation(asso.Name(), associas) == nil {
+	// 			associas = append(associas, asso)
+	// 		}
+	// 	}
+	// }
+	return e.associations
+}
 
 func (e *Entity) GetAssociationByName(name string) *Association {
 	//associations := e.AllAssociations()

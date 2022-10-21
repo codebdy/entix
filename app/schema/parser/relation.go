@@ -30,7 +30,7 @@ func (p *ModelParser) makeRelations(model *model.Model) {
 	for i := range p.model.Graph.Entities {
 		entity := p.model.Graph.Entities[i]
 		objectType := p.objectTypeMap[entity.Name()]
-		for _, association := range entity.AllAssociations() {
+		for _, association := range entity.Associations() {
 			if objectType.Fields()[association.Name()] != nil {
 				panic("Duplicate entity field: " + entity.Name() + "." + association.Name())
 			}

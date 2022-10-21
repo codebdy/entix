@@ -64,7 +64,7 @@ func (p *ModelParser) makeRelaionWhereExp() {
 			}
 		}
 		var associations []*graph.Association
-		associations = entity.AllAssociations()
+		associations = entity.Associations()
 		for i := range associations {
 			assoc := associations[i]
 			exp.AddFieldConfig(assoc.Name(), &graphql.InputObjectFieldConfig{
