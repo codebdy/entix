@@ -3,10 +3,7 @@ package schema
 import (
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/app/resolve"
-	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
-	"rxdrag.com/entify/model/meta"
-	"rxdrag.com/entify/orm"
 )
 
 func (a *AppProcessor) QueryFields() []*graphql.Field {
@@ -24,10 +21,6 @@ func (a *AppProcessor) QueryFields() []*graphql.Field {
 	}
 	for _, service := range a.Model.Graph.Services {
 		a.appendServiceToQueryFields(service, queryFields)
-	}
-
-	if orm.IsEntityExists(meta.USER_ENTITY_NAME) {
-		a.appendMeToQuery(queryFields)
 	}
 
 	return convertFieldsArray(queryFields)
@@ -91,12 +84,5 @@ func (a *AppProcessor) appendServiceToQueryFields(service *graph.Service, fields
 			Description: method.Method.Description,
 			Resolve:     resolve.MethodResolveFn(method, a.Model),
 		}
-	}
-}
-
-func (a *AppProcessor) appendMeToQuery(fields graphql.Fields) {
-	fields[consts.ME] = &graphql.Field{
-		Type:    a.modelParser.OutputType(meta.USER_ENTITY_NAME),
-		Resolve: resolve.Me,
 	}
 }

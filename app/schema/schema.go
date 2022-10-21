@@ -12,6 +12,7 @@ type AppGraphqlSchema struct {
 	SubscriptionFields []*graphql.Field
 	Directives         []*graphql.Directive
 	Types              []graphql.Type
+	proccessor         *AppProcessor
 }
 
 type AppProcessor struct {
@@ -29,5 +30,10 @@ func New(model *model.Model) AppGraphqlSchema {
 		QueryFields:    processor.QueryFields(),
 		MutationFields: processor.mutationFields(),
 		Types:          processor.modelParser.EntityTypes(),
+		proccessor:     processor,
 	}
+}
+
+func (s *AppGraphqlSchema) OutputType(name string) graphql.Type {
+	return s.proccessor.modelParser.OutputType(name)
 }

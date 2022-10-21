@@ -1,4 +1,4 @@
-package resolve
+package authentication
 
 import (
 	"github.com/graphql-go/graphql"
@@ -7,7 +7,7 @@ import (
 	"rxdrag.com/entify/utils"
 )
 
-func Me(p graphql.ResolveParams) (interface{}, error) {
+func resolveMe(p graphql.ResolveParams) (interface{}, error) {
 	defer utils.PrintErrorStack()
 	me := contexts.Values(p.Context).Me
 	if me == nil {

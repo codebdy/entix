@@ -9,7 +9,6 @@ import (
 )
 
 func DeployProcess(xml string, id uint64) {
-	//fmt.Println("哈哈哈", name, xml)
 	client, err := zbc.NewClient(&zbc.ClientConfig{
 		GatewayAddress:         config.ZeebeAddress(),
 		UsePlaintextConnection: true,
