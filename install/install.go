@@ -63,7 +63,7 @@ func installQueryFields() []*graphql.Field {
 			Type: graphql.Boolean,
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				defer utils.PrintErrorStack()
-				return false, nil
+				return app.Installed, nil
 			},
 		},
 	}

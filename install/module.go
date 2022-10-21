@@ -15,11 +15,7 @@ type BasicModule struct {
 func (m BasicModule) Init(ctx context.Context) {
 }
 func (m BasicModule) QueryFields() []*graphql.Field {
-	if app.Installed {
-		return []*graphql.Field{}
-	} else {
-		return installQueryFields()
-	}
+	return installQueryFields()
 }
 func (m BasicModule) MutationFields() []*graphql.Field {
 	if app.Installed {
