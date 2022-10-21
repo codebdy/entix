@@ -8,8 +8,6 @@ import (
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/entry"
-	"rxdrag.com/entify/model/meta"
-	"rxdrag.com/entify/orm"
 )
 
 type AppModule struct {
@@ -22,7 +20,7 @@ func (m *AppModule) Init(ctx context.Context) {
 	}
 
 	//没有安装
-	if !orm.IsEntityExists(meta.APP_ENTITY_NAME) {
+	if !Installed {
 		return
 	}
 
