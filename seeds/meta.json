@@ -59,7 +59,7 @@
           "uuid": "APP_COLUMN_NAME_UUID",
           "type": "String",
           "primary": false,
-          "name": "name",
+          "name": "title",
           "label": "",
           "nullable": false,
           "default": "",

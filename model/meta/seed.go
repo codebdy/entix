@@ -27,7 +27,7 @@ func init() {
 	SystemAppData = map[string]interface{}{
 		"id":            SYSTEM_APP_ID,
 		"uuid":          "SYSTEM-APP-UUID",
-		"name":          "Appx",
+		"title":         "Appx",
 		"meta":          content,
 		"publishedMeta": content,
 	}
@@ -75,7 +75,7 @@ var AppClass = ClassMeta{
 			System:    true,
 		},
 		{
-			Name:      "name",
+			Name:      "title",
 			Type:      STRING,
 			TypeLabel: STRING,
 			Uuid:      "APP_COLUMN_NAME_UUID",

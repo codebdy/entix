@@ -8,16 +8,24 @@ import (
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/entry"
+	"rxdrag.com/entify/model/meta"
+	"rxdrag.com/entify/orm"
 )
 
 type AppModule struct {
 	app *App
 }
 
-func (m AppModule) Init(ctx context.Context) {
+func (m *AppModule) Init(ctx context.Context) {
 	if contexts.Values(ctx).AppId == 0 {
 		return
 	}
+
+	//没有安装
+	if !orm.IsEntityExists(meta.APP_ENTITY_NAME) {
+		return
+	}
+
 	app, err := Get(contexts.Values(ctx).AppId)
 	if err != nil {
 		log.Panic(err)
@@ -25,47 +33,48 @@ func (m AppModule) Init(ctx context.Context) {
 	m.app = app
 }
 
-func (m AppModule) QueryFields() []*graphql.Field {
+func (m *AppModule) QueryFields() []*graphql.Field {
+
 	if m.app != nil {
 		return m.app.Schema.QueryFields
 	} else {
 		return []*graphql.Field{}
 	}
 }
-func (m AppModule) MutationFields() []*graphql.Field {
+func (m *AppModule) MutationFields() []*graphql.Field {
 	if m.app != nil {
 		return m.app.Schema.MutationFields
 	} else {
 		return []*graphql.Field{}
 	}
 }
-func (m AppModule) SubscriptionFields() []*graphql.Field {
+func (m *AppModule) SubscriptionFields() []*graphql.Field {
 	if m.app != nil {
 		return m.app.Schema.SubscriptionFields
 	} else {
 		return []*graphql.Field{}
 	}
 }
-func (m AppModule) Directives() []*graphql.Directive {
+func (m *AppModule) Directives() []*graphql.Directive {
 	if m.app != nil {
 		return m.app.Schema.Directives
 	} else {
 		return []*graphql.Directive{}
 	}
 }
-func (m AppModule) Types() []graphql.Type {
+func (m *AppModule) Types() []graphql.Type {
 	if m.app != nil {
 		return m.app.Schema.Types
 	} else {
 		return []graphql.Type{}
 	}
 }
-func (m AppModule) Middlewares() []func(next http.Handler) http.Handler {
+func (m *AppModule) Middlewares() []func(next http.Handler) http.Handler {
 	return []func(next http.Handler) http.Handler{
 		LoadersMiddleware,
 	}
 }
 
 func init() {
-	entry.AddModuler(AppModule{})
+	entry.AddModuler(&AppModule{})
 }
