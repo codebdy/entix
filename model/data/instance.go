@@ -81,6 +81,42 @@ func (ins *Instance) Table() *table.Table {
 	return ins.Entity.Table
 }
 
+func (ins *Instance) ColumnAssociations() []*Reference {
+	assocs := []*Reference{}
+
+	for i := range ins.Associations {
+		assoc := ins.Associations[i]
+		if assoc.Association.IsColumn() {
+			assocs = append(assocs, assoc)
+		}
+	}
+	return assocs
+}
+
+func (ins *Instance) PovitAssociations() []*Reference {
+	assocs := []*Reference{}
+
+	for i := range ins.Associations {
+		assoc := ins.Associations[i]
+		if assoc.Association.IsPovitTable() {
+			assocs = append(assocs, assoc)
+		}
+	}
+	return assocs
+}
+
+func (ins *Instance) TargetColumnAssociations() []*Reference {
+	assocs := []*Reference{}
+
+	for i := range ins.Associations {
+		assoc := ins.Associations[i]
+		if assoc.Association.IsTargetColumn() {
+			assocs = append(assocs, assoc)
+		}
+	}
+	return assocs
+}
+
 func parseId(id interface{}) uint64 {
 	switch v := id.(type) {
 	default:
