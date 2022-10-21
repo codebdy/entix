@@ -1,10 +1,5 @@
 package domain
 
-/**
- * 在domain层，把有子类的实体，拆分成接口+实体
- * 比如A => A + AEntity
- */
-
 import (
 	"rxdrag.com/entify/model/meta"
 )
@@ -36,15 +31,11 @@ func New(m *meta.Model) *Model {
 			panic("Meta is not integral, can not find class of relation:" + relation.Uuid)
 		}
 		if relation.RelationType == meta.INHERIT {
-			src.parents = append(src.parents, tar)
+			src.Parents = append(src.Parents, tar)
 			tar.Children = append(tar.Children, src)
 		} else {
-			//关联两端无虚类
-			if !relation.IsAbsract(m) {
-				r := NewRelation(relation, src, tar)
-				model.Relations = append(model.Relations, r)
-			}
-			//关联两端有虚类
+			r := NewRelation(relation, src, tar)
+			model.Relations = append(model.Relations, r)
 		}
 	}
 

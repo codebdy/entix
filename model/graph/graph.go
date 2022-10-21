@@ -71,17 +71,22 @@ func New(m *domain.Model) *Model {
 		}
 	}
 
-	//处理关联
+	//处理关联， 主要是把继承来的关联展平
 	for i := range m.Relations {
 		relation := m.Relations[i]
 		model.makeRelation(relation)
+	}
+
+	//处理association，把Relatons 转换成associations
+	for i := range model.Relations {
+		relation := model.Relations[i]
+		model.makeAssociations(relation)
 	}
 
 	//处理属性的实体类型跟枚举类型
 	for i := range model.Interfaces {
 		intf := model.Interfaces[i]
 		model.makeInterface(intf)
-
 	}
 
 	for i := range model.Entities {
@@ -130,6 +135,19 @@ func (m *Model) makeRelation(relation *domain.Relation) {
 		relation.RelationType == meta.TWO_WAY_ASSOCIATION ||
 		relation.RelationType == meta.TWO_WAY_COMBINATION {
 		targetEntity.AddAssociation(NewAssociation(r, targetEntity.Uuid()))
+	}
+}
+
+func (m *Model) makeAssociations(relation *Relation) {
+	sourceEntity := relation.SourceEntity
+
+	targetEntity := relation.TargetEntity
+
+	sourceEntity.AddAssociation(NewAssociation(relation, sourceEntity.Uuid()))
+	if relation.RelationType == meta.TWO_WAY_AGGREGATION ||
+		relation.RelationType == meta.TWO_WAY_ASSOCIATION ||
+		relation.RelationType == meta.TWO_WAY_COMBINATION {
+		targetEntity.AddAssociation(NewAssociation(relation, targetEntity.Uuid()))
 	}
 }
 

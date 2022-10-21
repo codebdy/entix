@@ -12,7 +12,7 @@ type Class struct {
 	SoftDelete    bool
 	Attributes    []*Attribute
 	Methods       []*Method
-	parents       []*Class
+	Parents       []*Class
 	Children      []*Class
 	AppId         uint64
 	IdNoShift     bool
@@ -33,7 +33,7 @@ func NewClass(c *meta.ClassMeta) *Class {
 		SoftDelete:    c.SoftDelete,
 		Attributes:    make([]*Attribute, len(c.Attributes)),
 		Methods:       make([]*Method, len(c.Methods)),
-		parents:       []*Class{},
+		Parents:       []*Class{},
 		Children:      []*Class{},
 		QueryScript:   c.QueryScript,
 		MuationScript: c.MuationScript,
@@ -60,8 +60,8 @@ func (c *Class) HasChildren() bool {
 
 func (c *Class) AllParents() []*Class {
 	parents := []*Class{}
-	for i := range c.parents {
-		parent := c.parents[i]
+	for i := range c.Parents {
+		parent := c.Parents[i]
 		parents = append(parents, parent)
 		parents = append(parents, parent.AllParents()...)
 	}
