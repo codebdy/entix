@@ -154,7 +154,7 @@ func (b *MySQLBuilder) ColumnTypeSQL(column *table.Column) string {
 	case meta.BOOLEAN:
 		typeStr = "tinyint(1)"
 		break
-	case meta.STRING:
+	case meta.STRING, meta.PASSWORD:
 		typeStr = "text"
 		if column.Length > 0 {
 			if column.Length <= 255 {
