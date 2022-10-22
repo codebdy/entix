@@ -10,29 +10,24 @@ import (
 	"rxdrag.com/entify/model/table"
 )
 
-func (b *MySQLBuilder) BuildUpdateSQL(id uint64, fields []*data.Field, assocs []*data.AssociationRef, table *table.Table) string {
+func (b *MySQLBuilder) BuildUpdateSQL(id uint64, fields []*data.Field, table *table.Table) string {
 	sql := fmt.Sprintf(
 		"UPDATE `%s` SET %s WHERE ID = %d",
 		table.Name,
-		updateSetFields(fields, assocs),
+		updateSetFields(fields),
 		id,
 	)
 
 	return sql
 }
 
-func updateSetFields(fields []*data.Field, assocs []*data.AssociationRef) string {
-	if len(fields) == 0 && len(assocs) == 0 {
+func updateSetFields(fields []*data.Field) string {
+	if len(fields) == 0 {
 		log.Panic(errors.New("No update fields"))
 	}
-	fieldLen := len(fields)
-	columns := make([]string, fieldLen+len(assocs))
+	columns := make([]string, len(fields))
 	for i, field := range fields {
 		columns[i] = field.Column.Name + "=?"
-	}
-
-	for i, assoc := range assocs {
-		columns[fieldLen+i] = assoc.OwnerColumn().Name + "=?"
 	}
 	return strings.Join(columns, ",")
 }

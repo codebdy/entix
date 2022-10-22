@@ -102,7 +102,7 @@ func New(m *domain.Model) *Model {
 
 	for i := range model.Relations {
 		relation := model.Relations[i]
-		//多对多关联，或者单向1对多关联
+		//所有关系存关系表
 		if (relation.SourceMutiplicity == meta.ZERO_MANY && relation.TargetMultiplicity == meta.ZERO_MANY) ||
 			(relation.RelationType == meta.ONE_WAY_ASSOCIATION && relation.TargetMultiplicity == meta.ZERO_MANY) {
 			model.Tables = append(model.Tables, NewRelationTable(relation))

@@ -19,6 +19,8 @@ func (con *Session) clearAssociation(r *data.AssociationRef, ownerId uint64) {
 
 func (con *Session) deleteAssociationPovit(r *data.AssociationRef, ownerId uint64) {
 	sqlBuilder := dialect.GetSQLBuilder()
+	//先检查是否有数据，如果有再删除，避免死锁
+
 	sql := sqlBuilder.BuildClearAssociationSQL(ownerId, r.Table().Name, r.OwnerColumn().Name)
 	_, err := con.Dbx.Exec(sql)
 	fmt.Println("deleteAssociationPovit SQL:" + sql)

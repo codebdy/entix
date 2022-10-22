@@ -9,113 +9,66 @@ import (
 	"rxdrag.com/entify/model/data"
 )
 
-// 两阶段操作，先插入、再更新
 func (s *Session) SaveOne(instance *data.Instance) (interface{}, error) {
-	//第一阶段插入
-	s.preInsertAll(instance)
-	//第二阶段更新
-	s.update(instance)
-
-	savedObject := s.QueryOneEntityById(instance.Entity, instance.Id)
-	return savedObject, nil
-}
-
-func (s *Session) preInsertAll(instance *data.Instance) {
 	if instance.IsInsert() {
-		s.insert(instance)
-	}
-
-	for i := range instance.Associations {
-		assoc := instance.Associations[i]
-		for j := range assoc.Added {
-			s.preInsertAll(assoc.Added[j])
-		}
-		for j := range assoc.Updated {
-			s.preInsertAll(assoc.Updated[j])
-		}
-		for j := range assoc.Synced {
-			s.preInsertAll(assoc.Synced[j])
-		}
+		return s.insertOne(instance)
+	} else {
+		return s.updateOne(instance)
 	}
 }
 
-func (s *Session) insert(instance *data.Instance) {
+func (s *Session) insertOne(instance *data.Instance) (interface{}, error) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	saveStr := sqlBuilder.BuildInsertSQL(instance.Fields, instance.Table())
 	values := makeFieldValues(instance.Fields)
 	result, err := s.Dbx.Exec(saveStr, values...)
 	if err != nil {
-		log.Println(err.Error())
-		log.Panic(err.Error())
+		log.Println("Insert data failed:", err.Error())
+		return nil, err
 	}
 
 	id, err := result.LastInsertId()
 	if err != nil {
-		log.Println(err.Error())
-		log.Panic(err.Error())
+		log.Println("LastInsertId failed:", err.Error())
+		return nil, err
+	}
+	for _, asso := range instance.Associations {
+		err = s.saveAssociation(asso, uint64(id))
+		if err != nil {
+			log.Println("Save reference failed:", err.Error())
+			return nil, err
+		}
 	}
 
-	instance.Inserted(uint64(id))
+	savedObject := s.QueryOneEntityById(instance.Entity, id)
+
+	//affectedRows, err := result.RowsAffected()
+	if err != nil {
+		log.Println("RowsAffected failed:", err.Error())
+		return nil, err
+	}
+
+	return savedObject, nil
 }
 
-func (s *Session) update(instance *data.Instance) (interface{}, error) {
-	oldInstanceData := s.QueryOneEntityById(instance.Entity, instance.Id)
+func (con *Session) updateOne(instance *data.Instance) (interface{}, error) {
+
 	sqlBuilder := dialect.GetSQLBuilder()
-	//在本方存的关联
-	columnAssocs := instance.ColumnAssociations()
-	saveStr := sqlBuilder.BuildUpdateSQL(instance.Id, instance.Fields, columnAssocs, instance.Table())
+
+	saveStr := sqlBuilder.BuildUpdateSQL(instance.Id, instance.Fields, instance.Table())
 	values := makeFieldValues(instance.Fields)
-	values = append(values, makeAssociationValues(columnAssocs))
 	fmt.Println(saveStr)
-	_, err := s.Dbx.Exec(saveStr, values...)
+	_, err := con.Dbx.Exec(saveStr, values...)
 	if err != nil {
-		log.Panic("Update data failed:", err.Error())
+		log.Println("Update data failed:", err.Error())
+		return nil, err
 	}
 
-	//本方关联类进一步处理其下级关联
-	for _, assocRef := range instance.ColumnAssociations() {
-		//如果级联，删除旧数据
-		if assocRef.Cascade() && oldInstanceData != nil {
-			//旧ID
-			oldId := oldInstanceData.(map[string]interface{})[assocRef.Association.Name()]
-			//新ID
-			newId := assocRef.AssociatedId()
-
-			if newId != nil && oldId != newId {
-				s.DeleteInstance(data.NewInstance(map[string]interface{}{"id": oldId}, assocRef.TypeEntity()))
-			}
-		}
-
-		for _, toAdd := range assocRef.Added {
-			if !toAdd.IsEmperty() {
-				s.update(toAdd)
-			}
-		}
-
-		for _, toSync := range assocRef.Synced {
-			if !toSync.IsEmperty() {
-				s.update(toSync)
-			}
-		}
-
-		for _, toUpdated := range assocRef.Updated {
-			if !toUpdated.IsEmperty() {
-				s.update(toUpdated)
-			}
-		}
+	for _, ref := range instance.Associations {
+		con.saveAssociation(ref, instance.Id)
 	}
 
-	//对方存的关联
-	for _, assocRef := range instance.TargetColumnAssociations() {
-		s.saveTargetAssociation(assocRef, instance.Id)
-	}
-
-	//中间表存的关联
-	for _, assocRef := range instance.PovitAssociations() {
-		s.savePovitAssociation(assocRef, instance.Id)
-	}
-
-	savedObject := s.QueryOneEntityById(instance.Entity, instance.Id)
+	savedObject := con.QueryOneEntityById(instance.Entity, instance.Id)
 
 	return savedObject, nil
 }
@@ -133,50 +86,50 @@ func newAssociationPovit(r *data.AssociationRef, ownerId uint64, tarId uint64) *
 
 }
 
-func (s *Session) saveAssociationInstance(ins *data.Instance) interface{} {
+func (con *Session) saveAssociationInstance(ins *data.Instance) (interface{}, error) {
 	targetData := InsanceData{consts.ID: ins.Id}
 
-	saved, err := s.SaveOne(ins)
+	saved, err := con.SaveOne(ins)
 	if err != nil {
-		log.Panic(err.Error())
+		return nil, err
 	}
 	targetData = saved.(InsanceData)
 
-	return targetData
+	return targetData, nil
 }
+func (con *Session) saveAssociation(r *data.AssociationRef, ownerId uint64) error {
 
-func (s *Session) saveTargetAssociation(r *data.AssociationRef, ownerId uint64) {
-}
-
-func (s *Session) savePovitAssociation(r *data.AssociationRef, ownerId uint64) {
-
-	for _, ins := range r.Deleted() {
+	for _, ins := range r.Deleted {
 		if r.Cascade() {
-			s.DeleteInstance(ins)
+			con.DeleteInstance(ins)
 		} else {
 			povit := newAssociationPovit(r, ownerId, ins.Id)
-			s.DeleteAssociationPovit(povit)
+			con.DeleteAssociationPovit(povit)
 		}
 	}
 
-	for _, ins := range r.Added() {
-		targetData := s.saveAssociationInstance(ins)
+	for _, ins := range r.Added {
+		targetData, err := con.saveAssociationInstance(ins)
 
-		if savedIns, ok := targetData.(InsanceData); ok {
-			tarId := savedIns[consts.ID].(uint64)
-			relationInstance := newAssociationPovit(r, ownerId, tarId)
-			s.SaveAssociationPovit(relationInstance)
+		if err != nil {
+			panic("Save Association error:" + err.Error())
 		} else {
-			panic("Save Association error")
+			if savedIns, ok := targetData.(InsanceData); ok {
+				tarId := savedIns[consts.ID].(uint64)
+				relationInstance := newAssociationPovit(r, ownerId, tarId)
+				con.SaveAssociationPovit(relationInstance)
+			} else {
+				panic("Save Association error")
+			}
 		}
 
 	}
 
-	for _, ins := range r.Updated() {
+	for _, ins := range r.Updated {
 		// if ins.Id == 0 {
 		// 	panic("Can not add new instance when update")
 		// }
-		targetData, err := s.saveAssociationInstance(ins)
+		targetData, err := con.saveAssociationInstance(ins)
 		if err != nil {
 			panic("Save Association error:" + err.Error())
 		} else {
@@ -184,25 +137,24 @@ func (s *Session) savePovitAssociation(r *data.AssociationRef, ownerId uint64) {
 				tarId := savedIns[consts.ID].(uint64)
 				relationInstance := newAssociationPovit(r, ownerId, tarId)
 
-				s.SaveAssociationPovit(relationInstance)
+				con.SaveAssociationPovit(relationInstance)
 			} else {
 				panic("Save Association error")
 			}
 		}
 	}
 
-	synced := r.Synced()
+	synced := r.Synced
 	if len(synced) == 0 {
 		return nil
 	}
 
-	//有死锁bug，暂时不解决
-	s.clearAssociation(r, ownerId)
+	con.clearAssociation(r, ownerId)
 
 	for _, ins := range synced {
 		targetId := ins.Id
-		if !ins.IsEmperty {
-			targetData, err := s.saveAssociationInstance(ins)
+		if !ins.IsEmperty() {
+			targetData, err := con.saveAssociationInstance(ins)
 			if err != nil {
 				panic("Save Association error:" + err.Error())
 			} else {
@@ -214,23 +166,23 @@ func (s *Session) savePovitAssociation(r *data.AssociationRef, ownerId uint64) {
 			}
 		}
 		relationInstance := newAssociationPovit(r, ownerId, targetId)
-		s.SaveAssociationPovit(relationInstance)
+		con.SaveAssociationPovit(relationInstance)
 	}
 
 	return nil
 }
 
-func (s *Session) SaveAssociationPovit(povit *data.AssociationPovit) {
+func (con *Session) SaveAssociationPovit(povit *data.AssociationPovit) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	sql := sqlBuilder.BuildQueryPovitSQL(povit)
-	rows, err := s.Dbx.Query(sql)
+	rows, err := con.Dbx.Query(sql)
 	defer rows.Close()
 	if err != nil {
 		panic(err.Error())
 	}
 	if !rows.Next() {
 		sql = sqlBuilder.BuildInsertPovitSQL(povit)
-		_, err := s.Dbx.Exec(sql)
+		_, err := con.Dbx.Exec(sql)
 		if err != nil {
 			panic(err.Error())
 		}

@@ -84,62 +84,62 @@ func (a *Association) isOneWay() bool {
 }
 
 //关系存本方
-func (a *Association) IsColumn() bool {
-	if a.is1To1() { //单向双向是一样的
-		if a.IsSource() {
-			return true
-		} else {
-			return false
-		}
-	} else if a.is1ToN() { //存对方或中间表
-		return false
-	} else if a.isNTo1() {
-		if a.isOneWay() && !a.IsSource() { //单向，被指向，存中间表
-			return false
-		} else {
-			return true
-		}
-	}
+// func (a *Association) IsColumn() bool {
+// 	if a.is1To1() { //单向双向是一样的
+// 		if a.IsSource() {
+// 			return true
+// 		} else {
+// 			return false
+// 		}
+// 	} else if a.is1ToN() { //存对方或中间表
+// 		return false
+// 	} else if a.isNTo1() {
+// 		if a.isOneWay() && !a.IsSource() { //单向，被指向，存中间表
+// 			return false
+// 		} else {
+// 			return true
+// 		}
+// 	}
 
-	return false
-}
+// 	return false
+// }
 
 //关系存对方
-func (a *Association) IsTargetColumn() bool {
-	if a.is1To1() { //单向双向是一样的
-		if a.IsSource() {
-			return false
-		} else {
-			return true
-		}
-	} else if a.is1ToN() { //存对方或中间表
-		if a.isOneWay() && a.IsSource() { //单向，指向对方，存中间表
-			return false
-		} else {
-			return true
-		}
-	} else if a.isNTo1() { //存本方或中间表
-		return false
-	}
+// func (a *Association) IsTargetColumn() bool {
+// 	if a.is1To1() { //单向双向是一样的
+// 		if a.IsSource() {
+// 			return false
+// 		} else {
+// 			return true
+// 		}
+// 	} else if a.is1ToN() { //存对方或中间表
+// 		if a.isOneWay() && a.IsSource() { //单向，指向对方，存中间表
+// 			return false
+// 		} else {
+// 			return true
+// 		}
+// 	} else if a.isNTo1() { //存本方或中间表
+// 		return false
+// 	}
 
-	return false
-}
+// 	return false
+// }
 
 //关系存中间表
-func (a *Association) IsPovitTable() bool {
-	if a.isNToN() {
-		return true
-	}
+// func (a *Association) IsPovitTable() bool {
+// 	if a.isNToN() {
+// 		return true
+// 	}
 
-	if a.is1ToN() && a.IsSource() && a.isOneWay() {
-		return true
-	}
+// 	if a.is1ToN() && a.IsSource() && a.isOneWay() {
+// 		return true
+// 	}
 
-	if a.isNTo1() && !a.IsSource() && a.isOneWay() {
-		return true
-	}
-	return false
-}
+// 	if a.isNTo1() && !a.IsSource() && a.isOneWay() {
+// 		return true
+// 	}
+// 	return false
+// }
 
 func (a *Association) IsSource() bool {
 	return a.Relation.SourceEntity.Uuid() == a.OwnerClassUuid

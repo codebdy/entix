@@ -1,8 +1,6 @@
 package data
 
 import (
-	"log"
-
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/model/meta"
@@ -45,19 +43,19 @@ func (r *AssociationRef) IsEmperty() bool {
 	return len(r.Added) == 0 && len(r.Updated) == 0 && len(r.Deleted) == 0 && len(r.Synced) == 0
 }
 
-func (r *AssociationRef) AssociatedId() interface{} {
-	if !r.Association.IsColumn() {
-		log.Panic("Assoicion is not the entity column, but as column to treat")
-	}
-	if len(r.Synced) != 0 {
-		return r.Synced[0]
-	} else if len(r.Added) != 0 {
-		return r.Added[0]
-	} else if len(r.Updated) != 0 {
-		return r.Updated[0]
-	}
-	return nil
-}
+// func (r *AssociationRef) AssociatedId() interface{} {
+// 	if !r.Association.IsColumn() {
+// 		log.Panic("Assoicion is not the entity column, but as column to treat")
+// 	}
+// 	if len(r.Synced) != 0 {
+// 		return r.Synced[0]
+// 	} else if len(r.Added) != 0 {
+// 		return r.Added[0]
+// 	} else if len(r.Updated) != 0 {
+// 		return r.Updated[0]
+// 	}
+// 	return nil
+// }
 
 func doConvertToInstances(data interface{}, isArray bool, entity *graph.Entity) []*Instance {
 	instances := []*Instance{}

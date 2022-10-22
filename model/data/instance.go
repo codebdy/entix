@@ -93,41 +93,41 @@ func (ins *Instance) Table() *table.Table {
 	return ins.Entity.Table
 }
 
-func (ins *Instance) ColumnAssociations() []*AssociationRef {
-	assocs := []*AssociationRef{}
+// func (ins *Instance) ColumnAssociations() []*AssociationRef {
+// 	assocs := []*AssociationRef{}
 
-	for i := range ins.Associations {
-		assoc := ins.Associations[i]
-		if assoc.Association.IsColumn() && !assoc.IsEmperty() {
-			assocs = append(assocs, assoc)
-		}
-	}
-	return assocs
-}
+// 	for i := range ins.Associations {
+// 		assoc := ins.Associations[i]
+// 		if assoc.Association.IsColumn() && !assoc.IsEmperty() {
+// 			assocs = append(assocs, assoc)
+// 		}
+// 	}
+// 	return assocs
+// }
 
-func (ins *Instance) PovitAssociations() []*AssociationRef {
-	assocs := []*AssociationRef{}
+// func (ins *Instance) PovitAssociations() []*AssociationRef {
+// 	assocs := []*AssociationRef{}
 
-	for i := range ins.Associations {
-		assoc := ins.Associations[i]
-		if assoc.Association.IsPovitTable() && !assoc.IsEmperty() {
-			assocs = append(assocs, assoc)
-		}
-	}
-	return assocs
-}
+// 	for i := range ins.Associations {
+// 		assoc := ins.Associations[i]
+// 		if assoc.Association.IsPovitTable() && !assoc.IsEmperty() {
+// 			assocs = append(assocs, assoc)
+// 		}
+// 	}
+// 	return assocs
+// }
 
-func (ins *Instance) TargetColumnAssociations() []*AssociationRef {
-	assocs := []*AssociationRef{}
+// func (ins *Instance) TargetColumnAssociations() []*AssociationRef {
+// 	assocs := []*AssociationRef{}
 
-	for i := range ins.Associations {
-		assoc := ins.Associations[i]
-		if assoc.Association.IsTargetColumn() && !assoc.IsEmperty() {
-			assocs = append(assocs, assoc)
-		}
-	}
-	return assocs
-}
+// 	for i := range ins.Associations {
+// 		assoc := ins.Associations[i]
+// 		if assoc.Association.IsTargetColumn() && !assoc.IsEmperty() {
+// 			assocs = append(assocs, assoc)
+// 		}
+// 	}
+// 	return assocs
+// }
 
 func parseId(id interface{}) uint64 {
 	switch v := id.(type) {

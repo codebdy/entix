@@ -49,14 +49,6 @@ func makeFieldValues(fields []*data.Field) []interface{} {
 	return objValues
 }
 
-func makeAssociationValues(assocs []*data.AssociationRef) []interface{} {
-	objValues := make([]interface{}, 0, len(assocs))
-	for i, assoc := range assocs {
-		objValues[i] = assoc.AssociatedId()
-	}
-	return objValues
-}
-
 func makeInterfaceQueryValues(intf *graph.Interface) []interface{} {
 	names := intf.AllAttributeNames()
 	values := make([]interface{}, len(names))
