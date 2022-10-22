@@ -23,7 +23,15 @@ func (s *Session) preInsert(instance *data.Instance) {
 
 	for i := range instance.Associations {
 		assoc := instance.Associations[i]
-		if(assoc.Value)
+		for j := range assoc.Added {
+			s.preInsert(assoc.Added[j])
+		}
+		for j := range assoc.Updated {
+			s.preInsert(assoc.Updated[j])
+		}
+		for j := range assoc.Synced {
+			s.preInsert(assoc.Synced[j])
+		}
 	}
 }
 
