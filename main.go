@@ -21,6 +21,7 @@ import (
 	_ "rxdrag.com/entify/app"
 	_ "rxdrag.com/entify/authentication"
 	_ "rxdrag.com/entify/install"
+	_ "rxdrag.com/entify/publish"
 )
 
 const PORT = 4000

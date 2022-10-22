@@ -18,7 +18,7 @@ func PublishMetaResolveFn(app *app.App) graphql.FieldResolveFn {
 		defer utils.PrintErrorStack()
 		doPublish(app)
 		logs.WriteBusinessLog(app.Model, p, logs.PUBLISH_META, logs.SUCCESS, "")
-		return "success", nil
+		return true, nil
 	}
 }
 
