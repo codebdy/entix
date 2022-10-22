@@ -15,7 +15,7 @@ import (
 )
 
 func makeFieldValues(fields []*data.Field) []interface{} {
-	objValues := make([]interface{}, 0, len(fields))
+	objValues := make([]interface{}, len(fields))
 	for i, field := range fields {
 		value := field.Value
 		column := field.Column
