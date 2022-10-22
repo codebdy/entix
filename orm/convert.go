@@ -14,7 +14,7 @@ import (
 	"rxdrag.com/entify/utils"
 )
 
-func makeSaveValues(fields []*data.Field) []interface{} {
+func makeFieldValues(fields []*data.Field) []interface{} {
 	objValues := make([]interface{}, 0, len(fields))
 	for _, field := range fields {
 		value := field.Value

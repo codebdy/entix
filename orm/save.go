@@ -9,37 +9,40 @@ import (
 	"rxdrag.com/entify/model/data"
 )
 
+// 两阶段操作，先插入、再更新
 func (s *Session) SaveOne(instance *data.Instance) (interface{}, error) {
-	if instance.IsInsert() {
-		return s.InsertOne(instance)
-	} else {
-		return s.UpdateOne(instance)
-	}
+	//第一阶段插入
+	s.preInsertAll(instance)
+	//第二阶段更新
+	s.update(instance)
+
+	savedObject := s.QueryOneEntityById(instance.Entity, instance.Id)
+	return savedObject, nil
 }
 
-func (s *Session) preInsert(instance *data.Instance) {
+func (s *Session) preInsertAll(instance *data.Instance) {
 	if instance.IsInsert() {
-		s.doInsert(instance)
+		s.insert(instance)
 	}
 
 	for i := range instance.Associations {
 		assoc := instance.Associations[i]
 		for j := range assoc.Added {
-			s.preInsert(assoc.Added[j])
+			s.preInsertAll(assoc.Added[j])
 		}
 		for j := range assoc.Updated {
-			s.preInsert(assoc.Updated[j])
+			s.preInsertAll(assoc.Updated[j])
 		}
 		for j := range assoc.Synced {
-			s.preInsert(assoc.Synced[j])
+			s.preInsertAll(assoc.Synced[j])
 		}
 	}
 }
 
-func (s *Session) doInsert(instance *data.Instance) {
+func (s *Session) insert(instance *data.Instance) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	saveStr := sqlBuilder.BuildInsertSQL(instance.Fields, instance.Table())
-	values := makeSaveValues(instance.Fields)
+	values := makeFieldValues(instance.Fields)
 	result, err := s.Dbx.Exec(saveStr, values...)
 	if err != nil {
 		log.Println(err.Error())
@@ -55,46 +58,12 @@ func (s *Session) doInsert(instance *data.Instance) {
 	instance.Inserted(uint64(id))
 }
 
-func (s *Session) InsertOne(instance *data.Instance) (interface{}, error) {
-	sqlBuilder := dialect.GetSQLBuilder()
-	saveStr := sqlBuilder.BuildInsertSQL(instance.Fields, instance.Table())
-	values := makeSaveValues(instance.Fields)
-	result, err := s.Dbx.Exec(saveStr, values...)
-	if err != nil {
-		fmt.Println("Insert data failed:", err.Error())
-		return nil, err
-	}
-
-	id, err := result.LastInsertId()
-	if err != nil {
-		fmt.Println("LastInsertId failed:", err.Error())
-		return nil, err
-	}
-	for _, asso := range instance.Associations {
-		err = s.doSaveAssociation(asso, uint64(id))
-		if err != nil {
-			fmt.Println("Save reference failed:", err.Error())
-			return nil, err
-		}
-	}
-
-	savedObject := s.QueryOneEntityById(instance.Entity, id)
-
-	//affectedRows, err := result.RowsAffected()
-	if err != nil {
-		fmt.Println("RowsAffected failed:", err.Error())
-		return nil, err
-	}
-
-	return savedObject, nil
-}
-
-func (s *Session) UpdateOne(instance *data.Instance) (interface{}, error) {
+func (s *Session) update(instance *data.Instance) (interface{}, error) {
 
 	sqlBuilder := dialect.GetSQLBuilder()
 	columnAssocs := instance.ColumnAssociations()
 	saveStr := sqlBuilder.BuildUpdateSQL(instance.Id, instance.Fields, columnAssocs, instance.Table())
-	values := makeSaveValues(instance.Fields, columnAssocs)
+	values := makeFieldValues(instance.Fields)
 	fmt.Println(saveStr)
 	_, err := s.Dbx.Exec(saveStr, values...)
 	if err != nil {
