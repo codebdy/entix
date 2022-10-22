@@ -50,19 +50,6 @@ func (con *Session) InsertOne(instance *data.Instance) (interface{}, error) {
 	return savedObject, nil
 }
 
-func merageInstances(source []InsanceData, target []InsanceData) {
-	for i := range source {
-		souceObj := source[i]
-		for j := range target {
-			targetObj := target[j]
-			if souceObj[consts.ID] == targetObj[consts.ID] {
-				targetObj[consts.ASSOCIATION_OWNER_ID] = souceObj[consts.ASSOCIATION_OWNER_ID]
-				source[i] = targetObj
-			}
-		}
-	}
-}
-
 func (con *Session) doUpdateOne(instance *data.Instance) (interface{}, error) {
 
 	sqlBuilder := dialect.GetSQLBuilder()
