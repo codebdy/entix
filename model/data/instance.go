@@ -2,6 +2,7 @@ package data
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 	"time"
 
@@ -20,7 +21,6 @@ type Instance struct {
 	Entity       *graph.Entity
 	Fields       []*Field
 	Associations []*AssociationRef
-	IsEmperty    bool
 	isInsert     bool
 }
 
@@ -32,14 +32,10 @@ func NewInstance(object map[string]interface{}, entity *graph.Entity) *Instance 
 		instance.Id = parseId(object[consts.ID])
 	}
 
-	if len(object) == 1 && object[consts.ID] != nil {
-		instance.IsEmperty = true
-	}
-
 	columns := entity.Table.Columns
 	for i := range columns {
 		column := columns[i]
-		if object[column.Name] != nil {
+		if object[column.Name] != nil && object[column.Name] != consts.ID { //ID额外处理
 			instance.Fields = append(instance.Fields, &Field{
 				Column: column,
 				Value:  object[column.Name],
@@ -61,6 +57,10 @@ func NewInstance(object map[string]interface{}, entity *graph.Entity) *Instance 
 		}
 	}
 	return &instance
+}
+
+func (ins *Instance) IsEmperty() bool {
+	return len(ins.Fields) == 0 && len(ins.Associations) == 0
 }
 
 //清空其它字段，保留ID跟关系，供二次保存使用
@@ -132,13 +132,15 @@ func (ins *Instance) TargetColumnAssociations() []*AssociationRef {
 func parseId(id interface{}) uint64 {
 	switch v := id.(type) {
 	default:
-		panic(fmt.Sprintf("unexpected id type %T", v))
+		msg := fmt.Sprintf("unexpected id type %T", v)
+		log.Panic(msg)
+		panic(msg)
 	case uint64:
 		return id.(uint64)
 	case string:
 		u, err := strconv.ParseUint(id.(string), 0, 64)
 		if err != nil {
-			panic(err.Error())
+			log.Panic(err.Error())
 		}
 		return u
 	}

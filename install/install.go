@@ -113,12 +113,12 @@ func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 	_, err := service.InsertOne(instance)
 
 	if err != nil {
-		log.Panic(err)
+		log.Panic(err.Error())
 	}
 
 	systemApp, err = app.Get(meta.SYSTEM_APP_ID)
 	if err != nil {
-		log.Panic(err)
+		log.Panic(err.Error())
 	}
 
 	if input.Admin != "" {

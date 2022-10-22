@@ -88,6 +88,6 @@ func main() {
 	err := http.ListenAndServe(fmt.Sprintf(":%d", PORT), nil)
 	if err != nil {
 		fmt.Printf("启动失败:%s", err)
-		log.Panic(err)
+		log.Panic(err.Error())
 	}
 }

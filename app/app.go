@@ -37,14 +37,14 @@ func init() {
 func GetAppByIdArg(idArg interface{}) (*App, error) {
 	if idArg == nil {
 		err := errors.New("Nil app id")
-		log.Panic(err)
+		log.Panic(err.Error())
 	}
 	appIdStr := idArg.(string)
 	appId, err := strconv.ParseUint(appIdStr, 10, 64)
 
 	if err != nil {
 		err := errors.New(fmt.Sprintf("App id error:%s", appIdStr))
-		log.Panic(err)
+		log.Panic(err.Error())
 	}
 	return Get(appId)
 }

@@ -26,7 +26,7 @@ func (m *AppModule) Init(ctx context.Context) {
 
 	app, err := Get(contexts.Values(ctx).AppId)
 	if err != nil {
-		log.Panic(err)
+		log.Panic(err.Error())
 	}
 	m.app = app
 }

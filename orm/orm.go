@@ -35,7 +35,7 @@ func Open() (*Session, error) {
 func IsEntityExists(name string) bool {
 	session, err := Open()
 	if err != nil {
-		log.Panic(err)
+		log.Panic(err.Error())
 	}
 	return session.doCheckEntity(name)
 }

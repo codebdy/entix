@@ -92,7 +92,7 @@ func GetSchema(ctx context.Context) graphql.Schema {
 	schema, err := graphql.NewSchema(schemaConfig)
 
 	if err != nil {
-		log.Panic(err)
+		log.Panic(err.Error())
 	}
 
 	return schema

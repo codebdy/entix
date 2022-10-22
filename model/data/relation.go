@@ -15,7 +15,7 @@ type AssociationRef struct {
 	Deleted     []*Instance
 	Updated     []*Instance
 	Synced      []*Instance
-	Cascade     bool
+	isCascade   bool
 }
 
 func NewAssociation(value map[string]interface{}, assoc *graph.Association) *AssociationRef {
@@ -33,8 +33,12 @@ func (r *AssociationRef) init(value map[string]interface{}) {
 	r.Updated = r.convertToInstances(value[consts.ARG_UPDATE])
 	r.Synced = r.convertToInstances(value[consts.ARG_SYNC])
 	if value[consts.ARG_CASCADE] != nil {
-		r.Cascade = value[consts.ARG_CASCADE].(bool)
+		r.isCascade = value[consts.ARG_CASCADE].(bool)
 	}
+}
+
+func (r *AssociationRef) Cascade() bool {
+	return r.IsCombination() || r.isCascade
 }
 
 func (r *AssociationRef) IsEmperty() bool {

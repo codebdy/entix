@@ -41,7 +41,7 @@ func (con *Session) doCheckEntity(name string) bool {
 	case err == sql.ErrNoRows:
 		return false
 	case err != nil:
-		log.Panic(err)
+		log.Panic(err.Error())
 	}
 	return count > 0
 }

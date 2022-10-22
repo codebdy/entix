@@ -46,20 +46,20 @@ func (s *Session) insert(instance *data.Instance) {
 	result, err := s.Dbx.Exec(saveStr, values...)
 	if err != nil {
 		log.Println(err.Error())
-		log.Panic(err)
+		log.Panic(err.Error())
 	}
 
 	id, err := result.LastInsertId()
 	if err != nil {
 		log.Println(err.Error())
-		log.Panic(err)
+		log.Panic(err.Error())
 	}
 
 	instance.Inserted(uint64(id))
 }
 
 func (s *Session) update(instance *data.Instance) (interface{}, error) {
-
+	oldInstanceData := s.QueryOneEntityById(instance.Entity, instance.Id)
 	sqlBuilder := dialect.GetSQLBuilder()
 	//在本方存的关联
 	columnAssocs := instance.ColumnAssociations()
@@ -72,8 +72,44 @@ func (s *Session) update(instance *data.Instance) (interface{}, error) {
 		log.Panic("Update data failed:", err.Error())
 	}
 
-	for _, ref := range instance.Associations {
-		s.doSaveAssociation(ref, instance.Id)
+	//本方关联类进一步处理其下级关联
+	for _, assocRef := range instance.ColumnAssociations() {
+		//如果级联，删除旧数据
+		if assocRef.Cascade() && oldInstanceData != nil {
+			//旧ID
+			oldId := oldInstanceData.(map[string]interface{})[assocRef.Association.Name()]
+			//新ID
+			newId := assocRef.AssociatedId()
+
+			if newId != nil && oldId != newId {
+				s.DeleteInstance(data.NewInstance(map[string]interface{}{"id": oldId}, assocRef.TypeEntity()))
+			}
+		}
+
+		for _, toAdd := range assocRef.Added {
+			if toAdd.IsEmperty() {
+				s.update(toAdd)
+			}
+
+		}
+
+		for _, toSync := range assocRef.Synced {
+			s.update(toSync)
+		}
+
+		for _, toUpdated := range assocRef.Updated {
+			s.update(toUpdated)
+		}
+	}
+
+	//对方存的关联
+	for _, assocRef := range instance.TargetColumnAssociations() {
+		s.saveTargetAssociation(assocRef, instance.Id)
+	}
+
+	//中间表存的关联
+	for _, assocRef := range instance.PovitAssociations() {
+		s.savePovitAssociation(assocRef, instance.Id)
 	}
 
 	savedObject := s.QueryOneEntityById(instance.Entity, instance.Id)
@@ -81,7 +117,7 @@ func (s *Session) update(instance *data.Instance) (interface{}, error) {
 	return savedObject, nil
 }
 
-func newAssociationPovit(r *data.Reference, ownerId uint64, tarId uint64) *data.AssociationPovit {
+func newAssociationPovit(r *data.AssociationRef, ownerId uint64, tarId uint64) *data.AssociationPovit {
 	sourceId := ownerId
 	targetId := tarId
 
@@ -94,19 +130,22 @@ func newAssociationPovit(r *data.Reference, ownerId uint64, tarId uint64) *data.
 
 }
 
-func (s *Session) saveAssociationInstance(ins *data.Instance) (interface{}, error) {
+func (s *Session) saveAssociationInstance(ins *data.Instance) interface{} {
 	targetData := InsanceData{consts.ID: ins.Id}
 
 	saved, err := s.SaveOne(ins)
 	if err != nil {
-		return nil, err
+		log.Panic(err.Error())
 	}
 	targetData = saved.(InsanceData)
 
-	return targetData, nil
+	return targetData
 }
 
-func (s *Session) doSaveAssociation(r *data.AssociationRef, ownerId uint64) error {
+func (s *Session) saveTargetAssociation(r *data.AssociationRef, ownerId uint64) {
+}
+
+func (s *Session) savePovitAssociation(r *data.AssociationRef, ownerId uint64) {
 
 	for _, ins := range r.Deleted() {
 		if r.Cascade() {
@@ -118,18 +157,14 @@ func (s *Session) doSaveAssociation(r *data.AssociationRef, ownerId uint64) erro
 	}
 
 	for _, ins := range r.Added() {
-		targetData, err := s.saveAssociationInstance(ins)
+		targetData := s.saveAssociationInstance(ins)
 
-		if err != nil {
-			panic("Save Association error:" + err.Error())
+		if savedIns, ok := targetData.(InsanceData); ok {
+			tarId := savedIns[consts.ID].(uint64)
+			relationInstance := newAssociationPovit(r, ownerId, tarId)
+			s.SaveAssociationPovit(relationInstance)
 		} else {
-			if savedIns, ok := targetData.(InsanceData); ok {
-				tarId := savedIns[consts.ID].(uint64)
-				relationInstance := newAssociationPovit(r, ownerId, tarId)
-				s.SaveAssociationPovit(relationInstance)
-			} else {
-				panic("Save Association error")
-			}
+			panic("Save Association error")
 		}
 
 	}
