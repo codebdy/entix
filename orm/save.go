@@ -2,6 +2,7 @@ package orm
 
 import (
 	"fmt"
+	"log"
 
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/db/dialect"
@@ -36,7 +37,22 @@ func (s *Session) preInsert(instance *data.Instance) {
 }
 
 func (s *Session) doInsert(instance *data.Instance) {
+	sqlBuilder := dialect.GetSQLBuilder()
+	saveStr := sqlBuilder.BuildInsertSQL(instance.Fields, instance.Table())
+	values := makeSaveValues(instance.Fields)
+	result, err := s.Dbx.Exec(saveStr, values...)
+	if err != nil {
+		log.Println(err.Error())
+		log.Panic(err)
+	}
 
+	id, err := result.LastInsertId()
+	if err != nil {
+		log.Println(err.Error())
+		log.Panic(err)
+	}
+
+	instance.Inserted(uint64(id))
 }
 
 func (s *Session) InsertOne(instance *data.Instance) (interface{}, error) {

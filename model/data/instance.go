@@ -63,6 +63,12 @@ func NewInstance(object map[string]interface{}, entity *graph.Entity) *Instance 
 	return &instance
 }
 
+//清空其它字段，保留ID跟关系，供二次保存使用
+func (ins *Instance) Inserted(id uint64) {
+	ins.Id = id
+	ins.Fields = []*Field{}
+}
+
 func (ins *Instance) AsInsert(isInsert bool) {
 	ins.isInsert = isInsert
 }
