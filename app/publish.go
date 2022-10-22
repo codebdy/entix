@@ -4,6 +4,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/mitchellh/mapstructure"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/model/meta"
@@ -28,8 +29,17 @@ func (a *App) Publish() {
 
 	appMap := appData.(map[string]interface{})
 
-	nextMeta := appMap["meta"].(meta.MetaContent)
-	oldMeta := appMap["publishedMeta"].(meta.MetaContent)
+	nextMeta := meta.MetaContent{}
+	err := mapstructure.Decode(appMap["meta"], &nextMeta)
+	if err != nil {
+		log.Println(err.Error())
+	}
+	oldMeta := meta.MetaContent{}
+	err = mapstructure.Decode(appMap["publishedMeta"], &oldMeta)
+	if err != nil {
+		log.Println(err.Error())
+	}
+
 	PublishMeta(a.MergeModel(&oldMeta), a.MergeModel(&nextMeta), a.AppId)
 
 	appMap["publishedMeta"] = appMap["meta"]
@@ -39,7 +49,7 @@ func (a *App) Publish() {
 		entity,
 	)
 
-	_, err := service.SaveOne(instance)
+	_, err = service.SaveOne(instance)
 
 	if err != nil {
 		log.Panic(err.Error())
