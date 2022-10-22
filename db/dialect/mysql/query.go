@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
 	"rxdrag.com/entify/consts"
@@ -284,7 +285,7 @@ func (b *MySQLBuilder) BuildQueryByIdsSQL(entity *graph.Entity, idCounts int) st
 		strings.Join(parms, ","),
 	)
 
-	fmt.Println("BuildQueryByIdsSQL:", queryStr)
+	log.Println("BuildQueryByIdsSQL:", queryStr)
 	return queryStr
 }
 
@@ -304,7 +305,7 @@ func (b *MySQLBuilder) BuildQueryAssociatedInstancesSQL(
 		ownerFieldName,
 		ownerId)
 
-	fmt.Println("BuildQueryAssociatedInstancesSQL:", queryStr)
+	log.Println("BuildQueryAssociatedInstancesSQL:", queryStr)
 	return queryStr
 }
 

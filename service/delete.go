@@ -1,7 +1,7 @@
 package service
 
 import (
-	"fmt"
+	"log"
 
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/orm"
@@ -10,12 +10,12 @@ import (
 func DeleteInstances(instances []*data.Instance) (interface{}, error) {
 	session, err := orm.Open()
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		return nil, err
 	}
 	err = session.BeginTx()
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		return nil, err
 	}
 	defer session.ClearTx()
@@ -30,7 +30,7 @@ func DeleteInstances(instances []*data.Instance) (interface{}, error) {
 
 	err = session.Dbx.Commit()
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		return nil, err
 	}
 
@@ -40,12 +40,12 @@ func DeleteInstances(instances []*data.Instance) (interface{}, error) {
 func DeleteInstance(instance *data.Instance) (interface{}, error) {
 	session, err := orm.Open()
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		return nil, err
 	}
 	err = session.BeginTx()
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		return nil, err
 	}
 	defer session.ClearTx()
@@ -53,7 +53,7 @@ func DeleteInstance(instance *data.Instance) (interface{}, error) {
 
 	err = session.Dbx.Commit()
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		return nil, err
 	}
 	return instance.Id, nil

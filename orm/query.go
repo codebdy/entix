@@ -3,6 +3,7 @@ package orm
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"strings"
 
 	"rxdrag.com/entify/consts"
@@ -147,7 +148,7 @@ func (con *Session) QueryInterface(intf *graph.Interface, args map[string]interf
 
 func (con *Session) QueryEntity(entity *graph.Entity, args map[string]interface{}) map[string]interface{} {
 	sqlStr, params := con.buildQueryEntityRecordsSQL(entity, args)
-	fmt.Println("doQueryEntity SQL:", sqlStr, params)
+	log.Println("doQueryEntity SQL:", sqlStr, params)
 	rows, err := con.Dbx.Query(sqlStr, params...)
 	defer rows.Close()
 	if err != nil {
@@ -164,7 +165,7 @@ func (con *Session) QueryEntity(entity *graph.Entity, args map[string]interface{
 	}
 
 	sqlStr, params = con.buildQueryEntityCountSQL(entity, args)
-	fmt.Println("doQueryEntity count SQL:", sqlStr, params)
+	log.Println("doQueryEntity count SQL:", sqlStr, params)
 	count := 0
 	err = con.Dbx.QueryRow(sqlStr, params...).Scan(&count)
 	switch {
@@ -219,7 +220,7 @@ func (con *Session) QueryOneEntity(entity *graph.Entity, args map[string]interfa
 	queryStr, params := con.buildQueryEntityRecordsSQL(entity, args)
 
 	values := makeEntityQueryValues(entity)
-	fmt.Println("doQueryOneEntity SQL:", queryStr)
+	log.Println("doQueryOneEntity SQL:", queryStr)
 	err := con.Dbx.QueryRow(queryStr, params...).Scan(values...)
 	switch {
 	case err == sql.ErrNoRows:
@@ -309,7 +310,7 @@ func (con *Session) BatchRealAssociations(
 	}
 
 	queryStr = queryStr + builder.BuildOrderBySQL(argEntity, args[consts.ARG_ORDERBY])
-	fmt.Println("doBatchRealAssociations SQL:	", queryStr)
+	log.Println("doBatchRealAssociations SQL:	", queryStr)
 	rows, err := con.Dbx.Query(queryStr, paramsList...)
 	defer rows.Close()
 	if err != nil {

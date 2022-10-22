@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
 	"rxdrag.com/entify/consts"
@@ -38,7 +39,7 @@ func (b *MySQLBuilder) BuildCreateTableSQL(table *table.Table) string {
 	}
 
 	sql = fmt.Sprintf(sql, table.Name, strings.Join(fieldSqls, ","))
-	fmt.Println("Create table sql:", sql)
+	log.Println("Create table sql:", sql)
 
 	if table.EntityInnerId > 0 {
 		sql = sql + fmt.Sprintf(" AUTO_INCREMENT = %d", utils.EncodeBaseId(table.EntityInnerId, table.IdNoShift))

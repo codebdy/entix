@@ -3,7 +3,7 @@ package authentication
 import (
 	"database/sql"
 	"errors"
-	"fmt"
+	"log"
 
 	"golang.org/x/crypto/bcrypt"
 	"rxdrag.com/entify/authentication/jwt"
@@ -25,7 +25,7 @@ func New() *Authentication {
 func (a *Authentication) loadUser(loginName string) *auth.User {
 	session, err := orm.Open()
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		panic(err)
 	}
 	var user auth.User
@@ -68,20 +68,20 @@ func (a *Authentication) loadUser(loginName string) *auth.User {
 func (a *Authentication) CheckPassword(loginName, pwd string) (bool, error) {
 	session, err := orm.Open()
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		panic(err)
 	}
 	sqlBuilder := dialect.GetSQLBuilder()
 	var password string
 	err = session.Dbx.QueryRow(sqlBuilder.BuildLoginSQL(), loginName).Scan(&password)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return false, errors.New("Login failed!")
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(password), []byte(pwd)) //验证（对比）
 	if err != nil {
-		fmt.Println(err, pwd, password)
+		log.Println(err, pwd, password)
 		return false, errors.New("Password error!")
 	}
 
@@ -114,7 +114,7 @@ func (a *Authentication) ChangePassword(loginName, oldPassword, newPassword stri
 
 	session, err := orm.Open()
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		panic(err)
 	}
 	sqlBuilder := dialect.GetSQLBuilder()
@@ -124,7 +124,7 @@ func (a *Authentication) ChangePassword(loginName, oldPassword, newPassword stri
 		loginName,
 	)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return "", errors.New("Login failed!")
 	}
 

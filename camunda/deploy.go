@@ -3,6 +3,7 @@ package camunda
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/camunda/zeebe/clients/go/v8/pkg/zbc"
 	"rxdrag.com/entify/config"
@@ -24,7 +25,7 @@ func DeployProcess(xml string, id uint64) {
 		panic(err)
 	}
 	processId := response.Deployments[0].GetProcess().BpmnProcessId
-	fmt.Println(response.String())
+	log.Println(response.String())
 
 	// After the process is deployed.
 	variables := make(map[string]interface{})
@@ -40,5 +41,5 @@ func DeployProcess(xml string, id uint64) {
 		panic(err)
 	}
 
-	fmt.Println(msg.String())
+	log.Println(msg.String())
 }

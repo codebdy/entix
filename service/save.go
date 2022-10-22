@@ -1,7 +1,7 @@
 package service
 
 import (
-	"fmt"
+	"log"
 
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/orm"
@@ -10,13 +10,13 @@ import (
 func Save(instances []*data.Instance) ([]interface{}, error) {
 	session, err := orm.Open()
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		return nil, err
 	}
 	err = session.BeginTx()
 	defer session.ClearTx()
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		session.Dbx.Rollback()
 		return nil, err
 	}
@@ -25,7 +25,7 @@ func Save(instances []*data.Instance) ([]interface{}, error) {
 	for i := range instances {
 		obj, err := session.SaveOne(instances[i])
 		if err != nil {
-			fmt.Println(err.Error())
+			log.Println(err.Error())
 			session.Dbx.Rollback()
 			return nil, err
 		}
@@ -35,7 +35,7 @@ func Save(instances []*data.Instance) ([]interface{}, error) {
 
 	err = session.Commit()
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		return nil, err
 	}
 
@@ -45,25 +45,25 @@ func Save(instances []*data.Instance) ([]interface{}, error) {
 func SaveOne(instance *data.Instance) (interface{}, error) {
 	session, err := orm.Open()
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		return nil, err
 	}
 	err = session.BeginTx()
 	defer session.ClearTx()
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		return nil, err
 	}
 
 	obj, err := session.SaveOne(instance)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		session.Dbx.Rollback()
 		return nil, err
 	}
 	err = session.Commit()
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		return nil, err
 	}
 	return obj, nil

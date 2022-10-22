@@ -2,8 +2,8 @@ package script
 
 import (
 	"bytes"
-	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -21,7 +21,7 @@ func FetchFn(url string, options map[string]interface{}) string {
 	req, err := http.NewRequest(method, url, bytes.NewBuffer(reqBody))
 
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return ""
 	}
 	if options != nil && options["headers"] != nil {
@@ -35,14 +35,14 @@ func FetchFn(url string, options map[string]interface{}) string {
 
 	res, err := client.Do(req)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return ""
 	}
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return ""
 	}
 	return string(body)

@@ -160,7 +160,7 @@
           "system": true
         },
         {
-          "uuid": "APP_COLUMN_CREATED_AT_UUID",
+          "uuid": "APP_COLUMN_UPDATED_AT_UUID",
           "type": "Date",
           "primary": false,
           "name": "updatedAt",

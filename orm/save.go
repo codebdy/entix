@@ -1,7 +1,6 @@
 package orm
 
 import (
-	"fmt"
 	"log"
 
 	"rxdrag.com/entify/consts"
@@ -57,7 +56,7 @@ func (con *Session) updateOne(instance *data.Instance) (interface{}, error) {
 
 	saveStr := sqlBuilder.BuildUpdateSQL(instance.Id, instance.Fields, instance.Table())
 	values := makeFieldValues(instance.Fields)
-	fmt.Println(saveStr)
+	log.Println(saveStr)
 	_, err := con.Dbx.Exec(saveStr, values...)
 	if err != nil {
 		log.Println("Update data failed:", err.Error())

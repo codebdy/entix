@@ -110,7 +110,7 @@ var AppClass = ClassMeta{
 			Type:       DATE,
 			TypeLabel:  DATE,
 			UpdateDate: true,
-			Uuid:       "APP_COLUMN_CREATED_AT_UUID",
+			Uuid:       "APP_COLUMN_UPDATEED_AT_UUID",
 			System:     true,
 			Nullable:   true,
 		},

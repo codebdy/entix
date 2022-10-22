@@ -2,6 +2,7 @@ package storage
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/artdarek/go-unzip"
 	"rxdrag.com/entify/consts"
@@ -12,7 +13,7 @@ func Unzip(src, dest string) error {
 	uz := unzip.New(staticPath+src, staticPath+dest)
 	err := uz.Extract()
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return err
 	}
 
