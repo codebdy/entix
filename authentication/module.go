@@ -7,9 +7,9 @@ import (
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/app"
 	"rxdrag.com/entify/consts"
-	"rxdrag.com/entify/entry"
 	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/orm"
+	"rxdrag.com/entify/register"
 )
 
 type AuthenticationModule struct {
@@ -52,5 +52,5 @@ func (m *AuthenticationModule) Middlewares() []func(next http.Handler) http.Hand
 }
 
 func init() {
-	entry.AddModuler(&AuthenticationModule{})
+	register.AddModuler(&AuthenticationModule{})
 }

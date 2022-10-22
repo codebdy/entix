@@ -9,7 +9,7 @@ import (
 	"rxdrag.com/entify/app"
 	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/consts"
-	"rxdrag.com/entify/entry"
+	"rxdrag.com/entify/register"
 )
 
 type PublishModule struct {
@@ -67,5 +67,5 @@ func (m *PublishModule) Middlewares() []func(next http.Handler) http.Handler {
 }
 
 func init() {
-	entry.AddModuler(&PublishModule{})
+	register.AddModuler(&PublishModule{})
 }

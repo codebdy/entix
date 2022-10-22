@@ -7,7 +7,7 @@ import (
 
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/common/contexts"
-	"rxdrag.com/entify/entry"
+	"rxdrag.com/entify/register"
 )
 
 type AppModule struct {
@@ -74,5 +74,5 @@ func (m *AppModule) Middlewares() []func(next http.Handler) http.Handler {
 }
 
 func init() {
-	entry.AddModuler(&AppModule{})
+	register.AddModuler(&AppModule{})
 }

@@ -1,4 +1,4 @@
-package entry
+package register
 
 import (
 	"context"

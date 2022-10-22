@@ -13,10 +13,10 @@ import (
 	"rxdrag.com/entify/config"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/db"
-	"rxdrag.com/entify/entry"
 	"rxdrag.com/entify/handler"
 	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/orm"
+	"rxdrag.com/entify/register"
 
 	_ "rxdrag.com/entify/app"
 	_ "rxdrag.com/entify/authentication"
@@ -70,7 +70,7 @@ func main() {
 	http.Handle("/graphql",
 		middlewares.CorsMiddleware(
 			middlewares.ContextMiddleware(
-				entry.AppendMiddlewares(h),
+				register.AppendMiddlewares(h),
 			),
 		),
 	)

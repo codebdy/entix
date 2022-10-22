@@ -14,7 +14,7 @@ import (
 	"github.com/graphql-go/graphql/gqlerrors"
 	"github.com/mitchellh/mapstructure"
 	"rxdrag.com/entify/common/contexts"
-	"rxdrag.com/entify/entry"
+	"rxdrag.com/entify/register"
 	"rxdrag.com/entify/storage"
 )
 
@@ -217,7 +217,7 @@ func (h *Handler) ContextHandler(ctx context.Context, w http.ResponseWriter, r *
 	// execute graphql query
 
 	params := graphql.Params{
-		Schema:         entry.GetSchema(ctx),
+		Schema:         register.GetSchema(ctx),
 		RequestString:  opts.Query,
 		VariableValues: opts.Variables,
 		OperationName:  opts.OperationName,
