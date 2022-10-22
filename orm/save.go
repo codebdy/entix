@@ -12,7 +12,7 @@ func (con *Session) SaveOne(instance *data.Instance) (interface{}, error) {
 	if instance.IsInsert() {
 		return con.InsertOne(instance)
 	} else {
-		return con.doUpdateOne(instance)
+		return con.UpdateOne(instance)
 	}
 }
 
@@ -50,7 +50,7 @@ func (con *Session) InsertOne(instance *data.Instance) (interface{}, error) {
 	return savedObject, nil
 }
 
-func (con *Session) doUpdateOne(instance *data.Instance) (interface{}, error) {
+func (con *Session) UpdateOne(instance *data.Instance) (interface{}, error) {
 
 	sqlBuilder := dialect.GetSQLBuilder()
 	columnAssocs := instance.ColumnAssociations()
