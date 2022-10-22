@@ -5,21 +5,6 @@
       "name": "$inline:{\"zh-CN\":\"系统\",\"en-US\":\"System\"}",
       "system": true,
       "stereoType": ""
-    },
-    {
-      "name": "$inline:{\"zh-CN\":\"工作流\",\"en-US\":\"Processes\"}",
-      "sharable": true,
-      "uuid": "bebc8345-a0e4-41ed-8743-93c00604260c"
-    },
-    {
-      "name": "$inline:{\"zh-CN\":\"Camunda\"}",
-      "stereoType": "ThirdParty",
-      "uuid": "f7624c29-88cc-44de-a108-94af9f54d4e4"
-    },
-    {
-      "name": "$inline:{\"zh-CN\":\"辅助\"}",
-      "stereoType": "Normal",
-      "uuid": "8ff26c85-bd4c-49fa-9c9f-c2a736767936"
     }
   ],
   "classes": [
