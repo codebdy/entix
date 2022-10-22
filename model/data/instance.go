@@ -69,8 +69,9 @@ func (ins *Instance) Inserted(id uint64) {
 	ins.Fields = []*Field{}
 }
 
-func (ins *Instance) AsInsert(isInsert bool) {
-	ins.isInsert = isInsert
+//有ID也当插入来处理
+func (ins *Instance) AsInsert() {
+	ins.isInsert = true
 }
 
 func (ins *Instance) IsInsert() bool {

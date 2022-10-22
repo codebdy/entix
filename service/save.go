@@ -70,30 +70,6 @@ func SaveOne(instance *data.Instance) (interface{}, error) {
 }
 
 func InsertOne(instance *data.Instance) (interface{}, error) {
-	session, err := orm.Open()
-	if err != nil {
-		fmt.Println(err.Error())
-		return nil, err
-	}
-	session.BeginTx()
-	defer session.ClearTx()
-	if err != nil {
-		fmt.Println(err.Error())
-		session.Dbx.Rollback()
-		return nil, err
-	}
-
-	obj, err := session.InsertOne(instance)
-	if err != nil {
-		fmt.Println(err.Error())
-		session.Dbx.Rollback()
-		return nil, err
-	}
-	err = session.Commit()
-	if err != nil {
-		fmt.Println(err.Error())
-		session.Dbx.Rollback()
-		return nil, err
-	}
-	return obj, nil
+	instance.AsInsert()
+	return SaveOne(instance)
 }
