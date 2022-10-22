@@ -98,7 +98,7 @@ func (ins *Instance) ColumnAssociations() []*AssociationRef {
 
 	for i := range ins.Associations {
 		assoc := ins.Associations[i]
-		if assoc.Association.IsColumn() {
+		if assoc.Association.IsColumn() && !assoc.IsEmperty() {
 			assocs = append(assocs, assoc)
 		}
 	}
@@ -110,7 +110,7 @@ func (ins *Instance) PovitAssociations() []*AssociationRef {
 
 	for i := range ins.Associations {
 		assoc := ins.Associations[i]
-		if assoc.Association.IsPovitTable() {
+		if assoc.Association.IsPovitTable() && !assoc.IsEmperty() {
 			assocs = append(assocs, assoc)
 		}
 	}
@@ -122,7 +122,7 @@ func (ins *Instance) TargetColumnAssociations() []*AssociationRef {
 
 	for i := range ins.Associations {
 		assoc := ins.Associations[i]
-		if assoc.Association.IsTargetColumn() {
+		if assoc.Association.IsTargetColumn() && !assoc.IsEmperty() {
 			assocs = append(assocs, assoc)
 		}
 	}

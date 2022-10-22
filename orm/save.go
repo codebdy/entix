@@ -61,14 +61,15 @@ func (s *Session) insert(instance *data.Instance) {
 func (s *Session) update(instance *data.Instance) (interface{}, error) {
 
 	sqlBuilder := dialect.GetSQLBuilder()
+	//在本方存的关联
 	columnAssocs := instance.ColumnAssociations()
 	saveStr := sqlBuilder.BuildUpdateSQL(instance.Id, instance.Fields, columnAssocs, instance.Table())
 	values := makeFieldValues(instance.Fields)
+	values = append(values, makeAssociationValues(columnAssocs))
 	fmt.Println(saveStr)
 	_, err := s.Dbx.Exec(saveStr, values...)
 	if err != nil {
-		fmt.Println("Update data failed:", err.Error())
-		return nil, err
+		log.Panic("Update data failed:", err.Error())
 	}
 
 	for _, ref := range instance.Associations {

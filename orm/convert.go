@@ -16,7 +16,7 @@ import (
 
 func makeFieldValues(fields []*data.Field) []interface{} {
 	objValues := make([]interface{}, 0, len(fields))
-	for _, field := range fields {
+	for i, field := range fields {
 		value := field.Value
 		column := field.Column
 
@@ -43,9 +43,17 @@ func makeFieldValues(fields []*data.Field) []interface{} {
 			}
 			value = jsonString
 		}
-		objValues = append(objValues, value)
+		objValues[i] = value
 	}
 
+	return objValues
+}
+
+func makeAssociationValues(assocs []*data.AssociationRef) []interface{} {
+	objValues := make([]interface{}, 0, len(assocs))
+	for i, assoc := range assocs {
+		objValues[i] = assoc.AssociatedId()
+	}
 	return objValues
 }
 
