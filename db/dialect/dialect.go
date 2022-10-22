@@ -36,7 +36,7 @@ type SQLBuilder interface {
 	//BuildQuerySQL(tableName string, fields []*graph.Attribute, args map[string]interface{}) (string, []interface{})
 
 	BuildInsertSQL(fields []*data.Field, table *table.Table) string
-	BuildUpdateSQL(id uint64, fields []*data.Field, table *table.Table) string
+	BuildUpdateSQL(id uint64, fields []*data.Field, assocs []*data.Reference, table *table.Table) string
 
 	BuildQueryByIdsSQL(entity *graph.Entity, idCounts int) string
 	BuildClearAssociationSQL(ownerId uint64, tableName string, ownerFieldName string) string

@@ -8,7 +8,7 @@ import (
 	"rxdrag.com/entify/model/table"
 )
 
-func (b *MySQLBuilder) BuildUpdateSQL(id uint64, fields []*data.Field, table *table.Table) string {
+func (b *MySQLBuilder) BuildUpdateSQL(id uint64, fields []*data.Field, assocs []*data.Reference, table *table.Table) string {
 	sql := fmt.Sprintf(
 		"UPDATE `%s` SET %s WHERE ID = %d",
 		table.Name,
