@@ -7,10 +7,32 @@ import (
 	"rxdrag.com/entify/model/table"
 )
 
-//没有继承关系的关联
-type Reference struct {
+type AssociationRef struct {
 	Association *graph.Association
-	Value       map[string]interface{}
+	Added       []*Instance
+	Deleted     []*Instance
+	Updated     []*Instance
+	Synced      []*Instance
+	Cascade     bool
+}
+
+func NewAssociation(value map[string]interface{}, assoc *graph.Association) *AssociationRef {
+	AssociationRef := AssociationRef{
+		Association: assoc,
+	}
+
+	AssociationRef.init(value)
+	return &AssociationRef
+}
+
+func (r *AssociationRef) init(value map[string]interface{}) {
+	r.Deleted = r.convertToInstances(value[consts.ARG_DELETE])
+	r.Added = r.convertToInstances(value[consts.ARG_ADD])
+	r.Updated = r.convertToInstances(value[consts.ARG_UPDATE])
+	r.Synced = r.convertToInstances(value[consts.ARG_SYNC])
+	if value[consts.ARG_CASCADE] != nil {
+		r.Cascade = value[consts.ARG_CASCADE].(bool)
+	}
 }
 
 func doConvertToInstances(data interface{}, isArray bool, entity *graph.Entity) []*Instance {
@@ -30,34 +52,11 @@ func doConvertToInstances(data interface{}, isArray bool, entity *graph.Entity) 
 	return instances
 }
 
-func (r *Reference) convertToInstances(data interface{}) []*Instance {
+func (r *AssociationRef) convertToInstances(data interface{}) []*Instance {
 	return doConvertToInstances(data, r.Association.IsArray(), r.TypeEntity())
 }
 
-func (r *Reference) Deleted() []*Instance {
-	return r.convertToInstances(r.Value[consts.ARG_DELETE])
-}
-
-func (r *Reference) Added() []*Instance {
-	return r.convertToInstances(r.Value[consts.ARG_ADD])
-}
-
-func (r *Reference) Updated() []*Instance {
-	return r.convertToInstances(r.Value[consts.ARG_UPDATE])
-}
-
-func (r *Reference) Synced() []*Instance {
-	return r.convertToInstances(r.Value[consts.ARG_SYNC])
-}
-
-func (r *Reference) Cascade() bool {
-	if r.Value[consts.ARG_CASCADE] != nil {
-		return r.Value[consts.ARG_CASCADE].(bool)
-	}
-	return false
-}
-
-func (r *Reference) SourceColumn() *table.Column {
+func (r *AssociationRef) SourceColumn() *table.Column {
 	for i := range r.Association.Relation.Table.Columns {
 		column := r.Association.Relation.Table.Columns[i]
 		if column.Name == r.Association.Relation.SourceEntity.TableName() {
@@ -67,7 +66,7 @@ func (r *Reference) SourceColumn() *table.Column {
 	return nil
 }
 
-func (r *Reference) TargetColumn() *table.Column {
+func (r *AssociationRef) TargetColumn() *table.Column {
 	for i := range r.Association.Relation.Table.Columns {
 		column := r.Association.Relation.Table.Columns[i]
 		if column.Name == r.Association.Relation.TargetEntity.TableName() {
@@ -77,22 +76,22 @@ func (r *Reference) TargetColumn() *table.Column {
 	return nil
 }
 
-func (r *Reference) Table() *table.Table {
+func (r *AssociationRef) Table() *table.Table {
 	return r.Association.Relation.Table
 }
 
-func (r *Reference) IsSource() bool {
+func (r *AssociationRef) IsSource() bool {
 	return r.Association.IsSource()
 }
 
-func (r *Reference) OwnerColumn() *table.Column {
+func (r *AssociationRef) OwnerColumn() *table.Column {
 	if r.IsSource() {
 		return r.SourceColumn()
 	} else {
 		return r.TargetColumn()
 	}
 }
-func (r *Reference) TypeColumn() *table.Column {
+func (r *AssociationRef) TypeColumn() *table.Column {
 	if !r.IsSource() {
 		return r.SourceColumn()
 	} else {
@@ -100,7 +99,7 @@ func (r *Reference) TypeColumn() *table.Column {
 	}
 }
 
-func (r *Reference) TypeEntity() *graph.Entity {
+func (r *AssociationRef) TypeEntity() *graph.Entity {
 	entity := r.Association.TypeEntity()
 	if entity != nil {
 		return entity
@@ -109,7 +108,7 @@ func (r *Reference) TypeEntity() *graph.Entity {
 	panic("Can not find reference entity")
 }
 
-func (r *Reference) IsCombination() bool {
+func (r *AssociationRef) IsCombination() bool {
 	return r.IsSource() &&
 		(r.Association.Relation.RelationType == meta.TWO_WAY_COMBINATION ||
 			r.Association.Relation.RelationType == meta.ONE_WAY_COMBINATION)

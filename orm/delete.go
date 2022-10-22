@@ -9,7 +9,7 @@ import (
 
 type InsanceData = map[string]interface{}
 
-func (con *Session) clearAssociation(r *data.Reference, ownerId uint64) {
+func (con *Session) clearAssociation(r *data.AssociationRef, ownerId uint64) {
 	con.deleteAssociationPovit(r, ownerId)
 
 	if r.IsCombination() {
@@ -17,7 +17,7 @@ func (con *Session) clearAssociation(r *data.Reference, ownerId uint64) {
 	}
 }
 
-func (con *Session) deleteAssociationPovit(r *data.Reference, ownerId uint64) {
+func (con *Session) deleteAssociationPovit(r *data.AssociationRef, ownerId uint64) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	sql := sqlBuilder.BuildClearAssociationSQL(ownerId, r.Table().Name, r.OwnerColumn().Name)
 	_, err := con.Dbx.Exec(sql)
@@ -27,7 +27,7 @@ func (con *Session) deleteAssociationPovit(r *data.Reference, ownerId uint64) {
 	}
 }
 
-func (con *Session) deleteAssociatedInstances(r *data.Reference, ownerId uint64) {
+func (con *Session) deleteAssociatedInstances(r *data.AssociationRef, ownerId uint64) {
 	typeEntity := r.TypeEntity()
 	associatedInstances := con.QueryAssociatedInstances(r, ownerId)
 	for i := range associatedInstances {

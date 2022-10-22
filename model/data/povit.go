@@ -8,10 +8,10 @@ type AssociationPovit struct {
 	Source *Field
 	Target *Field
 	//Fields      []*Field
-	Association *Reference
+	Association *AssociationRef
 }
 
-func NewAssociationPovit(association *Reference, sourceId uint64, targetId uint64) *AssociationPovit {
+func NewAssociationPovit(association *AssociationRef, sourceId uint64, targetId uint64) *AssociationPovit {
 	sourceColumn := association.SourceColumn()
 	targetColumn := association.TargetColumn()
 	povit := AssociationPovit{

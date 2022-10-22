@@ -19,8 +19,9 @@ type Instance struct {
 	Id           uint64
 	Entity       *graph.Entity
 	Fields       []*Field
-	Associations []*Reference
+	Associations []*AssociationRef
 	IsEmperty    bool
+	isInsert     bool
 }
 
 func NewInstance(object map[string]interface{}, entity *graph.Entity) *Instance {
@@ -55,17 +56,21 @@ func NewInstance(object map[string]interface{}, entity *graph.Entity) *Instance 
 		asso := allAssociation[i]
 		value := object[asso.Name()]
 		if value != nil {
-			ref := Reference{
-				Association: asso,
-				Value:       value.(map[string]interface{}),
-			}
-			instance.Associations = append(instance.Associations, &ref)
+			ref := NewAssociation(value.(map[string]interface{}), asso)
+			instance.Associations = append(instance.Associations, ref)
 		}
 	}
 	return &instance
 }
 
+func (ins *Instance) AsInsert(isInsert bool) {
+	ins.isInsert = isInsert
+}
+
 func (ins *Instance) IsInsert() bool {
+	if ins.isInsert {
+		return true
+	}
 	for i := range ins.Fields {
 		field := ins.Fields[i]
 		if field.Column.Name == consts.ID {
@@ -81,8 +86,8 @@ func (ins *Instance) Table() *table.Table {
 	return ins.Entity.Table
 }
 
-func (ins *Instance) ColumnAssociations() []*Reference {
-	assocs := []*Reference{}
+func (ins *Instance) ColumnAssociations() []*AssociationRef {
+	assocs := []*AssociationRef{}
 
 	for i := range ins.Associations {
 		assoc := ins.Associations[i]
@@ -93,8 +98,8 @@ func (ins *Instance) ColumnAssociations() []*Reference {
 	return assocs
 }
 
-func (ins *Instance) PovitAssociations() []*Reference {
-	assocs := []*Reference{}
+func (ins *Instance) PovitAssociations() []*AssociationRef {
+	assocs := []*AssociationRef{}
 
 	for i := range ins.Associations {
 		assoc := ins.Associations[i]
@@ -105,8 +110,8 @@ func (ins *Instance) PovitAssociations() []*Reference {
 	return assocs
 }
 
-func (ins *Instance) TargetColumnAssociations() []*Reference {
-	assocs := []*Reference{}
+func (ins *Instance) TargetColumnAssociations() []*AssociationRef {
+	assocs := []*AssociationRef{}
 
 	for i := range ins.Associations {
 		assoc := ins.Associations[i]

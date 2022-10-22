@@ -231,7 +231,7 @@ func (con *Session) QueryOneEntity(entity *graph.Entity, args map[string]interfa
 	return convertValuesToEntity(values, entity)
 }
 
-func (con *Session) QueryAssociatedInstances(r *data.Reference, ownerId uint64) []InsanceData {
+func (con *Session) QueryAssociatedInstances(r *data.AssociationRef, ownerId uint64) []InsanceData {
 	var instances []InsanceData
 	builder := dialect.GetSQLBuilder()
 	entity := r.TypeEntity()
