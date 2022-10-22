@@ -1,7 +1,9 @@
 package mysql
 
 import (
+	"errors"
 	"fmt"
+	"log"
 	"strings"
 
 	"rxdrag.com/entify/model/data"
@@ -12,20 +14,25 @@ func (b *MySQLBuilder) BuildUpdateSQL(id uint64, fields []*data.Field, assocs []
 	sql := fmt.Sprintf(
 		"UPDATE `%s` SET %s WHERE ID = %d",
 		table.Name,
-		updateSetFields(fields),
+		updateSetFields(fields, assocs),
 		id,
 	)
 
 	return sql
 }
 
-func updateSetFields(fields []*data.Field) string {
-	if len(fields) == 0 {
-		panic("No update fields")
+func updateSetFields(fields []*data.Field, assocs []*data.AssociationRef) string {
+	if len(fields) == 0 && len(assocs) == 0 {
+		log.Panic(errors.New("No update fields"))
 	}
-	newKeys := make([]string, len(fields))
+	fieldLen := len(fields)
+	columns := make([]string, fieldLen+len(assocs))
 	for i, field := range fields {
-		newKeys[i] = field.Column.Name + "=?"
+		columns[i] = field.Column.Name + "=?"
 	}
-	return strings.Join(newKeys, ",")
+
+	for i, assoc := range assocs {
+		columns[fieldLen+i] = assoc.OwnerColumn().Name + "=?"
+	}
+	return strings.Join(columns, ",")
 }
