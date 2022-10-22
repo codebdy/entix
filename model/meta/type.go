@@ -22,4 +22,5 @@ const (
 	VALUE_OBJECT_ARRAY string = "ValueObjectArray"
 	ENTITY_ARRAY       string = "EntityArray"
 	FILE               string = consts.FILE
+	Password           string = "Password"
 )
