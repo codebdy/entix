@@ -1,7 +1,7 @@
 package orm
 
 import (
-	"fmt"
+	"log"
 
 	"rxdrag.com/entify/db/dialect"
 	"rxdrag.com/entify/model/data"
@@ -17,37 +17,49 @@ func (con *Session) clearAssociation(r *data.AssociationRef, ownerId uint64) {
 	}
 }
 
-func (con *Session) deleteAssociationPovit(r *data.AssociationRef, ownerId uint64) {
+func (s *Session) deleteAssociationPovit(r *data.AssociationRef, ownerId uint64) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	//先检查是否有数据，如果有再删除，避免死锁
-
-	sql := sqlBuilder.BuildClearAssociationSQL(ownerId, r.Table().Name, r.OwnerColumn().Name)
-	_, err := con.Dbx.Exec(sql)
-	fmt.Println("deleteAssociationPovit SQL:" + sql)
+	sql := sqlBuilder.BuildCheckAssociationSQL(ownerId, r.Table().Name, r.OwnerColumn().Name)
+	rows, err := s.Dbx.Query(sql)
 	if err != nil {
-		panic(err.Error())
+		log.Println(err.Error())
+		return
+	} else {
+		var count int64
+		for rows.Next() {
+			rows.Scan(&count)
+		}
+		if count > 0 {
+			sql = sqlBuilder.BuildClearAssociationSQL(ownerId, r.Table().Name, r.OwnerColumn().Name)
+			_, err := s.Dbx.Exec(sql)
+			log.Println("deleteAssociationPovit SQL:" + sql)
+			if err != nil {
+				panic(err.Error())
+			}
+		}
 	}
 }
 
-func (con *Session) deleteAssociatedInstances(r *data.AssociationRef, ownerId uint64) {
+func (s *Session) deleteAssociatedInstances(r *data.AssociationRef, ownerId uint64) {
 	typeEntity := r.TypeEntity()
-	associatedInstances := con.QueryAssociatedInstances(r, ownerId)
+	associatedInstances := s.QueryAssociatedInstances(r, ownerId)
 	for i := range associatedInstances {
 		ins := data.NewInstance(associatedInstances[i], typeEntity)
-		con.DeleteInstance(ins)
+		s.DeleteInstance(ins)
 	}
 }
 
-func (con *Session) DeleteAssociationPovit(povit *data.AssociationPovit) {
+func (s *Session) DeleteAssociationPovit(povit *data.AssociationPovit) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	sql := sqlBuilder.BuildDeletePovitSQL(povit)
-	_, err := con.Dbx.Exec(sql)
+	_, err := s.Dbx.Exec(sql)
 	if err != nil {
 		panic(err.Error())
 	}
 }
 
-func (con *Session) DeleteInstance(instance *data.Instance) {
+func (s *Session) DeleteInstance(instance *data.Instance) {
 	var sql string
 	sqlBuilder := dialect.GetSQLBuilder()
 	tableName := instance.Table().Name
@@ -57,7 +69,7 @@ func (con *Session) DeleteInstance(instance *data.Instance) {
 		sql = sqlBuilder.BuildDeleteSQL(instance.Id, tableName)
 	}
 
-	_, err := con.Dbx.Exec(sql)
+	_, err := s.Dbx.Exec(sql)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -67,9 +79,9 @@ func (con *Session) DeleteInstance(instance *data.Instance) {
 		asso := associstions[i]
 		if asso.IsCombination() {
 			if !asso.TypeEntity().IsSoftDelete() {
-				con.deleteAssociationPovit(asso, instance.Id)
+				s.deleteAssociationPovit(asso, instance.Id)
 			}
-			con.deleteAssociatedInstances(asso, instance.Id)
+			s.deleteAssociatedInstances(asso, instance.Id)
 		}
 	}
 }

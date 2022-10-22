@@ -41,6 +41,18 @@ func (b *MySQLBuilder) BuildDeletePovitSQL(povit *data.AssociationPovit) string 
 	)
 }
 
+//删除前检查SQL
+func (b *MySQLBuilder) BuildCheckAssociationSQL(ownerId uint64, tableName string, ownerFieldName string) string {
+	sql := fmt.Sprintf(
+		"SELECT count(%s) FROM `%s` WHERE (`%s` = '%d')",
+		ownerFieldName,
+		tableName,
+		ownerFieldName,
+		ownerId,
+	)
+	return sql
+}
+
 func (b *MySQLBuilder) BuildClearAssociationSQL(ownerId uint64, tableName string, ownerFieldName string) string {
 	sql := fmt.Sprintf(
 		"DELETE FROM `%s` WHERE (`%s` = '%d')",

@@ -39,6 +39,7 @@ type SQLBuilder interface {
 	BuildUpdateSQL(id uint64, fields []*data.Field, table *table.Table) string
 
 	BuildQueryByIdsSQL(entity *graph.Entity, idCounts int) string
+	BuildCheckAssociationSQL(ownerId uint64, tableName string, ownerFieldName string) string
 	BuildClearAssociationSQL(ownerId uint64, tableName string, ownerFieldName string) string
 	BuildQueryAssociatedInstancesSQL(entity *graph.Entity,
 		ownerId uint64,
