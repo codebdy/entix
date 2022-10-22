@@ -1,0 +1,60 @@
+package service
+
+import (
+	"fmt"
+
+	"rxdrag.com/entify/model/data"
+	"rxdrag.com/entify/orm"
+)
+
+func DeleteInstances(instances []*data.Instance) (interface{}, error) {
+	session, err := orm.Open()
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	err = session.BeginTx()
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	defer session.ClearTx()
+
+	deletedIds := []interface{}{}
+
+	for i := range instances {
+		instance := instances[i]
+		session.DeleteInstance(instance)
+		deletedIds = append(deletedIds, instance.Id)
+	}
+
+	err = session.Dbx.Commit()
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+
+	return deletedIds, nil
+}
+
+func DeleteInstance(instance *data.Instance) (interface{}, error) {
+	session, err := orm.Open()
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	err = session.BeginTx()
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	defer session.ClearTx()
+	session.DeleteInstance(instance)
+
+	err = session.Dbx.Commit()
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	return instance.Id, nil
+}

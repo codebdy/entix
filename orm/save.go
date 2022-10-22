@@ -8,6 +8,40 @@ import (
 	"rxdrag.com/entify/model/data"
 )
 
+func (con *Session) InsertOne(instance *data.Instance) (interface{}, error) {
+	sqlBuilder := dialect.GetSQLBuilder()
+	saveStr := sqlBuilder.BuildInsertSQL(instance.Fields, instance.Table())
+	values := makeSaveValues(instance.Fields)
+	result, err := con.Dbx.Exec(saveStr, values...)
+	if err != nil {
+		fmt.Println("Insert data failed:", err.Error())
+		return nil, err
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		fmt.Println("LastInsertId failed:", err.Error())
+		return nil, err
+	}
+	for _, asso := range instance.Associations {
+		err = con.doSaveAssociation(asso, uint64(id))
+		if err != nil {
+			fmt.Println("Save reference failed:", err.Error())
+			return nil, err
+		}
+	}
+
+	savedObject := con.QueryOneEntityById(instance.Entity, id)
+
+	//affectedRows, err := result.RowsAffected()
+	if err != nil {
+		fmt.Println("RowsAffected failed:", err.Error())
+		return nil, err
+	}
+
+	return savedObject, nil
+}
+
 func merageInstances(source []InsanceData, target []InsanceData) {
 	for i := range source {
 		souceObj := source[i]
@@ -24,9 +58,9 @@ func merageInstances(source []InsanceData, target []InsanceData) {
 func (con *Session) doUpdateOne(instance *data.Instance) (interface{}, error) {
 
 	sqlBuilder := dialect.GetSQLBuilder()
-
-	saveStr := sqlBuilder.BuildUpdateSQL(instance.Id, instance.Fields, instance.Table())
-	values := makeSaveValues(instance.Fields)
+	columnAssocs := instance.ColumnAssociations()
+	saveStr := sqlBuilder.BuildUpdateSQL(instance.Id, instance.Fields, columnAssocs, instance.Table())
+	values := makeSaveValues(instance.Fields, columnAssocs)
 	fmt.Println(saveStr)
 	_, err := con.Dbx.Exec(saveStr, values...)
 	if err != nil {

@@ -233,40 +233,6 @@ func (con *Session) QueryOneEntity(entity *graph.Entity, args map[string]interfa
 	return convertValuesToEntity(values, entity)
 }
 
-func (con *Session) InsertOne(instance *data.Instance) (interface{}, error) {
-	sqlBuilder := dialect.GetSQLBuilder()
-	saveStr := sqlBuilder.BuildInsertSQL(instance.Fields, instance.Table())
-	values := makeSaveValues(instance.Fields)
-	result, err := con.Dbx.Exec(saveStr, values...)
-	if err != nil {
-		fmt.Println("Insert data failed:", err.Error())
-		return nil, err
-	}
-
-	id, err := result.LastInsertId()
-	if err != nil {
-		fmt.Println("LastInsertId failed:", err.Error())
-		return nil, err
-	}
-	for _, asso := range instance.Associations {
-		err = con.doSaveAssociation(asso, uint64(id))
-		if err != nil {
-			fmt.Println("Save reference failed:", err.Error())
-			return nil, err
-		}
-	}
-
-	savedObject := con.QueryOneEntityById(instance.Entity, id)
-
-	//affectedRows, err := result.RowsAffected()
-	if err != nil {
-		fmt.Println("RowsAffected failed:", err.Error())
-		return nil, err
-	}
-
-	return savedObject, nil
-}
-
 func (con *Session) QueryAssociatedInstances(r *data.Reference, ownerId uint64) []InsanceData {
 	var instances []InsanceData
 	builder := dialect.GetSQLBuilder()

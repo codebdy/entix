@@ -14,7 +14,7 @@ import (
 	"rxdrag.com/entify/utils"
 )
 
-func makeSaveValues(fields []*data.Field) []interface{} {
+func makeSaveValues(fields []*data.Field, assocs []*data.Reference) []interface{} {
 	objValues := make([]interface{}, 0, len(fields))
 	for _, field := range fields {
 		value := field.Value
@@ -44,6 +44,10 @@ func makeSaveValues(fields []*data.Field) []interface{} {
 			value = jsonString
 		}
 		objValues = append(objValues, value)
+	}
+
+	for i := range assocs {
+		objValues = append(objValues, assocs[i].Value[consts.ID])
 	}
 	return objValues
 }
