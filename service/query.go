@@ -1,6 +1,7 @@
 package service
 
 import (
+	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/orm"
 )
@@ -35,6 +36,16 @@ func QueryOneEntity(entity *graph.Entity, args graph.QueryArg) interface{} {
 		panic(err.Error())
 	}
 	return session.QueryOneEntity(entity, args)
+}
+
+func QueryById(entity *graph.Entity, id uint64) interface{} {
+	return QueryOneEntity(entity, graph.QueryArg{
+		consts.ARG_WHERE: graph.QueryArg{
+			consts.ID: graph.QueryArg{
+				consts.ARG_EQ: id,
+			},
+		},
+	})
 }
 
 func BatchQueryAssociations(

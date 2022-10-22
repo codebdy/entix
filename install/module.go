@@ -9,34 +9,34 @@ import (
 	"rxdrag.com/entify/entry"
 )
 
-type BasicModule struct {
+type InstallModule struct {
 }
 
-func (m *BasicModule) Init(ctx context.Context) {
+func (m *InstallModule) Init(ctx context.Context) {
 }
-func (m *BasicModule) QueryFields() []*graphql.Field {
+func (m *InstallModule) QueryFields() []*graphql.Field {
 	return installQueryFields()
 }
-func (m *BasicModule) MutationFields() []*graphql.Field {
+func (m *InstallModule) MutationFields() []*graphql.Field {
 	if app.Installed {
 		return []*graphql.Field{}
 	} else {
 		return installMutationFields()
 	}
 }
-func (m *BasicModule) SubscriptionFields() []*graphql.Field {
+func (m *InstallModule) SubscriptionFields() []*graphql.Field {
 	return []*graphql.Field{}
 }
-func (m *BasicModule) Directives() []*graphql.Directive {
+func (m *InstallModule) Directives() []*graphql.Directive {
 	return []*graphql.Directive{}
 }
-func (m *BasicModule) Types() []graphql.Type {
+func (m *InstallModule) Types() []graphql.Type {
 	return []graphql.Type{}
 }
-func (m *BasicModule) Middlewares() []func(next http.Handler) http.Handler {
+func (m *InstallModule) Middlewares() []func(next http.Handler) http.Handler {
 	return []func(next http.Handler) http.Handler{}
 }
 
 func init() {
-	entry.AddModuler(&BasicModule{})
+	entry.AddModuler(&InstallModule{})
 }

@@ -8,7 +8,6 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 	"rxdrag.com/entify/app/schema"
-	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/model/meta"
@@ -79,18 +78,18 @@ func (a *App) GetEntityByName(name string) *graph.Entity {
 	return a.Model.Graph.GetEntityByName(name)
 }
 
+func (a *App) ReLoad() {
+	newApp := NewApp(a.AppId)
+	a.Model = newApp.Model
+	a.Schema = newApp.Schema
+}
+
 func NewApp(appId uint64) *App {
 	systemApp := GetSystemApp()
 
-	appMeta := service.QueryOneEntity(
+	appMeta := service.QueryById(
 		systemApp.GetEntityByName(meta.APP_ENTITY_NAME),
-		graph.QueryArg{
-			consts.ARG_WHERE: graph.QueryArg{
-				consts.ID: graph.QueryArg{
-					consts.ARG_EQ: appId,
-				},
-			},
-		},
+		appId,
 	)
 
 	if appMeta != nil {
