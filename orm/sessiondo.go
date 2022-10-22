@@ -370,14 +370,6 @@ func (con *Session) DeleteAssociationPovit(povit *data.AssociationPovit) {
 	}
 }
 
-func (con *Session) SaveOne(instance *data.Instance) (interface{}, error) {
-	if instance.IsInsert() {
-		return con.InsertOne(instance)
-	} else {
-		return con.doUpdateOne(instance)
-	}
-}
-
 func (con *Session) DeleteInstance(instance *data.Instance) {
 	var sql string
 	sqlBuilder := dialect.GetSQLBuilder()

@@ -8,6 +8,14 @@ import (
 	"rxdrag.com/entify/model/data"
 )
 
+func (con *Session) SaveOne(instance *data.Instance) (interface{}, error) {
+	if instance.IsInsert() {
+		return con.InsertOne(instance)
+	} else {
+		return con.doUpdateOne(instance)
+	}
+}
+
 func (con *Session) InsertOne(instance *data.Instance) (interface{}, error) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	saveStr := sqlBuilder.BuildInsertSQL(instance.Fields, instance.Table())
