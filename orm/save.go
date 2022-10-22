@@ -87,18 +87,21 @@ func (s *Session) update(instance *data.Instance) (interface{}, error) {
 		}
 
 		for _, toAdd := range assocRef.Added {
-			if toAdd.IsEmperty() {
+			if !toAdd.IsEmperty() {
 				s.update(toAdd)
 			}
-
 		}
 
 		for _, toSync := range assocRef.Synced {
-			s.update(toSync)
+			if !toSync.IsEmperty() {
+				s.update(toSync)
+			}
 		}
 
 		for _, toUpdated := range assocRef.Updated {
-			s.update(toUpdated)
+			if !toUpdated.IsEmperty() {
+				s.update(toUpdated)
+			}
 		}
 	}
 
