@@ -226,7 +226,7 @@ func (con *Session) QueryOneEntity(entity *graph.Entity, args map[string]interfa
 	case err == sql.ErrNoRows:
 		return nil
 	case err != nil:
-		panic(err.Error())
+		log.Panic(err)
 	}
 
 	return convertValuesToEntity(values, entity)
