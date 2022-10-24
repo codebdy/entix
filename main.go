@@ -23,6 +23,7 @@ import (
 	_ "rxdrag.com/entify/imexport"
 	_ "rxdrag.com/entify/install"
 	_ "rxdrag.com/entify/publish"
+	_ "rxdrag.com/entify/snapshot"
 )
 
 const PORT = 4000
