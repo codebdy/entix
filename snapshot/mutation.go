@@ -93,12 +93,12 @@ func (m *SnapshotModule) makeVersion(p graphql.ResolveParams) (interface{}, erro
 }
 
 func (m *SnapshotModule) makeFieldsGql(entity *graph.Entity) string {
-	fieldStrings := strings.Join(entity.AllAttributeNames(), "\n")
+	fieldStrings := strings.Join(entity.AllAttributeNames(), "\n") + "\n"
 	for _, assoc := range entity.Associations() {
 		if assoc.IsCombination() {
 			subFields := m.makeFieldsGql(assoc.TypeEntity())
-			fieldStrings = fieldStrings + subFields
+			fieldStrings = fieldStrings + assoc.Name() + subFields
 		}
 	}
-	return fmt.Sprintf("{\n%s\n}", fieldStrings)
+	return fmt.Sprintf("{\n%s\n}\n", fieldStrings)
 }
