@@ -1,6 +1,7 @@
 package snapshot
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/graphql-go/graphql"
@@ -60,6 +61,14 @@ func (m *SnapshotModule) makeVersion(p graphql.ResolveParams) (interface{}, erro
 
 	if instanceId == 0 {
 		log.Panic("Instance id is nil")
+	}
+
+	entityInnerId := utils.DecodeEntityInnerId(instanceId)
+
+	entity := m.app.Parser.GetEntityTypeByInnerId(entityInnerId)
+
+	if entity == nil {
+		log.Panic(fmt.Sprintf("Can not find entity by inner id:%d", entityInnerId))
 	}
 	//gqlSchema := register.GetSchema(p.Context)
 	return false, nil
