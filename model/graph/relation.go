@@ -34,11 +34,11 @@ func NewRelation(
 	roleOfSource := r.RoleOfSource
 
 	if sourceEntity.Uuid() != r.Source.Uuid {
-		roleOfSource = roleOfSource + utils.FirstUpper(sourceEntity.Name())
+		roleOfSource = roleOfSource + "Of" + utils.FirstUpper(sourceEntity.Name())
 	}
 
 	if targetEntity.Uuid() != r.Target.Uuid {
-		roleOfTarget = roleOfTarget + utils.FirstUpper(targetEntity.Name())
+		roleOfTarget = roleOfTarget + "Of" + utils.FirstUpper(targetEntity.Name())
 	}
 
 	relation := &Relation{
