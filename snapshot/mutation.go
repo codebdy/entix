@@ -67,12 +67,28 @@ func (m *SnapshotModule) makeVersion(p graphql.ResolveParams) (interface{}, erro
 
 	entityInnerId := utils.DecodeEntityInnerId(instanceId)
 
-	entity := m.app.Parser.GetEntityTypeByInnerId(entityInnerId)
+	entity := m.app.GetEntityByInnerId(entityInnerId)
 
 	if entity == nil {
 		log.Panic(fmt.Sprintf("Can not find entity by inner id:%d", entityInnerId))
 	}
+
+	queryGql := fmt.Sprintf(`
+	query ($id:ID!){
+		one%s(where:{
+			id:{
+				_eq:$id
+			}
+		})
+		%s
+	}
+	`,
+		entity.Name(),
+		m.makeFieldsGql(entity),
+	)
 	//gqlSchema := register.GetSchema(p.Context)
+
+	fmt.Println(queryGql)
 	return false, nil
 }
 

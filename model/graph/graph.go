@@ -329,6 +329,16 @@ func (m *Model) GetEntityByName(name string) *Entity {
 	return nil
 }
 
+func (m *Model) GetEntityByInnerId(innerId uint64) *Entity {
+	for i := range m.Entities {
+		ent := m.Entities[i]
+		if ent.InnerId() == innerId {
+			return ent
+		}
+	}
+	return nil
+}
+
 func (m *Model) GetThirdPartyByName(name string) *ThirdParty {
 	for i := range m.ThirdParties {
 		third := m.ThirdParties[i]

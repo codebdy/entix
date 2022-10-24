@@ -80,6 +80,10 @@ func (a *App) GetEntityByName(name string) *graph.Entity {
 	return a.Model.Graph.GetEntityByName(name)
 }
 
+func (a *App) GetEntityByInnerId(innerId uint64) *graph.Entity {
+	return a.Model.Graph.GetEntityByInnerId(innerId)
+}
+
 func (a *App) ReLoad() {
 	newApp := NewApp(a.AppId)
 	a.Model = newApp.Model
