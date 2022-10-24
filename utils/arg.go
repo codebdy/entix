@@ -11,8 +11,9 @@ func Uint64Value(value interface{}) uint64 {
 	}
 
 	intVal, err := strconv.ParseUint(value.(string), 10, 64)
-
-	log.Panic(err)
+	if err != nil {
+		log.Panic("Uint64Value error")
+	}
 	return intVal
 }
 
