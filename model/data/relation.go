@@ -3,7 +3,6 @@ package data
 import (
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
-	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/model/table"
 )
 
@@ -40,7 +39,7 @@ func (r *AssociationRef) init(value map[string]interface{}) {
 }
 
 func (r *AssociationRef) Cascade() bool {
-	return r.IsCombination() || r.isCascade
+	return r.Association.IsCombination() || r.isCascade
 }
 
 func (r *AssociationRef) IsEmperty() bool {
@@ -132,10 +131,4 @@ func (r *AssociationRef) TypeEntity() *graph.Entity {
 	}
 
 	panic("Can not find reference entity")
-}
-
-func (r *AssociationRef) IsCombination() bool {
-	return r.IsSource() &&
-		(r.Association.Relation.RelationType == meta.TWO_WAY_COMBINATION ||
-			r.Association.Relation.RelationType == meta.ONE_WAY_COMBINATION)
 }

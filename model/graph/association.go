@@ -140,6 +140,11 @@ func (a *Association) isOneWay() bool {
 // 	}
 // 	return false
 // }
+func (a *Association) IsCombination() bool {
+	return a.IsSource() &&
+		(a.Relation.RelationType == meta.TWO_WAY_COMBINATION ||
+			a.Relation.RelationType == meta.ONE_WAY_COMBINATION)
+}
 
 func (a *Association) IsSource() bool {
 	return a.Relation.SourceEntity.Uuid() == a.OwnerClassUuid

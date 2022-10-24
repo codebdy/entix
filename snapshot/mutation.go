@@ -3,9 +3,11 @@ package snapshot
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/app"
+	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/utils"
 )
 
@@ -72,4 +74,15 @@ func (m *SnapshotModule) makeVersion(p graphql.ResolveParams) (interface{}, erro
 	}
 	//gqlSchema := register.GetSchema(p.Context)
 	return false, nil
+}
+
+func (m *SnapshotModule) makeFieldsGql(entity *graph.Entity) string {
+	fieldStrings := strings.Join(entity.AllAttributeNames(), "\n")
+	for _, assoc := range entity.Associations() {
+		if assoc.IsCombination() {
+			subFields := m.makeFieldsGql(assoc.TypeEntity())
+			fieldStrings = fieldStrings + subFields
+		}
+	}
+	return fmt.Sprintf("{\n%s\n}", fieldStrings)
 }

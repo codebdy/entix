@@ -12,7 +12,7 @@ type InsanceData = map[string]interface{}
 func (con *Session) clearAssociation(r *data.AssociationRef, ownerId uint64) {
 	con.deleteAssociationPovit(r, ownerId)
 
-	if r.IsCombination() {
+	if r.Association.IsCombination() {
 		con.deleteAssociatedInstances(r, ownerId)
 	}
 }
@@ -77,7 +77,7 @@ func (s *Session) DeleteInstance(instance *data.Instance) {
 	associstions := instance.Associations
 	for i := range associstions {
 		asso := associstions[i]
-		if asso.IsCombination() {
+		if asso.Association.IsCombination() {
 			if !asso.TypeEntity().IsSoftDelete() {
 				s.deleteAssociationPovit(asso, instance.Id)
 			}
