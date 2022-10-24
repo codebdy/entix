@@ -74,5 +74,5 @@ func (m *AppModule) Middlewares() []func(next http.Handler) http.Handler {
 }
 
 func init() {
-	register.AddModuler(&AppModule{})
+	register.RegisterModule(&AppModule{})
 }

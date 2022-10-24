@@ -52,5 +52,5 @@ func (m *AuthenticationModule) Middlewares() []func(next http.Handler) http.Hand
 }
 
 func init() {
-	register.AddModuler(&AuthenticationModule{})
+	register.RegisterModule(&AuthenticationModule{})
 }

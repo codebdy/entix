@@ -67,5 +67,5 @@ func (m *PublishModule) Middlewares() []func(next http.Handler) http.Handler {
 }
 
 func init() {
-	register.AddModuler(&PublishModule{})
+	register.RegisterModule(&PublishModule{})
 }

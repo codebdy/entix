@@ -26,7 +26,7 @@ type Moduler interface {
 	Middlewares() []func(next http.Handler) http.Handler
 }
 
-func AddModuler(module Moduler) {
+func RegisterModule(module Moduler) {
 	modules = append(modules, module)
 }
 
