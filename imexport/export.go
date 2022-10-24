@@ -1,6 +1,7 @@
 package imexport
 
 import (
+	"fmt"
 	"log"
 	"strconv"
 
@@ -8,6 +9,35 @@ import (
 	"rxdrag.com/entify/app"
 	"rxdrag.com/entify/utils"
 )
+
+var queryGql = `
+query($id:ID!){
+	oneApp(where:{
+		id:{
+			_eq:$id
+		}
+	}){
+		id
+		uuid
+		title
+		description
+		pages
+		menus
+		imageUrl
+		pageFrames
+		publishedMeta
+		plugins{
+			id
+			url
+			title
+			pluginId
+			type
+			description
+			version
+		}
+	}
+}
+`
 
 func (m *ImExportModule) QueryFields() []*graphql.Field {
 	if !app.Installed {
@@ -42,5 +72,6 @@ func exportResolve(p graphql.ResolveParams) (interface{}, error) {
 		log.Panic(err)
 	}
 
+	fmt.Println("哈哈", appId)
 	return "", nil
 }
