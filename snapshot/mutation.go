@@ -34,13 +34,14 @@ func (m *SnapshotModule) MutationFields() []*graphql.Field {
 					Type: graphql.String,
 				},
 			},
-			Resolve: makeVersionResolve,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				defer utils.PrintErrorStack()
+				return m.makeVersion(p)
+			},
 		},
 	}
 }
 
-func makeVersionResolve(p graphql.ResolveParams) (interface{}, error) {
-	defer utils.PrintErrorStack()
-
+func (m *SnapshotModule) makeVersion(p graphql.ResolveParams) (interface{}, error) {
 	return false, nil
 }
