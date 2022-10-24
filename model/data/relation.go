@@ -13,6 +13,7 @@ type AssociationRef struct {
 	Deleted     []*Instance
 	Updated     []*Instance
 	Synced      []*Instance
+	Clear       bool
 	isCascade   bool
 }
 
@@ -26,6 +27,9 @@ func NewAssociation(value map[string]interface{}, assoc *graph.Association) *Ass
 }
 
 func (r *AssociationRef) init(value map[string]interface{}) {
+	if value[consts.ARG_CLEAR] != nil {
+		r.Clear = value[consts.ARG_CLEAR].(bool)
+	}
 	r.Deleted = r.convertToInstances(value[consts.ARG_DELETE])
 	r.Added = r.convertToInstances(value[consts.ARG_ADD])
 	r.Updated = r.convertToInstances(value[consts.ARG_UPDATE])

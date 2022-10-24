@@ -58,6 +58,7 @@ const (
 	ARG_UPDATE  string = "update"
 	ARG_SYNC    string = "sync"
 	ARG_CASCADE string = "cascade"
+	ARG_CLEAR   string = "clear"
 
 	ARG_AND string = "_and"
 	ARG_NOT string = "_not"

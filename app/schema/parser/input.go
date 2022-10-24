@@ -67,7 +67,7 @@ func (p *ModelParser) makeHasOneInput(entity *graph.Entity, hasOneName string) *
 	return graphql.NewInputObject(graphql.InputObjectConfig{
 		Name: hasOneName,
 		Fields: graphql.InputObjectConfigFieldMap{
-			consts.ARG_DELETE: &graphql.InputObjectFieldConfig{
+			consts.ARG_CLEAR: &graphql.InputObjectFieldConfig{
 				Type: graphql.Boolean,
 			},
 			consts.ARG_SYNC: &graphql.InputObjectFieldConfig{

@@ -98,6 +98,11 @@ func (con *Session) saveAssociationInstance(ins *data.Instance) (interface{}, er
 }
 func (con *Session) saveAssociation(r *data.AssociationRef, ownerId uint64) error {
 
+	//这块逻辑还需要优化
+	if r.Clear {
+		con.clearAssociation(r, ownerId)
+	}
+
 	for _, ins := range r.Deleted {
 		if r.Cascade() {
 			con.DeleteInstance(ins)
