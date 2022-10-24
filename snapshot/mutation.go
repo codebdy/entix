@@ -13,7 +13,7 @@ import (
 
 const (
 	APP_ID      = "appId"
-	INSTANCE_ID = "instaneId"
+	INSTANCE_ID = "instanceId"
 	VERSION     = "version"
 	DESCRIPTION = "description"
 )
