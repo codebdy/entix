@@ -15,11 +15,15 @@ type ImExportModule struct {
 func (m *ImExportModule) Init(ctx context.Context) {
 }
 func (m *ImExportModule) QueryFields() []*graphql.Field {
-	return []*graphql.Field{}
+	if app.Installed {
+		return exportQueryFields()
+	} else {
+		return []*graphql.Field{}
+	}
 }
 func (m *ImExportModule) MutationFields() []*graphql.Field {
 	if app.Installed {
-		return []*graphql.Field{}
+		return importMutationFields()
 	} else {
 		return []*graphql.Field{}
 	}
