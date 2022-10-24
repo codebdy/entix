@@ -1,9 +1,18 @@
 package snapshot
 
 import (
+	"log"
+
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/app"
 	"rxdrag.com/entify/utils"
+)
+
+const (
+	APP_ID      = "appId"
+	INSTANCE_ID = "instaneId"
+	VERSION     = "version"
+	DESCRIPTION = "description"
 )
 
 func (m *SnapshotModule) MutationFields() []*graphql.Field {
@@ -15,22 +24,22 @@ func (m *SnapshotModule) MutationFields() []*graphql.Field {
 			Name: "makeVersion",
 			Type: graphql.Boolean,
 			Args: graphql.FieldConfigArgument{
-				"appId": &graphql.ArgumentConfig{
+				APP_ID: &graphql.ArgumentConfig{
 					Type: &graphql.NonNull{
 						OfType: graphql.ID,
 					},
 				},
-				"instaneId": &graphql.ArgumentConfig{
+				INSTANCE_ID: &graphql.ArgumentConfig{
 					Type: &graphql.NonNull{
 						OfType: graphql.ID,
 					},
 				},
-				"version": &graphql.ArgumentConfig{
+				VERSION: &graphql.ArgumentConfig{
 					Type: &graphql.NonNull{
 						OfType: graphql.String,
 					},
 				},
-				"description": &graphql.ArgumentConfig{
+				DESCRIPTION: &graphql.ArgumentConfig{
 					Type: graphql.String,
 				},
 			},
@@ -43,5 +52,15 @@ func (m *SnapshotModule) MutationFields() []*graphql.Field {
 }
 
 func (m *SnapshotModule) makeVersion(p graphql.ResolveParams) (interface{}, error) {
+	appId := utils.Uint64Value(p.Args[APP_ID])
+	if appId == 0 {
+		log.Panic("App id is nil")
+	}
+	instanceId := utils.Uint64Value(p.Args[INSTANCE_ID])
+
+	if instanceId == 0 {
+		log.Panic("Instance id is nil")
+	}
+	//gqlSchema := register.GetSchema(p.Context)
 	return false, nil
 }
