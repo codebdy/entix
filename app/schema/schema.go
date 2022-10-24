@@ -34,6 +34,10 @@ func New(model *model.Model) AppGraphqlSchema {
 	}
 }
 
+func (s *AppGraphqlSchema) Parser() *parser.ModelParser {
+	return &s.proccessor.modelParser
+}
+
 func (s *AppGraphqlSchema) OutputType(name string) graphql.Type {
 	return s.proccessor.modelParser.OutputType(name)
 }

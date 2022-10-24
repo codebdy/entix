@@ -8,6 +8,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 	"rxdrag.com/entify/app/schema"
+	"rxdrag.com/entify/app/schema/parser"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/model/meta"
@@ -22,6 +23,7 @@ type App struct {
 	AppId  uint64
 	Model  *model.Model
 	Schema schema.AppGraphqlSchema
+	Parser *parser.ModelParser
 }
 
 var appCache = map[uint64]*App{}
@@ -82,6 +84,7 @@ func (a *App) ReLoad() {
 	newApp := NewApp(a.AppId)
 	a.Model = newApp.Model
 	a.Schema = newApp.Schema
+	a.Parser = newApp.Parser
 }
 
 func NewApp(appId uint64) *App {
@@ -103,10 +106,12 @@ func NewApp(appId uint64) *App {
 		}
 
 		model := model.New(content, appId)
+		schema := schema.New(model)
 		return &App{
 			AppId:  appId,
 			Model:  model,
-			Schema: schema.New(model),
+			Schema: schema,
+			Parser: schema.Parser(),
 		}
 	}
 

@@ -20,7 +20,7 @@ func (m *ImExportModule) MutationFields() []*graphql.Field {
 					Type: scalars.UploadType,
 				},
 			},
-			Resolve: exportResolve,
+			Resolve: importResolve,
 		},
 	}
 }
