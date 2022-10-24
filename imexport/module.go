@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/graphql-go/graphql"
-	"rxdrag.com/entify/app"
 	"rxdrag.com/entify/register"
 )
 
@@ -14,20 +13,7 @@ type ImExportModule struct {
 
 func (m *ImExportModule) Init(ctx context.Context) {
 }
-func (m *ImExportModule) QueryFields() []*graphql.Field {
-	if app.Installed {
-		return exportQueryFields()
-	} else {
-		return []*graphql.Field{}
-	}
-}
-func (m *ImExportModule) MutationFields() []*graphql.Field {
-	if app.Installed {
-		return importMutationFields()
-	} else {
-		return []*graphql.Field{}
-	}
-}
+
 func (m *ImExportModule) SubscriptionFields() []*graphql.Field {
 	return []*graphql.Field{}
 }

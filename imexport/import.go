@@ -1,15 +1,16 @@
 package imexport
 
 import (
-	"log"
-	"strconv"
-
 	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify/app"
 	"rxdrag.com/entify/scalars"
 	"rxdrag.com/entify/utils"
 )
 
-func importMutationFields() []*graphql.Field {
+func (m *ImExportModule) MutationFields() []*graphql.Field {
+	if !app.Installed {
+		return []*graphql.Field{}
+	}
 	return []*graphql.Field{
 		{
 			Name: EXPORT_APP,
@@ -26,16 +27,6 @@ func importMutationFields() []*graphql.Field {
 
 func importResolve(p graphql.ResolveParams) (interface{}, error) {
 	defer utils.PrintErrorStack()
-
-	if p.Args[ARG_APP_ID] == nil {
-		log.Panic("App id is nil")
-	}
-
-	appId, err := strconv.ParseUint(p.Args[ARG_APP_ID].(string), 10, 64)
-
-	if err != nil {
-		log.Panic(err)
-	}
 
 	return false, nil
 }
