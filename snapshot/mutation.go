@@ -80,6 +80,9 @@ func (m *SnapshotModule) makeVersion(p graphql.ResolveParams) (interface{}, erro
 
 	operateName := fmt.Sprintf("one%s", entity.Name())
 
+	//防止循环组合带来的死循环
+	entityUuids := []string{}
+
 	queryGql := fmt.Sprintf(`
 	query ($id:ID!){
 		%s(where:{
@@ -91,7 +94,7 @@ func (m *SnapshotModule) makeVersion(p graphql.ResolveParams) (interface{}, erro
 	}
 	`,
 		operateName,
-		m.makeFieldsGql(entity),
+		m.makeFieldsGql(entity, &entityUuids),
 	)
 
 	gqlSchema := register.GetSchema(p.Context)
@@ -132,11 +135,22 @@ func (m *SnapshotModule) makeVersion(p graphql.ResolveParams) (interface{}, erro
 	return true, nil
 }
 
-func (m *SnapshotModule) makeFieldsGql(entity *graph.Entity) string {
+func existInarray(uuid string, arr []string) bool {
+	for _, item := range arr {
+		if item == uuid {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (m *SnapshotModule) makeFieldsGql(entity *graph.Entity, entityUuids *[]string) string {
+	*entityUuids = append(*entityUuids, entity.Uuid())
 	fieldStrings := strings.Join(entity.AllAttributeNames(), "\n") + "\n"
 	for _, assoc := range entity.Associations() {
-		if assoc.IsCombination() {
-			subFields := m.makeFieldsGql(assoc.TypeEntity())
+		if assoc.IsCombination() && !existInarray(assoc.TypeEntity().Uuid(), *entityUuids) {
+			subFields := m.makeFieldsGql(assoc.TypeEntity(), entityUuids)
 			fieldStrings = fieldStrings + assoc.Name() + subFields
 		}
 	}
