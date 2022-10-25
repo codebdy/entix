@@ -1,43 +1,14 @@
 package imexport
 
 import (
-	"fmt"
 	"log"
 	"strconv"
 
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/app"
+	"rxdrag.com/entify/service"
 	"rxdrag.com/entify/utils"
 )
-
-var queryGql = `
-query($id:ID!){
-	oneApp(where:{
-		id:{
-			_eq:$id
-		}
-	}){
-		id
-		uuid
-		title
-		description
-		pages
-		menus
-		imageUrl
-		pageFrames
-		publishedMeta
-		plugins{
-			id
-			url
-			title
-			pluginId
-			type
-			description
-			version
-		}
-	}
-}
-`
 
 func (m *ImExportModule) QueryFields() []*graphql.Field {
 	if !app.Installed {
@@ -54,24 +25,37 @@ func (m *ImExportModule) QueryFields() []*graphql.Field {
 					},
 				},
 			},
-			Resolve: exportResolve,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				defer utils.PrintErrorStack()
+				return m.exportResolve(p)
+			},
 		},
 	}
 }
 
-func exportResolve(p graphql.ResolveParams) (interface{}, error) {
+func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, error) {
 	defer utils.PrintErrorStack()
 
 	if p.Args[ARG_SNAPSHOT_ID] == nil {
-		log.Panic("App id is nil")
+		log.Panic("Snapshot id is nil")
 	}
 
-	appId, err := strconv.ParseUint(p.Args[ARG_SNAPSHOT_ID].(string), 10, 64)
+	snapshotId, err := strconv.ParseUint(p.Args[ARG_SNAPSHOT_ID].(string), 10, 64)
 
 	if err != nil {
 		log.Panic(err)
 	}
 
-	fmt.Println("哈哈", appId)
+	appSnapshot := service.QueryById(m.app.GetEntityByName("Snapshot"), snapshotId)
+
+	if appSnapshot == nil {
+		log.Panicf("App snapshot is nil on id:%d", snapshotId)
+	}
+	appJson := appSnapshot.(map[string]interface{})["content"]
+
+	if appJson == nil {
+		log.Panic("App json in snapshot is nil")
+	}
+
 	return "", nil
 }
