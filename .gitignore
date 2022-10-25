@@ -13,6 +13,7 @@
 
 config.yaml
 uploads
+temp-datas
 downloads
 plugins
 debug.log

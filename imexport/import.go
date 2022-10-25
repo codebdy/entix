@@ -1,9 +1,12 @@
 package imexport
 
 import (
+	"log"
+
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/app"
 	"rxdrag.com/entify/scalars"
+	"rxdrag.com/entify/storage"
 	"rxdrag.com/entify/utils"
 )
 
@@ -20,13 +23,20 @@ func (m *ImExportModule) MutationFields() []*graphql.Field {
 					Type: scalars.UploadType,
 				},
 			},
-			Resolve: importResolve,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				defer utils.PrintErrorStack()
+				return m.importResolve(p)
+			},
 		},
 	}
 }
 
-func importResolve(p graphql.ResolveParams) (interface{}, error) {
-	defer utils.PrintErrorStack()
-
+func (m *ImExportModule) importResolve(p graphql.ResolveParams) (interface{}, error) {
+	file := p.Args[ARG_APP_FILE].(storage.File)
+	fileInfo := file.Save(TEMP_DATAS)
+	err := storage.Unzip(fileInfo.Path, fileInfo.Dir+fileInfo.NameBody)
+	if err != nil {
+		log.Panic(err.Error())
+	}
 	return true, nil
 }

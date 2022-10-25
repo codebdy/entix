@@ -22,7 +22,6 @@ const (
 	INSTALLED       = "installed"
 	CAN_UPLOAD      = "canUpload"
 	UPLOAD          = "upload"
-	UPLOAD_PLUGIN   = "uploadPlugin"
 
 	ONE        = "one"
 	QUERY      = "query"

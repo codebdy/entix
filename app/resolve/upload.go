@@ -1,6 +1,8 @@
 package resolve
 
 import (
+	"log"
+
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/storage"
@@ -20,7 +22,7 @@ func UploadPluginResolveResolve(p graphql.ResolveParams) (interface{}, error) {
 	fileInfo := file.Save(consts.PLUGINS_PATH)
 	err := storage.Unzip(fileInfo.Path, fileInfo.Dir+fileInfo.NameBody)
 	if err != nil {
-		panic(err)
+		log.Panic(err.Error())
 	}
 	return GetFileUrl(fileInfo, p)
 }

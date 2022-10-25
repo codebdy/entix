@@ -21,7 +21,7 @@ func (a *AppProcessor) mutationFields() []*graphql.Field {
 		Resolve: resolve.UploadResolveResolve,
 	}
 
-	mutationFields[consts.UPLOAD_PLUGIN] = &graphql.Field{
+	mutationFields[UPLOAD_PLUGIN] = &graphql.Field{
 		Type: graphql.String,
 		Args: graphql.FieldConfigArgument{
 			consts.ARG_FILE: &graphql.ArgumentConfig{

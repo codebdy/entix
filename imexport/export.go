@@ -69,7 +69,16 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 		"http://%s/",
 		contexts.Values(p.Context).Host,
 	)
-	zipFileName := fmt.Sprintf("%s/downloads/app_%s.zip", consts.STATIC_PATH, uuid.New().String())
+
+	folderFullPath := fmt.Sprintf("%s/app%d/%s", consts.STATIC_PATH, m.app.AppId, TEMP_DATAS)
+	_, err = os.Stat(folderFullPath)
+	if os.IsNotExist(err) {
+		err = os.MkdirAll(folderFullPath, 0777)
+		if err != nil {
+			log.Panic(err.Error())
+		}
+	}
+	zipFileName := fmt.Sprintf("%s/app_%s.zip", folderFullPath, uuid.New().String())
 
 	fileUrl := fmt.Sprintf(
 		"%s%s",
