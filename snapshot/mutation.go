@@ -1,13 +1,18 @@
 package snapshot
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/app"
+	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/model/graph"
+	"rxdrag.com/entify/register"
+	"rxdrag.com/entify/service"
 	"rxdrag.com/entify/utils"
 )
 
@@ -73,9 +78,11 @@ func (m *SnapshotModule) makeVersion(p graphql.ResolveParams) (interface{}, erro
 		log.Panic(fmt.Sprintf("Can not find entity by inner id:%d", entityInnerId))
 	}
 
+	operateName := fmt.Sprintf("one%s", entity.Name())
+
 	queryGql := fmt.Sprintf(`
 	query ($id:ID!){
-		one%s(where:{
+		%s(where:{
 			id:{
 				_eq:$id
 			}
@@ -83,13 +90,46 @@ func (m *SnapshotModule) makeVersion(p graphql.ResolveParams) (interface{}, erro
 		%s
 	}
 	`,
-		entity.Name(),
+		operateName,
 		m.makeFieldsGql(entity),
 	)
-	//gqlSchema := register.GetSchema(p.Context)
 
-	fmt.Println(queryGql)
-	return false, nil
+	gqlSchema := register.GetSchema(p.Context)
+	params := graphql.Params{
+		Schema:         gqlSchema,
+		RequestString:  queryGql,
+		VariableValues: map[string]interface{}{"id": instanceId},
+		//OperationName:  opts.OperationName,
+		Context: context.WithValue(p.Context, "gql", queryGql),
+	}
+
+	result := graphql.Do(params)
+	if len(result.Errors) > 0 {
+		log.Panic(result.Errors[0])
+	}
+	if result.Data != nil {
+		ins := data.NewInstance(
+			map[string]interface{}{
+				"app": map[string]interface{}{
+					"id": appId,
+				},
+				"instanceId":  instanceId,
+				"content":     result.Data.(map[string]interface{})[operateName],
+				"version":     p.Args["version"],
+				"description": p.Args["description"],
+				"createdAt":   time.Now(),
+			},
+			m.app.GetEntityByName("Snapshot"),
+		)
+		_, err := service.SaveOne(ins)
+		if err != nil {
+			log.Panic(err)
+		}
+	} else {
+		log.Panic("Can not query data")
+	}
+
+	return true, nil
 }
 
 func (m *SnapshotModule) makeFieldsGql(entity *graph.Entity) string {

@@ -136,10 +136,15 @@ func convertValuesToEntity(values []interface{}, ent *graph.Entity) map[string]i
 
 func convertOneColumnValue(column *graph.Attribute, value interface{}) interface{} {
 	switch column.Type {
-	case meta.ID, meta.INT:
+	case meta.ID:
 		nullValue := value.(*db.NullUint64)
 		if nullValue.Valid {
 			return nullValue.Uint64
+		}
+	case meta.INT:
+		nullValue := value.(*sql.NullInt64)
+		if nullValue.Valid {
+			return nullValue.Int64
 		}
 	case meta.FLOAT:
 		nullValue := value.(*sql.NullFloat64)
