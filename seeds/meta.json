@@ -10,7 +10,7 @@
   ],
   "classes": [
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -271,7 +271,7 @@
       "uuid": "APP_ENTITY_UUID"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -484,7 +484,7 @@
       "uuid": "META_USER_UUID"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -625,7 +625,7 @@
       "uuid": "META_ROLE_UUID"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -650,54 +650,6 @@
           "unsigned": false,
           "updateDate": false,
           "uuid": "c5f97c87-ce73-4853-bd0d-a055ef769a6b"
-        },
-        {
-          "createDate": false,
-          "default": "",
-          "deleteDate": false,
-          "description": "",
-          "floatD": 0,
-          "floatM": 0,
-          "hidden": false,
-          "index": false,
-          "label": "",
-          "length": 0,
-          "name": "appUuid",
-          "nullable": false,
-          "primary": false,
-          "readonly": false,
-          "system": false,
-          "type": "String",
-          "typeLabel": "String",
-          "typeUuid": "",
-          "unique": false,
-          "unsigned": false,
-          "updateDate": false,
-          "uuid": "8aed8ca4-e4a8-4e3f-82e1-c00b5819b70b"
-        },
-        {
-          "createDate": false,
-          "default": "",
-          "deleteDate": false,
-          "description": "",
-          "floatD": 0,
-          "floatM": 0,
-          "hidden": false,
-          "index": false,
-          "label": "",
-          "length": 0,
-          "name": "entityUuid",
-          "nullable": false,
-          "primary": false,
-          "readonly": false,
-          "system": false,
-          "type": "String",
-          "typeLabel": "String",
-          "typeUuid": "",
-          "unique": false,
-          "unsigned": false,
-          "updateDate": false,
-          "uuid": "e653d43e-07e7-4540-8231-a5e6e50e9186"
         },
         {
           "createDate": false,
@@ -794,6 +746,12 @@
           "unsigned": false,
           "updateDate": false,
           "uuid": "10db4f63-fbff-4eb4-a723-4418be1e1c30"
+        },
+        {
+          "uuid": "b82a34b5-a806-442a-8bb1-bfe43282e957",
+          "name": "instanceId",
+          "type": "ID",
+          "typeLabel": "ID"
         }
       ],
       "description": "",
@@ -814,7 +772,7 @@
       "uuid": "SNAPSHOT_ENTITY_UUID"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -979,7 +937,7 @@
       "uuid": "LOG_ENTITY_UUID"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -1048,7 +1006,7 @@
       "uuid": "BUSINESS_LOG_ENTITY_UUID"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -1213,7 +1171,7 @@
       "uuid": "MODEL_LOG_ENTITY_UUID"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -1330,7 +1288,7 @@
       "uuid": "MODEL_OPERATE_TYPE_ENUM_UUID"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -1495,7 +1453,7 @@
       "uuid": "BUSINESS_OPERATE_TYPE_ENUM_UUID"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -1564,7 +1522,7 @@
       "uuid": "OPERATE_RESULT_ENUM_UUID"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -1657,7 +1615,7 @@
       "uuid": "e90f69e9-1be0-45e2-95a6-269da4d2fada"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -1702,7 +1660,7 @@
       "uuid": "660a55fe-c2f1-4b17-921e-38aa14737a1c"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -1771,7 +1729,7 @@
       "uuid": "6be09899-afed-4115-b214-4511adc0e813"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -1840,7 +1798,7 @@
       "uuid": "087b2915-5582-496d-bafb-ae2f5623a70d"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -1909,7 +1867,7 @@
       "uuid": "ddbecde2-3e2d-4391-a327-63d4c8c6a2c3"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -1954,7 +1912,7 @@
       "uuid": "c19d7f61-6a73-408c-b272-284ee374d5ce"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -2023,7 +1981,7 @@
       "uuid": "de56ae19-aaac-4479-8bf9-6573ad22a482"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -2092,7 +2050,7 @@
       "uuid": "db282fa2-db28-4a99-badd-f53cc8fb0862"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -2161,7 +2119,7 @@
       "uuid": "0e31f942-ce6f-4f6e-bd1b-0a5eb126d204"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -2278,7 +2236,7 @@
       "uuid": "3a450ffa-e784-415f-b6c2-bc415e2dfd8c"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -2371,7 +2329,7 @@
       "uuid": "65dc043c-daaf-408c-b74c-f6ff4952bd5a"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -2560,7 +2518,7 @@
       "uuid": "f0fa4b0f-4b91-4092-a93b-beaa13896e86"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -2605,7 +2563,7 @@
       "uuid": "51d35ee7-6757-4e1f-8a08-13b274bbaf3d"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -2674,7 +2632,7 @@
       "uuid": "58d3b299-cd9a-4066-929f-26341023a62a"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -2743,7 +2701,7 @@
       "uuid": "0068083c-88f9-4170-8763-c6a3313bab73"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -2812,7 +2770,7 @@
       "uuid": "f9288fd0-2747-4fa0-8b3d-4c8bdaeb5dd8"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -2881,7 +2839,7 @@
       "uuid": "8f77f9f7-a39d-4f9e-8c21-023a48e4858d"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -2950,7 +2908,7 @@
       "uuid": "4a0a79fa-70ba-4297-a71f-a28336b1b7e5"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -3043,7 +3001,7 @@
       "uuid": "02e50e9a-23e2-4b69-81d6-22de373a35d6"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -3070,10 +3028,28 @@
           "uuid": "01445fc0-728a-4110-9bf0-a7d704f4e47f"
         },
         {
-          "uuid": "3ccba263-77d4-47c1-a555-3db8935ab33c",
+          "createDate": false,
+          "default": "",
+          "deleteDate": false,
+          "description": "",
+          "floatD": 0,
+          "floatM": 0,
+          "hidden": false,
+          "index": false,
+          "label": "",
+          "length": 0,
           "name": "roleId",
+          "nullable": false,
+          "primary": false,
+          "readonly": false,
+          "system": false,
           "type": "ID",
-          "typeLabel": "ID"
+          "typeLabel": "ID",
+          "typeUuid": "",
+          "unique": false,
+          "unsigned": false,
+          "updateDate": false,
+          "uuid": "3ccba263-77d4-47c1-a555-3db8935ab33c"
         }
       ],
       "description": "",
@@ -3094,7 +3070,7 @@
       "uuid": "3502291d-5e64-4c31-82b0-c04c6c70e6a7"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -3259,7 +3235,7 @@
       "uuid": "42252d97-5b4c-40bc-8117-3fd4b7e92926"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -3424,7 +3400,7 @@
       "uuid": "3fd0b1e1-b2ee-491d-be5a-a40109f3c65a"
     },
     {
-      
+
       "attributes": [
         {
           "createDate": false,
@@ -3495,7 +3471,7 @@
   ],
   "relations": [
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3517,7 +3493,7 @@
       "uuid": "META_RELATION_USER_ROLE_UUID"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3539,7 +3515,7 @@
       "uuid": "5126fcc8-d75e-4014-9f2a-a41dbd751426"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3561,7 +3537,7 @@
       "uuid": "387b84ce-f6d6-4200-97ac-00cec82ddbd4"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3583,7 +3559,7 @@
       "uuid": "98c01d23-1003-4b92-87bc-d4b7ddaf3bf9"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3605,7 +3581,7 @@
       "uuid": "000ec63c-aa41-4043-a328-0ed901c3ca4b"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3627,7 +3603,7 @@
       "uuid": "4fdab8ec-f76a-4770-ab88-bbcdb0a16e60"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3649,7 +3625,7 @@
       "uuid": "f049d397-6d87-4625-8fc4-6ba29ad71eb9"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3671,7 +3647,7 @@
       "uuid": "7757cf44-3fc8-450b-86bd-4db6ee6f8a49"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3693,7 +3669,7 @@
       "uuid": "e05e5f31-796f-418a-9045-ac27788f2b1e"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3715,7 +3691,7 @@
       "uuid": "1240b020-d5f1-4ee5-bdbe-9f571007dc22"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3737,7 +3713,7 @@
       "uuid": "49373514-a5a4-40ee-a236-44670c439f3e"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3759,7 +3735,7 @@
       "uuid": "167dd6a4-c8cf-479b-825d-ad3e397b6610"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3781,7 +3757,7 @@
       "uuid": "165e1065-60c0-45a4-aa81-1d0d8a7aa890"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3803,7 +3779,7 @@
       "uuid": "da458d06-3397-4312-b6fe-8460c7391986"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3825,7 +3801,7 @@
       "uuid": "3b742dc1-b0fc-4106-9629-190fd0558f2d"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3847,7 +3823,7 @@
       "uuid": "2bc28a45-01b9-49c9-ab19-941c516cb427"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3869,7 +3845,7 @@
       "uuid": "d73c3019-aeef-41dd-bcbb-3156b835f6e4"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3891,7 +3867,7 @@
       "uuid": "0e01b6ec-70f9-4c76-b1bf-3da8a80e308a"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3913,7 +3889,7 @@
       "uuid": "6c14e01c-4d63-417b-9569-05840362fe66"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3935,7 +3911,7 @@
       "uuid": "5a34022e-bd1e-4ed6-b28c-c9348c91aca4"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3957,7 +3933,7 @@
       "uuid": "1d6437c7-e295-4f4d-8223-14e6ed52f366"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -3979,7 +3955,7 @@
       "uuid": "b057542e-c291-4a6c-b7f5-f6cc634c2bab"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -4001,7 +3977,7 @@
       "uuid": "0655bc25-af80-4856-be68-f53eb77fa970"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -4023,7 +3999,7 @@
       "uuid": "7155615f-a7f9-4d4f-ad31-fe2c91f18d0b"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -4045,7 +4021,7 @@
       "uuid": "6b3bcf02-2d62-4376-8312-69c9088cc821"
     },
     {
-      
+
       "associationClass": {
         "attributes": null,
         "name": ""
@@ -4067,13 +4043,37 @@
       "uuid": "2cdb4c7c-ce16-4744-8405-cffaef63ba55"
     },
     {
+
+      "associationClass": {
+        "attributes": null,
+        "name": ""
+      },
+      "descriptionOnSource": "",
+      "descriptionOnTarget": "",
+      "enableAssociaitonClass": false,
       "innerId": 0,
+      "labelOfSource": "",
+      "labelOfTarget": "",
       "relationType": "inherit",
+      "roleOfSource": "",
+      "roleOfTarget": "",
       "sourceId": "3a450ffa-e784-415f-b6c2-bc415e2dfd8c",
       "sourceMutiplicity": "0..1",
+      "system": false,
       "targetId": "0068083c-88f9-4170-8763-c6a3313bab73",
       "targetMultiplicity": "0..1",
       "uuid": "c813d688-bb04-484b-a8d9-32202760d6f0"
+    },
+    {
+      "uuid": "e148c5c4-ef02-4541-b2ca-df4ec3a48b43",
+      "innerId": 1005,
+      "relationType": "twoWayAggregation",
+      "sourceId": "APP_ENTITY_UUID",
+      "targetId": "SNAPSHOT_ENTITY_UUID",
+      "roleOfTarget": "snapshots",
+      "roleOfSource": "app",
+      "sourceMutiplicity": "0..1",
+      "targetMultiplicity": "0..1"
     }
   ],
   "diagrams": [
@@ -4097,6 +4097,13 @@
       "nodes": [],
       "packageUuid": "PACKAGE_SYSTEM_UUID",
       "uuid": "014aa54a-38c4-4911-a4ce-091943d9b5d8"
+    },
+    {
+      "uuid": "2b8c005d-fc0b-4200-a109-7cc085b268d9",
+      "name": "版本管理",
+      "packageUuid": "PACKAGE_SYSTEM_UUID",
+      "nodes": [],
+      "edges": []
     }
   ],
   "codes": [],
@@ -4300,6 +4307,22 @@
       "width": 180,
       "x": 832,
       "y": 230
+    },
+    {
+      "id": "APP_ENTITY_UUID",
+      "x": -100,
+      "y": -220,
+      "width": 180,
+      "height": 330,
+      "diagramUuid": "2b8c005d-fc0b-4200-a109-7cc085b268d9"
+    },
+    {
+      "id": "SNAPSHOT_ENTITY_UUID",
+      "x": 270,
+      "y": -181,
+      "width": 180,
+      "height": 252,
+      "diagramUuid": "2b8c005d-fc0b-4200-a109-7cc085b268d9"
     }
   ],
   "x6Edges": [
@@ -4672,6 +4695,27 @@
           "y": 180
         }
       ]
+    },
+    {
+      "id": "e148c5c4-ef02-4541-b2ca-df4ec3a48b43",
+      "vertices": [],
+      "roleOnSourcePosition": {
+        "distance": 40,
+        "offset": 20
+      },
+      "sourceMultiplicityPosition": {
+        "distance": 40,
+        "offset": -20
+      },
+      "roleOnTargetPosition": {
+        "distance": -40,
+        "offset": 20
+      },
+      "targetMultiplicityPosition": {
+        "distance": -40,
+        "offset": -20
+      },
+      "diagramUuid": "2b8c005d-fc0b-4200-a109-7cc085b268d9"
     }
   ]
 }
