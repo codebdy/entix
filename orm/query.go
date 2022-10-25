@@ -172,7 +172,7 @@ func (con *Session) QueryEntity(entity *graph.Entity, args map[string]interface{
 	case err == sql.ErrNoRows:
 		count = 0
 	case err != nil:
-		panic(err.Error())
+		log.Panic(err.Error())
 	}
 
 	defer rows.Close()
