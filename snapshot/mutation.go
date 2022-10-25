@@ -114,7 +114,9 @@ func (m *SnapshotModule) makeVersion(p graphql.ResolveParams) (interface{}, erro
 		ins := data.NewInstance(
 			map[string]interface{}{
 				"app": map[string]interface{}{
-					"id": appId,
+					"sync": map[string]interface{}{
+						"id": appId,
+					},
 				},
 				"instanceId":  instanceId,
 				"content":     result.Data.(map[string]interface{})[operateName],
