@@ -97,13 +97,12 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 		plugins := pluginsData.([]interface{})
 		for i, pluginData := range plugins {
 			plugin := pluginData.(map[string]interface{})
-			pluginName := fmt.Sprintf("%d", i)
+			pluginName := fmt.Sprintf("%d", i+1)
 			urlData := plugin["url"]
-			if urlData != nil {
+			if urlData != nil && plugin["type"] != "debug" {
 				url := urlData.(string)
-				folderPath := url[len(hostPath) : len(url)-1]
+				folderPath := url[len(hostPath):]
 
-				fmt.Print("哈哈", folderPath)
 				zipFolder(folderPath, pluginName, w)
 				plugin["url"] = pluginName
 			}
