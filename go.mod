@@ -14,6 +14,7 @@ require (
 	github.com/graphql-go/graphql v0.8.0
 	github.com/mitchellh/mapstructure v1.4.3
 	github.com/spf13/viper v1.11.0
+	github.com/thinkeridea/go-extend v1.3.2
 	golang.org/x/crypto v0.0.0-20220513210258-46612604a0f9
 )
 
@@ -21,7 +22,6 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20200108200545-475eaeb16496 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dlclark/regexp2 v1.7.0 // indirect
-	github.com/dop251/goja_nodejs v0.0.0-20220905124449-678b33ca5009 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.3+incompatible // indirect
@@ -40,7 +40,6 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/testify v1.8.0 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
-	github.com/thinkeridea/go-extend v1.3.2 // indirect
 	golang.org/x/net v0.0.0-20220622184535-263ec571b305 // indirect
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5 // indirect
 	golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8 // indirect

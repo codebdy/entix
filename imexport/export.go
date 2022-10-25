@@ -1,11 +1,22 @@
 package imexport
 
 import (
+	"archive/zip"
+	"encoding/json"
+	"fmt"
+	"io"
 	"log"
+	"os"
+	"path/filepath"
 	"strconv"
 
+	"github.com/google/uuid"
 	"github.com/graphql-go/graphql"
+	"github.com/mitchellh/mapstructure"
 	"rxdrag.com/entify/app"
+	"rxdrag.com/entify/common/contexts"
+	"rxdrag.com/entify/consts"
+	"rxdrag.com/entify/model/business"
 	"rxdrag.com/entify/service"
 	"rxdrag.com/entify/utils"
 )
@@ -56,6 +67,89 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 	if appJson == nil {
 		log.Panic("App json in snapshot is nil")
 	}
+	hostPath := fmt.Sprintf(
+		"http://%s",
+		contexts.Values(p.Context).Host,
+	)
+	zipFileName := fmt.Sprintf("%s/downloads/app_%s.zip", consts.STATIC_PATH, uuid.New().String())
 
-	return "", nil
+	fileUrl := fmt.Sprintf(
+		"%s/%s",
+		hostPath,
+		zipFileName,
+	)
+
+	file, err := os.Create(zipFileName)
+	defer file.Close()
+
+	if err != nil {
+		log.Panic(err)
+	}
+
+	w := zip.NewWriter(file)
+	defer w.Close()
+
+	if err != nil {
+		log.Panic(err)
+	}
+
+	f, err := w.Create("app.json")
+	if err != nil {
+		log.Panic(err)
+	}
+
+	appStr, err := json.Marshal(appJson)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	f.Write(appStr)
+	plugins := []business.PluginInfo{}
+	mapstructure.Decode(appJson.(map[string]interface{})["plugins"], &plugins)
+
+	for _, plugin := range plugins {
+		if plugin.Url != "" {
+			folderPath := plugin.Url[len(hostPath) : len(plugin.Url)-1]
+			zipFolder(folderPath, w)
+		}
+	}
+	return fileUrl, nil
+}
+
+// Add folder to zip
+func zipFolder(folder string, w *zip.Writer) {
+	walker := func(path string, info os.FileInfo, err error) error {
+		fmt.Printf("Crawling: %#v\n", path)
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			return nil
+		}
+		file, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+
+		// Ensure that `path` is not absolute; it should not start with "/".
+		// This snippet happens to work because I don't use
+		// absolute paths, but ensure your real-world code
+		// transforms path into a zip-root relative path.
+		f, err := w.Create(path)
+		if err != nil {
+			return err
+		}
+
+		_, err = io.Copy(f, file)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	}
+	err := filepath.Walk(folder, walker)
+	if err != nil {
+		log.Panic(err)
+	}
 }
