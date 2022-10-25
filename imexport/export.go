@@ -48,7 +48,7 @@ func (m *ImExportModule) QueryFields() []*graphql.Field {
 			Name: EXPORT_APP,
 			Type: graphql.String,
 			Args: graphql.FieldConfigArgument{
-				ARG_APP_ID: &graphql.ArgumentConfig{
+				ARG_SNAPSHOT_ID: &graphql.ArgumentConfig{
 					Type: &graphql.NonNull{
 						OfType: graphql.ID,
 					},
@@ -62,11 +62,11 @@ func (m *ImExportModule) QueryFields() []*graphql.Field {
 func exportResolve(p graphql.ResolveParams) (interface{}, error) {
 	defer utils.PrintErrorStack()
 
-	if p.Args[ARG_APP_ID] == nil {
+	if p.Args[ARG_SNAPSHOT_ID] == nil {
 		log.Panic("App id is nil")
 	}
 
-	appId, err := strconv.ParseUint(p.Args[ARG_APP_ID].(string), 10, 64)
+	appId, err := strconv.ParseUint(p.Args[ARG_SNAPSHOT_ID].(string), 10, 64)
 
 	if err != nil {
 		log.Panic(err)
