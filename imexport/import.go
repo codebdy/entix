@@ -13,7 +13,7 @@ func (m *ImExportModule) MutationFields() []*graphql.Field {
 	}
 	return []*graphql.Field{
 		{
-			Name: EXPORT_APP,
+			Name: IMPORT_APP,
 			Type: graphql.Boolean,
 			Args: graphql.FieldConfigArgument{
 				ARG_APP_FILE: &graphql.ArgumentConfig{

@@ -127,7 +127,7 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 // Add folder to zip
 func zipFolder(folder string, pluginName string, w *zip.Writer) {
 	walker := func(path string, info os.FileInfo, err error) error {
-		fmt.Printf("Crawling: %#v\n", path)
+		log.Printf("Crawling: %#v\n", path)
 		if err != nil {
 			return err
 		}
