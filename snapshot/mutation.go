@@ -128,7 +128,7 @@ func (m *SnapshotModule) makeVersion(p graphql.ResolveParams) (interface{}, erro
 		)
 		_, err := service.SaveOne(ins)
 		if err != nil {
-			log.Panic(err)
+			log.Panic(err.Error())
 		}
 	} else {
 		log.Panic("Can not query data")

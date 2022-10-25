@@ -12,11 +12,9 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/graphql-go/graphql"
-	"github.com/mitchellh/mapstructure"
 	"rxdrag.com/entify/app"
 	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/consts"
-	"rxdrag.com/entify/model/business"
 	"rxdrag.com/entify/service"
 	"rxdrag.com/entify/utils"
 )
@@ -54,7 +52,7 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 	snapshotId, err := strconv.ParseUint(p.Args[ARG_SNAPSHOT_ID].(string), 10, 64)
 
 	if err != nil {
-		log.Panic(err)
+		log.Panic(err.Error())
 	}
 
 	appSnapshot := service.QueryById(m.app.GetEntityByName("Snapshot"), snapshotId)
@@ -68,13 +66,13 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 		log.Panic("App json in snapshot is nil")
 	}
 	hostPath := fmt.Sprintf(
-		"http://%s",
+		"http://%s/",
 		contexts.Values(p.Context).Host,
 	)
 	zipFileName := fmt.Sprintf("%s/downloads/app_%s.zip", consts.STATIC_PATH, uuid.New().String())
 
 	fileUrl := fmt.Sprintf(
-		"%s/%s",
+		"%s%s",
 		hostPath,
 		zipFileName,
 	)
@@ -83,41 +81,52 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 	defer file.Close()
 
 	if err != nil {
-		log.Panic(err)
+		log.Panic(err.Error())
 	}
 
 	w := zip.NewWriter(file)
 	defer w.Close()
 
 	if err != nil {
-		log.Panic(err)
+		log.Panic(err.Error())
 	}
 
+	pluginsData := appJson.(utils.JSON)["plugins"]
+
+	if pluginsData != nil {
+		plugins := pluginsData.([]interface{})
+		for i, pluginData := range plugins {
+			plugin := pluginData.(map[string]interface{})
+			pluginName := fmt.Sprintf("%d", i)
+			urlData := plugin["url"]
+			if urlData != nil {
+				url := urlData.(string)
+				folderPath := url[len(hostPath) : len(url)-1]
+
+				fmt.Print("哈哈", folderPath)
+				zipFolder(folderPath, pluginName, w)
+				plugin["url"] = pluginName
+			}
+		}
+	}
+
+	//保存app.json
 	f, err := w.Create("app.json")
 	if err != nil {
-		log.Panic(err)
+		log.Panic(err.Error())
 	}
 
 	appStr, err := json.Marshal(appJson)
 	if err != nil {
-		log.Panic(err)
+		log.Panic(err.Error())
 	}
 
 	f.Write(appStr)
-	plugins := []business.PluginInfo{}
-	mapstructure.Decode(appJson.(map[string]interface{})["plugins"], &plugins)
-
-	for _, plugin := range plugins {
-		if plugin.Url != "" {
-			folderPath := plugin.Url[len(hostPath) : len(plugin.Url)-1]
-			zipFolder(folderPath, w)
-		}
-	}
 	return fileUrl, nil
 }
 
 // Add folder to zip
-func zipFolder(folder string, w *zip.Writer) {
+func zipFolder(folder string, pluginName string, w *zip.Writer) {
 	walker := func(path string, info os.FileInfo, err error) error {
 		fmt.Printf("Crawling: %#v\n", path)
 		if err != nil {
@@ -136,7 +145,7 @@ func zipFolder(folder string, w *zip.Writer) {
 		// This snippet happens to work because I don't use
 		// absolute paths, but ensure your real-world code
 		// transforms path into a zip-root relative path.
-		f, err := w.Create(path)
+		f, err := w.Create("plugins/" + pluginName + "/" + info.Name())
 		if err != nil {
 			return err
 		}
@@ -150,6 +159,6 @@ func zipFolder(folder string, w *zip.Writer) {
 	}
 	err := filepath.Walk(folder, walker)
 	if err != nil {
-		log.Panic(err)
+		log.Panic(err.Error())
 	}
 }
