@@ -28,5 +28,5 @@ func (m *ImExportModule) MutationFields() []*graphql.Field {
 func importResolve(p graphql.ResolveParams) (interface{}, error) {
 	defer utils.PrintErrorStack()
 
-	return false, nil
+	return true, nil
 }
