@@ -89,17 +89,38 @@ func (m *ImExportModule) importResolve(p graphql.ResolveParams) (interface{}, er
 				relativePath := fmt.Sprintf("%s/app%d/plugins/%s", consts.STATIC_PATH, appId, pluginName)
 				plugin["url"] = hostPath + relativePath
 				for i := range pluginFiles {
-					extractAndWriteFile(relativePath, pluginFiles[i])
+					extractAndCopyFile(relativePath, pluginFiles[i])
 				}
 			}
 		}
 	}
-	instance := data.NewInstance(
-		appMap,
-		m.app.GetEntityByName(meta.APP_ENTITY_NAME),
+	appEntity := m.app.GetEntityByName(meta.APP_ENTITY_NAME)
+	convertInstanceValue(appEntity, appMap)
+
+	oldApp := service.QueryOneEntity(
+		appEntity,
+		map[string]interface{}{
+			consts.ARG_WHERE: map[string]interface{}{
+				"uuid": map[string]interface{}{
+					consts.ARG_EQ: appMap["uuid"],
+				},
+			},
+		},
 	)
 
-	err = service.ImportApp(instance)
+	if oldApp != nil {
+		appMap[consts.ID] = oldApp.(map[string]interface{})[consts.ID]
+	}
+	instance := data.NewInstance(appMap, appEntity)
+	savedIns, err := service.SaveOne(instance)
+
+	ap, err := app.Get(savedIns.(map[string]interface{})[consts.ID].(uint64))
+
+	if err != nil {
+		return false, err
+	}
+
+	ap.ReLoad()
 	return err == nil, err
 }
 
@@ -144,7 +165,7 @@ func readToBuffer(rc io.ReadCloser) *bytes.Buffer {
 	return buf
 }
 
-func extractAndWriteFile(destination string, f *zip.File) error {
+func extractAndCopyFile(destination string, f *zip.File) error {
 	rc, err := f.Open()
 	if err != nil {
 		return err

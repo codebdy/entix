@@ -17,10 +17,13 @@ func (s *Session) SaveOne(instance *data.Instance) (interface{}, error) {
 }
 
 func (s *Session) InsertOne(instance *data.Instance) (interface{}, error) {
-	id := s.InsertOneBody(instance)
+	id, err := s.insertOneBody(instance)
 
+	if err != nil {
+		return nil, err
+	}
 	for _, asso := range instance.Associations {
-		err := s.saveAssociation(asso, uint64(id))
+		err := s.SaveAssociation(asso, uint64(id))
 		if err != nil {
 			log.Println("Save reference failed:", err.Error())
 			return nil, err
@@ -33,28 +36,35 @@ func (s *Session) InsertOne(instance *data.Instance) (interface{}, error) {
 }
 
 //只保存属性，不保存关联
-func (s *Session) InsertOneBody(instance *data.Instance) int64 {
+func (s *Session) insertOneBody(instance *data.Instance) (int64, error) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	saveStr := sqlBuilder.BuildInsertSQL(instance.Fields, instance.Table())
 	values := makeFieldValues(instance.Fields)
 	result, err := s.Dbx.Exec(saveStr, values...)
 	if err != nil {
-		log.Panic("Insert data failed:", err.Error())
+		log.Println("Insert data failed:", err.Error())
+		return 0, err
 	}
 
 	id, err := result.LastInsertId()
 	if err != nil {
-		log.Panic("LastInsertId failed:", err.Error())
+		log.Println("LastInsertId failed:", err.Error())
+		return 0, err
 	}
-	return id
+	return id, nil
 }
 
 func (s *Session) UpdateOne(instance *data.Instance) (interface{}, error) {
 
-	s.UpdateOneBody(instance)
-
+	err := s.updateOneBody(instance)
+	if err != nil {
+		return nil, err
+	}
 	for _, ref := range instance.Associations {
-		s.saveAssociation(ref, instance.Id)
+		err = s.SaveAssociation(ref, instance.Id)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	savedObject := s.QueryOneEntityById(instance.Entity, instance.Id)
@@ -63,7 +73,7 @@ func (s *Session) UpdateOne(instance *data.Instance) (interface{}, error) {
 }
 
 //只保存属性，不保存关联
-func (s *Session) UpdateOneBody(instance *data.Instance) {
+func (s *Session) updateOneBody(instance *data.Instance) error {
 	sqlBuilder := dialect.GetSQLBuilder()
 
 	saveStr := sqlBuilder.BuildUpdateSQL(instance.Id, instance.Fields, instance.Table())
@@ -71,8 +81,11 @@ func (s *Session) UpdateOneBody(instance *data.Instance) {
 	log.Println(saveStr)
 	_, err := s.Dbx.Exec(saveStr, values...)
 	if err != nil {
-		log.Panic("Update data failed:", err.Error())
+		log.Println("Update data failed:", err.Error())
+		return err
 	}
+
+	return nil
 }
 
 func newAssociationPovit(r *data.AssociationRef, ownerId uint64, tarId uint64) *data.AssociationPovit {
@@ -99,7 +112,7 @@ func (s *Session) saveAssociationInstance(ins *data.Instance) (interface{}, erro
 
 	return targetData, nil
 }
-func (s *Session) saveAssociation(r *data.AssociationRef, ownerId uint64) error {
+func (s *Session) SaveAssociation(r *data.AssociationRef, ownerId uint64) error {
 
 	//这块逻辑还需要优化
 	if r.Clear {
