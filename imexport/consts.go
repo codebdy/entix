@@ -7,3 +7,4 @@ const IMPORT_APP = "importApp"
 const EXPORT_APP = "exportApp"
 
 const TEMP_DATAS = "temp-datas"
+const APP_JON = "app.json"

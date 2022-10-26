@@ -119,7 +119,7 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 	}
 
 	//保存app.json
-	f, err := w.Create("app.json")
+	f, err := w.Create(APP_JON)
 	if err != nil {
 		log.Panic(err.Error())
 	}
