@@ -1,8 +1,11 @@
 package imexport
 
 import (
+	"time"
+
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
+	"rxdrag.com/entify/model/meta"
 )
 
 //处理要导入的实体对象，转化关联：
@@ -10,6 +13,15 @@ import (
 // 删掉关联的Id，保证所有数据都是新增
 func convertInstanceValue(entity *graph.Entity, object map[string]interface{}) map[string]interface{} {
 	object[consts.ID] = nil
+	columns := entity.Table.Columns
+	for i := range columns {
+		column := columns[i]
+		if column.Type == meta.DATE && object[column.Name] != nil {
+			//val, err := time.Parse(object[column.Name].(string))
+			//应用目前没有其它时间，可以全用now
+			object[column.Name] = time.Now()
+		}
+	}
 	allAssociation := entity.Associations()
 	for i := range allAssociation {
 		asso := allAssociation[i]
