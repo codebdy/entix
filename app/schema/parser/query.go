@@ -6,11 +6,10 @@ import (
 	"rxdrag.com/entify/model/graph"
 )
 
-func (p *ModelParser) ClassListType(entity *graph.Class) *graphql.Object {
-	return p.listType(entity.Name(), entity.ListName())
-}
+func (p *ModelParser) ClassListType(cls *graph.Class) *graphql.Object {
+	name := cls.Name()
+	listName := cls.ListName()
 
-func (p *ModelParser) listType(name string, listName string) *graphql.Object {
 	if p.listMap[listName] != nil {
 		return p.listMap[listName]
 	}
@@ -26,6 +25,37 @@ func (p *ModelParser) listType(name string, listName string) *graphql.Object {
 				},
 				consts.TOTAL: &graphql.Field{
 					Type: graphql.Int,
+				},
+			},
+		},
+	)
+
+	p.listMap[listName] = returnValue
+	return returnValue
+}
+
+func (p *ModelParser) EntityListType(entity *graph.Entity) *graphql.Object {
+	name := entity.Name()
+	listName := entity.ListName()
+
+	if p.listMap[listName] != nil {
+		return p.listMap[listName]
+	}
+
+	returnValue := graphql.NewObject(
+		graphql.ObjectConfig{
+			Name: listName,
+			Fields: graphql.Fields{
+				consts.NODES: &graphql.Field{
+					Type: &graphql.List{
+						OfType: p.OutputType(name),
+					},
+				},
+				consts.TOTAL: &graphql.Field{
+					Type: graphql.Int,
+				},
+				consts.AGGREGATE: &graphql.Field{
+					Type: p.aggregateType(entity),
 				},
 			},
 		},

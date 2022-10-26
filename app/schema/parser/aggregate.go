@@ -7,10 +7,6 @@ import (
 	"rxdrag.com/entify/model/meta"
 )
 
-func (p *ModelParser) AggregateEntityType(entity *graph.Entity) *graphql.Object {
-	return p.aggregateType(entity.Name(), entity.AggregateName(), entity.AllAttributes())
-}
-
 func (p *ModelParser) avgFields(attrs []*graph.Attribute) graphql.Fields {
 	fields := graphql.Fields{}
 	for _, column := range attrs {
@@ -185,7 +181,7 @@ func (p *ModelParser) varianceFields(attrs []*graph.Attribute) graphql.Fields {
 	return fields
 }
 
-func (p *ModelParser) aggregateFields(name string, attrs []*graph.Attribute) graphql.Fields {
+func (p *ModelParser) AggregateFields(name string, attrs []*graph.Attribute) graphql.Fields {
 	fields := graphql.Fields{}
 	avgFields := p.avgFields(attrs)
 	if len(avgFields) > 0 {
@@ -329,41 +325,19 @@ func (p *ModelParser) aggregateFields(name string, attrs []*graph.Attribute) gra
 	return fields
 }
 
-func (p *ModelParser) aggregateType(name string, aggregateName string, attrs []*graph.Attribute) *graphql.Object {
+func (p *ModelParser) aggregateType(entity *graph.Entity) *graphql.Object {
+	aggregateName := entity.AggregateName()
 	if p.aggregateMap[aggregateName] != nil {
 		return p.aggregateMap[aggregateName]
 	}
+	aggregateFields := p.AggregateFields(entity.Name(), entity.AllAttributes())
 
-	var returnValue *graphql.Object
-
-	fields := graphql.Fields{
-		consts.NODES: &graphql.Field{
-			Type: &graphql.List{
-				OfType: p.OutputType(name),
-			},
-		},
-	}
-
-	aggregateFields := p.aggregateFields(name, attrs)
-
-	if len(aggregateFields) > 0 {
-		fields[consts.AGGREGATE] = &graphql.Field{
-			Type: graphql.NewObject(
-				graphql.ObjectConfig{
-					Name:   aggregateName + consts.FIELDS,
-					Fields: aggregateFields,
-				},
-			),
-		}
-	}
-
-	returnValue = graphql.NewObject(
+	obj := graphql.NewObject(
 		graphql.ObjectConfig{
-			Name:   aggregateName,
-			Fields: fields,
+			Name:   aggregateName + consts.FIELDS,
+			Fields: aggregateFields,
 		},
 	)
-
-	p.aggregateMap[aggregateName] = returnValue
-	return returnValue
+	p.aggregateMap[aggregateName] = obj
+	return obj
 }

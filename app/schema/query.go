@@ -26,16 +26,19 @@ func (a *AppProcessor) QueryFields() []*graphql.Field {
 	return convertFieldsArray(queryFields)
 }
 
-func (a *AppProcessor) QueryResponseType(class *graph.Class) graphql.Output {
-	return a.modelParser.ClassListType(class)
+func (a *AppProcessor) EntityQueryResponseType(entity *graph.Entity) graphql.Output {
+	return a.modelParser.EntityListType(entity)
+}
+func (a *AppProcessor) ClassQueryResponseType(cls *graph.Class) graphql.Output {
+	return a.modelParser.ClassListType(cls)
 }
 
 func (a *AppProcessor) appendInterfaceToQueryFields(intf *graph.Interface, fields graphql.Fields) {
-	(fields)[intf.QueryName()] = &graphql.Field{
-		Type:    a.QueryResponseType(&intf.Class),
-		Args:    a.modelParser.QueryArgs(intf.Name()),
-		Resolve: resolve.QueryInterfaceResolveFn(intf, a.Model),
-	}
+	// (fields)[intf.QueryName()] = &graphql.Field{
+	// 	Type:    a.QueryResponseType(&intf.Class),
+	// 	Args:    a.modelParser.QueryArgs(intf.Name()),
+	// 	Resolve: resolve.QueryInterfaceResolveFn(intf, a.Model),
+	// }
 	(fields)[intf.QueryOneName()] = &graphql.Field{
 		Type:    a.modelParser.OutputType(intf.Name()),
 		Args:    a.modelParser.QueryArgs(intf.Name()),
@@ -45,7 +48,7 @@ func (a *AppProcessor) appendInterfaceToQueryFields(intf *graph.Interface, field
 
 func (a *AppProcessor) appendEntityToQueryFields(entity *graph.Entity, fields graphql.Fields) {
 	(fields)[entity.QueryName()] = &graphql.Field{
-		Type:    a.QueryResponseType(&entity.Class),
+		Type:    a.EntityQueryResponseType(entity),
 		Args:    a.modelParser.QueryArgs(entity.Name()),
 		Resolve: resolve.QueryEntityResolveFn(entity, a.Model),
 	}
@@ -55,16 +58,11 @@ func (a *AppProcessor) appendEntityToQueryFields(entity *graph.Entity, fields gr
 		Resolve: resolve.QueryOneEntityResolveFn(entity, a.Model),
 	}
 
-	(fields)[entity.QueryAggregateName()] = &graphql.Field{
-		Type:    a.modelParser.AggregateEntityType(entity),
-		Args:    a.modelParser.QueryArgs(entity.Name()),
-		Resolve: resolve.QueryEntityResolveFn(entity, a.Model),
-	}
 }
 
 func (a *AppProcessor) appendThirdPartyToQueryFields(third *graph.ThirdParty, fields graphql.Fields) {
 	(fields)[third.QueryName()] = &graphql.Field{
-		Type:    a.QueryResponseType(&third.Class),
+		Type:    a.ClassQueryResponseType(&third.Class),
 		Args:    a.modelParser.QueryArgs(third.Name()),
 		Resolve: resolve.QueryThirdPartyResolveFn(third, a.Model),
 	}
