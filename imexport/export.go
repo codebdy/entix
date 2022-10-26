@@ -13,7 +13,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/app"
-	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/service"
 	"rxdrag.com/entify/utils"
@@ -65,10 +64,7 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 	if appJson == nil {
 		log.Panic("App json in snapshot is nil")
 	}
-	hostPath := fmt.Sprintf(
-		"http://%s/",
-		contexts.Values(p.Context).Host,
-	)
+	hostPath := getHostPath(p.Context)
 
 	folderFullPath := fmt.Sprintf("%s/app%d/%s", consts.STATIC_PATH, m.app.AppId, TEMP_DATAS)
 	_, err = os.Stat(folderFullPath)
