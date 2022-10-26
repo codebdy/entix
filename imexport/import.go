@@ -16,7 +16,10 @@ import (
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/app"
 	"rxdrag.com/entify/consts"
+	"rxdrag.com/entify/model/data"
+	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/scalars"
+	"rxdrag.com/entify/service"
 	"rxdrag.com/entify/storage"
 	"rxdrag.com/entify/utils"
 )
@@ -91,6 +94,12 @@ func (m *ImExportModule) importResolve(p graphql.ResolveParams) (interface{}, er
 			}
 		}
 	}
+	instance := data.NewInstance(
+		appMap,
+		m.app.GetEntityByName(meta.APP_ENTITY_NAME),
+	)
+
+	service.ImportApp(instance)
 	return true, nil
 }
 
