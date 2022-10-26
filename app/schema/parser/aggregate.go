@@ -3,11 +3,12 @@ package parser
 import (
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/consts"
+	"rxdrag.com/entify/model/domain"
 	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/model/meta"
 )
 
-func (p *ModelParser) avgFields(attrs []*graph.Attribute) graphql.Fields {
+func (p *ModelParser) avgFields(attrs []*graph.Attribute, methods []*domain.Method) graphql.Fields {
 	fields := graphql.Fields{}
 	for _, column := range attrs {
 		if column.Type == meta.INT || column.Type == meta.FLOAT {
@@ -17,10 +18,18 @@ func (p *ModelParser) avgFields(attrs []*graph.Attribute) graphql.Fields {
 		}
 
 	}
+
+	for _, method := range methods {
+		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
+			fields[method.Name] = &graphql.Field{
+				Type: p.PropertyType(method.Type),
+			}
+		}
+	}
 	return fields
 }
 
-func (p *ModelParser) maxFields(attrs []*graph.Attribute) graphql.Fields {
+func (p *ModelParser) maxFields(attrs []*graph.Attribute, methods []*domain.Method) graphql.Fields {
 	fields := graphql.Fields{}
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
@@ -28,12 +37,18 @@ func (p *ModelParser) maxFields(attrs []*graph.Attribute) graphql.Fields {
 				Type: p.PropertyType(attr.Type),
 			}
 		}
-
+	}
+	for _, method := range methods {
+		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
+			fields[method.Name] = &graphql.Field{
+				Type: p.PropertyType(method.Type),
+			}
+		}
 	}
 	return fields
 }
 
-func (p *ModelParser) minFields(attrs []*graph.Attribute) graphql.Fields {
+func (p *ModelParser) minFields(attrs []*graph.Attribute, methods []*domain.Method) graphql.Fields {
 	fields := graphql.Fields{}
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
@@ -45,12 +60,18 @@ func (p *ModelParser) minFields(attrs []*graph.Attribute) graphql.Fields {
 				// },
 			}
 		}
-
+	}
+	for _, method := range methods {
+		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
+			fields[method.Name] = &graphql.Field{
+				Type: p.PropertyType(method.Type),
+			}
+		}
 	}
 	return fields
 }
 
-func (p *ModelParser) selectFields(attrs []*graph.Attribute) graphql.InputObjectConfigFieldMap {
+func (p *ModelParser) selectFields(attrs []*graph.Attribute, methods []*domain.Method) graphql.InputObjectConfigFieldMap {
 	fields := graphql.InputObjectConfigFieldMap{}
 	for _, attr := range attrs {
 		if attr.Type != meta.FILE {
@@ -59,11 +80,79 @@ func (p *ModelParser) selectFields(attrs []*graph.Attribute) graphql.InputObject
 			}
 		}
 	}
-
 	return fields
 }
 
-func (p *ModelParser) stddevFields(attrs []*graph.Attribute) graphql.Fields {
+func (p *ModelParser) stddevFields(attrs []*graph.Attribute, methods []*domain.Method) graphql.Fields {
+	fields := graphql.Fields{}
+	for _, attr := range attrs {
+		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
+			fields[attr.Name] = &graphql.Field{
+				Type: p.PropertyType(attr.Type),
+				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				// 	fmt.Println(p.Context.Value("data"))
+				// 	return "world", nil
+				// },
+			}
+		}
+	}
+	for _, method := range methods {
+		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
+			fields[method.Name] = &graphql.Field{
+				Type: p.PropertyType(method.Type),
+			}
+		}
+	}
+	return fields
+}
+
+func (p *ModelParser) stddevPopFields(attrs []*graph.Attribute, methods []*domain.Method) graphql.Fields {
+	fields := graphql.Fields{}
+	for _, attr := range attrs {
+		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
+			fields[attr.Name] = &graphql.Field{
+				Type: p.PropertyType(attr.Type),
+				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				// 	fmt.Println(p.Context.Value("data"))
+				// 	return "world", nil
+				// },
+			}
+		}
+	}
+	for _, method := range methods {
+		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
+			fields[method.Name] = &graphql.Field{
+				Type: p.PropertyType(method.Type),
+			}
+		}
+	}
+	return fields
+}
+
+func (p *ModelParser) stddevSampFields(attrs []*graph.Attribute, methods []*domain.Method) graphql.Fields {
+	fields := graphql.Fields{}
+	for _, attr := range attrs {
+		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
+			fields[attr.Name] = &graphql.Field{
+				Type: p.PropertyType(attr.Type),
+				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				// 	fmt.Println(p.Context.Value("data"))
+				// 	return "world", nil
+				// },
+			}
+		}
+	}
+	for _, method := range methods {
+		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
+			fields[method.Name] = &graphql.Field{
+				Type: p.PropertyType(method.Type),
+			}
+		}
+	}
+	return fields
+}
+
+func (p *ModelParser) sumFields(attrs []*graph.Attribute, methods []*domain.Method) graphql.Fields {
 	fields := graphql.Fields{}
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
@@ -77,10 +166,17 @@ func (p *ModelParser) stddevFields(attrs []*graph.Attribute) graphql.Fields {
 		}
 
 	}
+	for _, method := range methods {
+		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
+			fields[method.Name] = &graphql.Field{
+				Type: p.PropertyType(method.Type),
+			}
+		}
+	}
 	return fields
 }
 
-func (p *ModelParser) stddevPopFields(attrs []*graph.Attribute) graphql.Fields {
+func (p *ModelParser) varPopFields(attrs []*graph.Attribute, methods []*domain.Method) graphql.Fields {
 	fields := graphql.Fields{}
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
@@ -93,10 +189,17 @@ func (p *ModelParser) stddevPopFields(attrs []*graph.Attribute) graphql.Fields {
 			}
 		}
 	}
+	for _, method := range methods {
+		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
+			fields[method.Name] = &graphql.Field{
+				Type: p.PropertyType(method.Type),
+			}
+		}
+	}
 	return fields
 }
 
-func (p *ModelParser) stddevSampFields(attrs []*graph.Attribute) graphql.Fields {
+func (p *ModelParser) varSampFields(attrs []*graph.Attribute, methods []*domain.Method) graphql.Fields {
 	fields := graphql.Fields{}
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
@@ -108,12 +211,18 @@ func (p *ModelParser) stddevSampFields(attrs []*graph.Attribute) graphql.Fields 
 				// },
 			}
 		}
-
+	}
+	for _, method := range methods {
+		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
+			fields[method.Name] = &graphql.Field{
+				Type: p.PropertyType(method.Type),
+			}
+		}
 	}
 	return fields
 }
 
-func (p *ModelParser) sumFields(attrs []*graph.Attribute) graphql.Fields {
+func (p *ModelParser) varianceFields(attrs []*graph.Attribute, methods []*domain.Method) graphql.Fields {
 	fields := graphql.Fields{}
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
@@ -125,65 +234,20 @@ func (p *ModelParser) sumFields(attrs []*graph.Attribute) graphql.Fields {
 				// },
 			}
 		}
-
 	}
-	return fields
-}
-
-func (p *ModelParser) varPopFields(attrs []*graph.Attribute) graphql.Fields {
-	fields := graphql.Fields{}
-	for _, attr := range attrs {
-		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
-			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr.Type),
-				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				// 	fmt.Println(p.Context.Value("data"))
-				// 	return "world", nil
-				// },
+	for _, method := range methods {
+		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
+			fields[method.Name] = &graphql.Field{
+				Type: p.PropertyType(method.Type),
 			}
 		}
-
 	}
 	return fields
 }
 
-func (p *ModelParser) varSampFields(attrs []*graph.Attribute) graphql.Fields {
+func (p *ModelParser) AggregateFields(name string, attrs []*graph.Attribute, methods []*domain.Method) graphql.Fields {
 	fields := graphql.Fields{}
-	for _, attr := range attrs {
-		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
-			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr.Type),
-				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				// 	fmt.Println(p.Context.Value("data"))
-				// 	return "world", nil
-				// },
-			}
-		}
-
-	}
-	return fields
-}
-
-func (p *ModelParser) varianceFields(attrs []*graph.Attribute) graphql.Fields {
-	fields := graphql.Fields{}
-	for _, attr := range attrs {
-		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
-			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr.Type),
-				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				// 	fmt.Println(p.Context.Value("data"))
-				// 	return "world", nil
-				// },
-			}
-		}
-
-	}
-	return fields
-}
-
-func (p *ModelParser) AggregateFields(name string, attrs []*graph.Attribute) graphql.Fields {
-	fields := graphql.Fields{}
-	avgFields := p.avgFields(attrs)
+	avgFields := p.avgFields(attrs, methods)
 	if len(avgFields) > 0 {
 		fields["avg"] = &graphql.Field{
 			Type: graphql.NewObject(
@@ -195,7 +259,7 @@ func (p *ModelParser) AggregateFields(name string, attrs []*graph.Attribute) gra
 		}
 	}
 
-	maxFields := p.maxFields(attrs)
+	maxFields := p.maxFields(attrs, methods)
 	if len(maxFields) > 0 {
 		fields["max"] = &graphql.Field{
 			Type: graphql.NewObject(
@@ -207,7 +271,7 @@ func (p *ModelParser) AggregateFields(name string, attrs []*graph.Attribute) gra
 		}
 	}
 
-	minFields := p.minFields(attrs)
+	minFields := p.minFields(attrs, methods)
 	if len(minFields) > 0 {
 		fields["min"] = &graphql.Field{
 			Type: graphql.NewObject(
@@ -219,7 +283,7 @@ func (p *ModelParser) AggregateFields(name string, attrs []*graph.Attribute) gra
 		}
 	}
 
-	countFields := p.selectFields(attrs)
+	countFields := p.selectFields(attrs, methods)
 	if len(countFields) > 0 {
 		selectColumnName := name + "SelectColumn"
 		selectColumn := graphql.NewInputObject(
@@ -242,7 +306,7 @@ func (p *ModelParser) AggregateFields(name string, attrs []*graph.Attribute) gra
 		}
 	}
 
-	stddevFields := p.stddevFields(attrs)
+	stddevFields := p.stddevFields(attrs, methods)
 	if len(stddevFields) > 0 {
 		fields["stddev"] = &graphql.Field{
 			Type: graphql.NewObject(
@@ -254,7 +318,7 @@ func (p *ModelParser) AggregateFields(name string, attrs []*graph.Attribute) gra
 		}
 	}
 
-	stddevPopFields := p.stddevPopFields(attrs)
+	stddevPopFields := p.stddevPopFields(attrs, methods)
 	if len(stddevPopFields) > 0 {
 		fields["stddevPop"] = &graphql.Field{
 			Type: graphql.NewObject(
@@ -266,7 +330,7 @@ func (p *ModelParser) AggregateFields(name string, attrs []*graph.Attribute) gra
 		}
 	}
 
-	stddevSampFields := p.stddevSampFields(attrs)
+	stddevSampFields := p.stddevSampFields(attrs, methods)
 	if len(stddevSampFields) > 0 {
 		fields["stddevSamp"] = &graphql.Field{
 			Type: graphql.NewObject(
@@ -278,7 +342,7 @@ func (p *ModelParser) AggregateFields(name string, attrs []*graph.Attribute) gra
 		}
 	}
 
-	sumFields := p.sumFields(attrs)
+	sumFields := p.sumFields(attrs, methods)
 	if len(sumFields) > 0 {
 		fields["sum"] = &graphql.Field{
 			Type: graphql.NewObject(
@@ -289,7 +353,7 @@ func (p *ModelParser) AggregateFields(name string, attrs []*graph.Attribute) gra
 			),
 		}
 	}
-	varPopFields := p.varPopFields(attrs)
+	varPopFields := p.varPopFields(attrs, methods)
 	if len(varPopFields) > 0 {
 		fields["varPop"] = &graphql.Field{
 			Type: graphql.NewObject(
@@ -300,7 +364,7 @@ func (p *ModelParser) AggregateFields(name string, attrs []*graph.Attribute) gra
 			),
 		}
 	}
-	varSampFields := p.varSampFields(attrs)
+	varSampFields := p.varSampFields(attrs, methods)
 	if len(varSampFields) > 0 {
 		fields["varSamp"] = &graphql.Field{
 			Type: graphql.NewObject(
@@ -311,7 +375,7 @@ func (p *ModelParser) AggregateFields(name string, attrs []*graph.Attribute) gra
 			),
 		}
 	}
-	varianceFields := p.varianceFields(attrs)
+	varianceFields := p.varianceFields(attrs, methods)
 	if len(varianceFields) > 0 {
 		fields["variance"] = &graphql.Field{
 			Type: graphql.NewObject(
@@ -330,7 +394,7 @@ func (p *ModelParser) aggregateType(entity *graph.Entity) *graphql.Object {
 	if p.aggregateMap[aggregateName] != nil {
 		return p.aggregateMap[aggregateName]
 	}
-	aggregateFields := p.AggregateFields(entity.Name(), entity.AllAttributes())
+	aggregateFields := p.AggregateFields(entity.Name(), entity.AllAttributes(), entity.Domain.Methods)
 
 	obj := graphql.NewObject(
 		graphql.ObjectConfig{
