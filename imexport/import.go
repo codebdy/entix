@@ -76,8 +76,9 @@ func (m *ImExportModule) importResolve(p graphql.ResolveParams) (interface{}, er
 	appMap := readAppJsonFile(appJsonFile)
 
 	if appMap["plugins"] != nil {
-		plugins := appMap["plugins"].([]map[string]interface{})
-		for _, plugin := range plugins {
+		plugins := appMap["plugins"].([]interface{})
+		for _, pluginData := range plugins {
+			plugin := pluginData.(map[string]interface{})
 			if plugin["type"] != "debug" {
 				pluginFiles := getPluginFiles(plugin["url"].(string), r.File)
 				hostPath := getHostPath(p.Context)
