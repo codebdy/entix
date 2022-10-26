@@ -99,8 +99,8 @@ func (m *ImExportModule) importResolve(p graphql.ResolveParams) (interface{}, er
 		m.app.GetEntityByName(meta.APP_ENTITY_NAME),
 	)
 
-	service.ImportApp(instance)
-	return true, nil
+	err = service.ImportApp(instance)
+	return err == nil, err
 }
 
 func getPluginFiles(pluginPath string, arr []*zip.File) []*zip.File {

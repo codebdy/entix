@@ -10,29 +10,17 @@ import (
 
 func (s *Session) SaveOne(instance *data.Instance) (interface{}, error) {
 	if instance.IsInsert() {
-		return s.insertOne(instance)
+		return s.InsertOne(instance)
 	} else {
-		return s.updateOne(instance)
+		return s.UpdateOne(instance)
 	}
 }
 
-func (s *Session) insertOne(instance *data.Instance) (interface{}, error) {
-	sqlBuilder := dialect.GetSQLBuilder()
-	saveStr := sqlBuilder.BuildInsertSQL(instance.Fields, instance.Table())
-	values := makeFieldValues(instance.Fields)
-	result, err := s.Dbx.Exec(saveStr, values...)
-	if err != nil {
-		log.Println("Insert data failed:", err.Error())
-		return nil, err
-	}
+func (s *Session) InsertOne(instance *data.Instance) (interface{}, error) {
+	id := s.InsertOneBody(instance)
 
-	id, err := result.LastInsertId()
-	if err != nil {
-		log.Println("LastInsertId failed:", err.Error())
-		return nil, err
-	}
 	for _, asso := range instance.Associations {
-		err = s.saveAssociation(asso, uint64(id))
+		err := s.saveAssociation(asso, uint64(id))
 		if err != nil {
 			log.Println("Save reference failed:", err.Error())
 			return nil, err
@@ -41,35 +29,50 @@ func (s *Session) insertOne(instance *data.Instance) (interface{}, error) {
 
 	savedObject := s.QueryOneEntityById(instance.Entity, id)
 
-	//affectedRows, err := result.RowsAffected()
+	return savedObject, nil
+}
+
+//只保存属性，不保存关联
+func (s *Session) InsertOneBody(instance *data.Instance) int64 {
+	sqlBuilder := dialect.GetSQLBuilder()
+	saveStr := sqlBuilder.BuildInsertSQL(instance.Fields, instance.Table())
+	values := makeFieldValues(instance.Fields)
+	result, err := s.Dbx.Exec(saveStr, values...)
 	if err != nil {
-		log.Println("RowsAffected failed:", err.Error())
-		return nil, err
+		log.Panic("Insert data failed:", err.Error())
 	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		log.Panic("LastInsertId failed:", err.Error())
+	}
+	return id
+}
+
+func (s *Session) UpdateOne(instance *data.Instance) (interface{}, error) {
+
+	s.UpdateOneBody(instance)
+
+	for _, ref := range instance.Associations {
+		s.saveAssociation(ref, instance.Id)
+	}
+
+	savedObject := s.QueryOneEntityById(instance.Entity, instance.Id)
 
 	return savedObject, nil
 }
 
-func (con *Session) updateOne(instance *data.Instance) (interface{}, error) {
-
+//只保存属性，不保存关联
+func (s *Session) UpdateOneBody(instance *data.Instance) {
 	sqlBuilder := dialect.GetSQLBuilder()
 
 	saveStr := sqlBuilder.BuildUpdateSQL(instance.Id, instance.Fields, instance.Table())
 	values := makeFieldValues(instance.Fields)
 	log.Println(saveStr)
-	_, err := con.Dbx.Exec(saveStr, values...)
+	_, err := s.Dbx.Exec(saveStr, values...)
 	if err != nil {
-		log.Println("Update data failed:", err.Error())
-		return nil, err
+		log.Panic("Update data failed:", err.Error())
 	}
-
-	for _, ref := range instance.Associations {
-		con.saveAssociation(ref, instance.Id)
-	}
-
-	savedObject := con.QueryOneEntityById(instance.Entity, instance.Id)
-
-	return savedObject, nil
 }
 
 func newAssociationPovit(r *data.AssociationRef, ownerId uint64, tarId uint64) *data.AssociationPovit {
@@ -85,10 +88,10 @@ func newAssociationPovit(r *data.AssociationRef, ownerId uint64, tarId uint64) *
 
 }
 
-func (con *Session) saveAssociationInstance(ins *data.Instance) (interface{}, error) {
+func (s *Session) saveAssociationInstance(ins *data.Instance) (interface{}, error) {
 	targetData := InsanceData{consts.ID: ins.Id}
 
-	saved, err := con.SaveOne(ins)
+	saved, err := s.SaveOne(ins)
 	if err != nil {
 		return nil, err
 	}
@@ -96,24 +99,24 @@ func (con *Session) saveAssociationInstance(ins *data.Instance) (interface{}, er
 
 	return targetData, nil
 }
-func (con *Session) saveAssociation(r *data.AssociationRef, ownerId uint64) error {
+func (s *Session) saveAssociation(r *data.AssociationRef, ownerId uint64) error {
 
 	//这块逻辑还需要优化
 	if r.Clear {
-		con.clearAssociation(r, ownerId)
+		s.clearAssociation(r, ownerId)
 	}
 
 	for _, ins := range r.Deleted {
 		if r.Cascade() {
-			con.DeleteInstance(ins)
+			s.DeleteInstance(ins)
 		} else {
 			povit := newAssociationPovit(r, ownerId, ins.Id)
-			con.DeleteAssociationPovit(povit)
+			s.DeleteAssociationPovit(povit)
 		}
 	}
 
 	for _, ins := range r.Added {
-		targetData, err := con.saveAssociationInstance(ins)
+		targetData, err := s.saveAssociationInstance(ins)
 
 		if err != nil {
 			panic("Save Association error:" + err.Error())
@@ -121,7 +124,7 @@ func (con *Session) saveAssociation(r *data.AssociationRef, ownerId uint64) erro
 			if savedIns, ok := targetData.(InsanceData); ok {
 				tarId := savedIns[consts.ID].(uint64)
 				relationInstance := newAssociationPovit(r, ownerId, tarId)
-				con.SaveAssociationPovit(relationInstance)
+				s.SaveAssociationPovit(relationInstance)
 			} else {
 				panic("Save Association error")
 			}
@@ -133,7 +136,7 @@ func (con *Session) saveAssociation(r *data.AssociationRef, ownerId uint64) erro
 		// if ins.Id == 0 {
 		// 	panic("Can not add new instance when update")
 		// }
-		targetData, err := con.saveAssociationInstance(ins)
+		targetData, err := s.saveAssociationInstance(ins)
 		if err != nil {
 			panic("Save Association error:" + err.Error())
 		} else {
@@ -141,7 +144,7 @@ func (con *Session) saveAssociation(r *data.AssociationRef, ownerId uint64) erro
 				tarId := savedIns[consts.ID].(uint64)
 				relationInstance := newAssociationPovit(r, ownerId, tarId)
 
-				con.SaveAssociationPovit(relationInstance)
+				s.SaveAssociationPovit(relationInstance)
 			} else {
 				panic("Save Association error")
 			}
@@ -153,12 +156,12 @@ func (con *Session) saveAssociation(r *data.AssociationRef, ownerId uint64) erro
 		return nil
 	}
 
-	con.clearAssociation(r, ownerId)
+	s.clearAssociation(r, ownerId)
 
 	for _, ins := range synced {
 		targetId := ins.Id
 		if !ins.IsEmperty() {
-			targetData, err := con.saveAssociationInstance(ins)
+			targetData, err := s.saveAssociationInstance(ins)
 			if err != nil {
 				panic("Save Association error:" + err.Error())
 			} else {
@@ -170,23 +173,23 @@ func (con *Session) saveAssociation(r *data.AssociationRef, ownerId uint64) erro
 			}
 		}
 		relationInstance := newAssociationPovit(r, ownerId, targetId)
-		con.SaveAssociationPovit(relationInstance)
+		s.SaveAssociationPovit(relationInstance)
 	}
 
 	return nil
 }
 
-func (con *Session) SaveAssociationPovit(povit *data.AssociationPovit) {
+func (s *Session) SaveAssociationPovit(povit *data.AssociationPovit) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	sql := sqlBuilder.BuildQueryPovitSQL(povit)
-	rows, err := con.Dbx.Query(sql)
+	rows, err := s.Dbx.Query(sql)
 	defer rows.Close()
 	if err != nil {
 		panic(err.Error())
 	}
 	if !rows.Next() {
 		sql = sqlBuilder.BuildInsertPovitSQL(povit)
-		_, err := con.Dbx.Exec(sql)
+		_, err := s.Dbx.Exec(sql)
 		if err != nil {
 			panic(err.Error())
 		}

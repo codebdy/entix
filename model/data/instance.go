@@ -22,11 +22,13 @@ type Instance struct {
 	Fields       []*Field
 	Associations []*AssociationRef
 	isInsert     bool
+	ValueMap     map[string]interface{}
 }
 
 func NewInstance(object map[string]interface{}, entity *graph.Entity) *Instance {
 	instance := Instance{
-		Entity: entity,
+		Entity:   entity,
+		ValueMap: object,
 	}
 	if object[consts.ID] != nil {
 		instance.Id = parseId(object[consts.ID])
