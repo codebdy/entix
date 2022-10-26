@@ -112,7 +112,12 @@ func (m *ImExportModule) importResolve(p graphql.ResolveParams) (interface{}, er
 		appMap[consts.ID] = oldApp.(map[string]interface{})[consts.ID]
 	}
 	instance := data.NewInstance(appMap, appEntity)
+
 	savedIns, err := service.SaveOne(instance)
+
+	if err != nil {
+		return false, err
+	}
 
 	ap, err := app.Get(savedIns.(map[string]interface{})[consts.ID].(uint64))
 

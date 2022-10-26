@@ -19,7 +19,7 @@ func convertInstanceValue(entity *graph.Entity, object map[string]interface{}) m
 			if value != nil {
 				if asso.IsArray() {
 					object[asso.Name()] = map[string]interface{}{
-						consts.ARG_SYNC: convertInstanceValues(asso.TypeEntity(), value.([]map[string]interface{})),
+						consts.ARG_SYNC: convertInstanceValues(asso.TypeEntity(), value.([]interface{})),
 					}
 				} else {
 					object[asso.Name()] = map[string]interface{}{
@@ -38,9 +38,9 @@ func convertInstanceValue(entity *graph.Entity, object map[string]interface{}) m
 	return object
 }
 
-func convertInstanceValues(entity *graph.Entity, objects []map[string]interface{}) []map[string]interface{} {
+func convertInstanceValues(entity *graph.Entity, objects []interface{}) []interface{} {
 	for _, object := range objects {
-		convertInstanceValue(entity, object)
+		convertInstanceValue(entity, object.(map[string]interface{}))
 	}
 	return objects
 }
