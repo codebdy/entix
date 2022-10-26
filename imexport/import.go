@@ -2,6 +2,7 @@ package imexport
 
 import (
 	"archive/zip"
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -113,24 +114,24 @@ func readAppJsonFile(f *zip.File) map[string]interface{} {
 		}
 	}()
 
-	jsonByte := []byte{}
-	length, err := rc.Read(jsonByte)
+	buf := readToBuffer(rc)
 
 	if err != nil {
 		log.Panic(err.Error())
-	}
-
-	if length == 0 {
-		log.Panic("app.json is emperty")
 	}
 
 	appMap := map[string]interface{}{}
-	err = json.Unmarshal(jsonByte, &appMap)
+	err = json.Unmarshal(buf.Bytes(), &appMap)
 	if err != nil {
 		log.Panic(err.Error())
 	}
-
 	return appMap
+}
+
+func readToBuffer(rc io.ReadCloser) *bytes.Buffer {
+	buf := bytes.NewBuffer(nil)
+	io.Copy(buf, rc)
+	return buf
 }
 
 func extractAndWriteFile(destination string, f *zip.File) error {
