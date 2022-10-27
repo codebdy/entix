@@ -120,12 +120,12 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 		log.Panic(err.Error())
 	}
 
-	appStr, err := json.Marshal(appJson)
+	appStrBytes, err := json.Marshal(appJson)
 	if err != nil {
 		log.Panic(err.Error())
 	}
 
-	f.Write(appStr)
+	f.Write(appStrBytes)
 	return fileUrl, nil
 }
 
