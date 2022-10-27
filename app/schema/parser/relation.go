@@ -8,25 +8,25 @@ import (
 )
 
 func (p *ModelParser) makeRelations(model *model.Model) {
-	for i := range p.model.Graph.Interfaces {
-		intf := p.model.Graph.Interfaces[i]
-		interfaceType := p.interfaceTypeMap[intf.Name()]
-		if interfaceType == nil {
-			panic("Can find object type:" + intf.Name())
-		}
-		for _, association := range intf.AllAssociations() {
-			if interfaceType.Fields()[association.Name()] != nil {
-				panic("Duplicate interface field: " + intf.Name() + "." + association.Name())
-			}
-			interfaceType.AddFieldConfig(association.Name(), &graphql.Field{
-				Name:        association.Name(),
-				Type:        p.AssociationType(association),
-				Description: association.Description(),
-				Resolve:     resolve.QueryAssociationFn(association, model),
-				Args:        p.QueryArgs(association.TypeEntity().Name()),
-			})
-		}
-	}
+	// for i := range p.model.Graph.Interfaces {
+	// intf := p.model.Graph.Interfaces[i]
+	// interfaceType := p.interfaceTypeMap[intf.Name()]
+	// if interfaceType == nil {
+	// 	panic("Can find object type:" + intf.Name())
+	// }
+	// for _, association := range intf.AllAssociations() {
+	// 	if interfaceType.Fields()[association.Name()] != nil {
+	// 		panic("Duplicate interface field: " + intf.Name() + "." + association.Name())
+	// 	}
+	// 	interfaceType.AddFieldConfig(association.Name(), &graphql.Field{
+	// 		Name:        association.Name(),
+	// 		Type:        p.AssociationType(association),
+	// 		Description: association.Description(),
+	// 		Resolve:     resolve.QueryAssociationFn(association, model),
+	// 		Args:        p.QueryArgs(association.TypeEntity().Name()),
+	// 	})
+	// }
+	// }
 	for i := range p.model.Graph.Entities {
 		entity := p.model.Graph.Entities[i]
 		objectType := p.objectTypeMap[entity.Name()]
