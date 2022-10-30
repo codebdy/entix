@@ -40,12 +40,7 @@ func NewInstance(object map[string]interface{}, entity *graph.Entity) *Instance 
 	columns := entity.Table.Columns
 	for i := range columns {
 		column := columns[i]
-		if object[column.Name] != nil && object[column.Name] != consts.ID { //ID额外处理
-			instance.Fields = append(instance.Fields, &Field{
-				Column: column,
-				Value:  object[column.Name],
-			})
-		} else if column.CreateDate || column.UpdateDate {
+		if column.CreateDate || column.UpdateDate {
 			instance.Fields = append(instance.Fields, &Field{
 				Column: column,
 				Value:  time.Now(),
@@ -61,6 +56,11 @@ func NewInstance(object map[string]interface{}, entity *graph.Entity) *Instance 
 			instance.Fields = append(instance.Fields, &Field{
 				Column: column,
 				Value:  utils.BcryptEncode(object[column.Name].(string)),
+			})
+		} else if object[column.Name] != nil && object[column.Name] != consts.ID { //ID额外处理
+			instance.Fields = append(instance.Fields, &Field{
+				Column: column,
+				Value:  object[column.Name],
 			})
 		}
 	}
