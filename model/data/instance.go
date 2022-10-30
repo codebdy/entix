@@ -6,9 +6,12 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/google/uuid"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
+	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/model/table"
+	"rxdrag.com/entify/utils"
 )
 
 type Field struct {
@@ -46,6 +49,18 @@ func NewInstance(object map[string]interface{}, entity *graph.Entity) *Instance 
 			instance.Fields = append(instance.Fields, &Field{
 				Column: column,
 				Value:  time.Now(),
+			})
+		} else if column.Type == meta.UUID &&
+			object[consts.ID] == nil &&
+			column.AutoGenerate {
+			instance.Fields = append(instance.Fields, &Field{
+				Column: column,
+				Value:  uuid.New().String(),
+			})
+		} else if column.Type == meta.PASSWORD && object[column.Name] != nil {
+			instance.Fields = append(instance.Fields, &Field{
+				Column: column,
+				Value:  utils.BcryptEncode(object[column.Name].(string)),
 			})
 		}
 	}

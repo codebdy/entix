@@ -153,7 +153,7 @@ func adminInstance(name string, password string) map[string]interface{} {
 	return map[string]interface{}{
 		consts.NAME:           "Admin",
 		consts.LOGIN_NAME:     name,
-		consts.PASSWORD:       utils.BcryptEncode(password),
+		consts.PASSWORD:       password,
 		consts.IS_SUPPER:      true,
 		consts.META_CREATEDAT: time.Now(),
 		consts.META_UPDATEDAT: time.Now(),
@@ -164,7 +164,7 @@ func demoInstance() map[string]interface{} {
 	return map[string]interface{}{
 		consts.NAME:           "Demo",
 		consts.LOGIN_NAME:     "demo",
-		consts.PASSWORD:       utils.BcryptEncode("demo"),
+		consts.PASSWORD:       "demo",
 		consts.IS_DEMO:        true,
 		consts.META_CREATEDAT: time.Now(),
 		consts.META_UPDATEDAT: time.Now(),
