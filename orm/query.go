@@ -240,7 +240,7 @@ func (con *Session) QueryAssociatedInstances(r *data.AssociationRef, ownerId uin
 	rows, err := con.Dbx.Query(queryStr)
 	defer rows.Close()
 	if err != nil {
-		panic(err.Error())
+		log.Panic(err.Error())
 	}
 
 	for rows.Next() {

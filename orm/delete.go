@@ -10,11 +10,10 @@ import (
 type InsanceData = map[string]interface{}
 
 func (con *Session) clearAssociation(r *data.AssociationRef, ownerId uint64) {
-	con.deleteAssociationPovit(r, ownerId)
-
 	if r.Association.IsCombination() {
 		con.deleteAssociatedInstances(r, ownerId)
 	}
+	con.deleteAssociationPovit(r, ownerId)
 }
 
 func (s *Session) deleteAssociationPovit(r *data.AssociationRef, ownerId uint64) {
@@ -68,7 +67,6 @@ func (s *Session) DeleteInstance(instance *data.Instance) {
 	} else {
 		sql = sqlBuilder.BuildDeleteSQL(instance.Id, tableName)
 	}
-
 	_, err := s.Dbx.Exec(sql)
 	if err != nil {
 		panic(err.Error())
