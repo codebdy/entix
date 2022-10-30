@@ -108,6 +108,10 @@ func (m *ImExportModule) importResolve(p graphql.ResolveParams) (interface{}, er
 		},
 	)
 
+	if p.Args[ARG_APP_ID] == nil && oldApp != nil {
+		log.Panic("App is exists!")
+	}
+
 	if oldApp != nil {
 		appMap[consts.ID] = oldApp.(map[string]interface{})[consts.ID]
 	}
