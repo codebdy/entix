@@ -23,4 +23,5 @@ const (
 	ENTITY_ARRAY       string = "EntityArray"
 	FILE               string = consts.FILE
 	PASSWORD           string = "Password"
+	UUID               string = "Uuid"
 )

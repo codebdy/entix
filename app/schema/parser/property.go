@@ -24,7 +24,7 @@ func (p *ModelParser) PropertyType(propType string) graphql.Output {
 		return graphql.Float
 	case meta.BOOLEAN:
 		return graphql.Boolean
-	case meta.STRING, meta.PASSWORD:
+	case meta.STRING, meta.PASSWORD, meta.UUID:
 		return graphql.String
 	case meta.DATE:
 		return graphql.DateTime
@@ -65,7 +65,7 @@ func (p *ModelParser) AttributeExp(column *graph.Attribute) *graphql.InputObject
 		return &FloatComparisonExp
 	case meta.BOOLEAN:
 		return &BooleanComparisonExp
-	case meta.STRING, meta.PASSWORD:
+	case meta.STRING, meta.PASSWORD, meta.UUID:
 		return &StringComparisonExp
 	case meta.DATE:
 		return &DateTimeComparisonExp
