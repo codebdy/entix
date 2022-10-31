@@ -11,4 +11,5 @@ type PackageMeta struct {
 	Label      string `json:"label"`
 	System     bool   `json:"system"`
 	StereoType string `json:"stereoType"`
+	Sharable   bool   `json:"sharable"`
 }

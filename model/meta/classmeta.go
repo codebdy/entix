@@ -25,7 +25,6 @@ type ClassMeta struct {
 	PackageUuid   string          `json:"packageUuid"`
 	QueryScript   string          `json:"queryScript"`
 	MuationScript string          `json:"muationScript"`
-	Sharable      bool            `json:"sharable"`
 	//生成表名时使用
 	AppId uint64
 }
