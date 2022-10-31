@@ -47,7 +47,7 @@ func NewInstance(object map[string]interface{}, entity *graph.Entity) *Instance 
 			})
 		} else if column.Type == meta.UUID &&
 			object[consts.ID] == nil &&
-			column.AutoGenerate {
+			column.AutoGenerate && object[column.Name] == nil {
 			instance.Fields = append(instance.Fields, &Field{
 				Column: column,
 				Value:  uuid.New().String(),
