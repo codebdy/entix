@@ -170,7 +170,7 @@ func (p *ModelParser) InterfaceType(intf *graph.Interface) *graphql.Interface {
 	return graphql.NewInterface(
 		graphql.InterfaceConfig{
 			Name:        name,
-			Fields:      p.outputFields(intf.AllAttributes()),
+			Fields:      OutputFields(intf.AllAttributes()),
 			Description: intf.Description(),
 			ResolveType: p.resolveTypeFn,
 		},

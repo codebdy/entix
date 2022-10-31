@@ -87,7 +87,7 @@ func (p *ModelParser) makeThirdPartyObject(third *graph.ThirdParty) {
 	objType := graphql.NewObject(
 		graphql.ObjectConfig{
 			Name:        third.Name(),
-			Fields:      p.outputFields(third.Attributes()),
+			Fields:      OutputFields(third.Attributes()),
 			Description: third.Description(),
 		},
 	)
@@ -103,7 +103,7 @@ func (p *ModelParser) ObjectType(entity *graph.Entity) *graphql.Object {
 		return graphql.NewObject(
 			graphql.ObjectConfig{
 				Name:        name,
-				Fields:      p.outputFields(entity.AllAttributes()),
+				Fields:      OutputFields(entity.AllAttributes()),
 				Description: entity.Description(),
 				Interfaces:  interfaces,
 			},
@@ -112,7 +112,7 @@ func (p *ModelParser) ObjectType(entity *graph.Entity) *graphql.Object {
 		return graphql.NewObject(
 			graphql.ObjectConfig{
 				Name:        name,
-				Fields:      p.outputFields(entity.AllAttributes()),
+				Fields:      OutputFields(entity.AllAttributes()),
 				Description: entity.Description(),
 			},
 		)
@@ -120,11 +120,11 @@ func (p *ModelParser) ObjectType(entity *graph.Entity) *graphql.Object {
 
 }
 
-func (p *ModelParser) outputFields(attrs []*graph.Attribute) graphql.Fields {
+func OutputFields(attrs []*graph.Attribute) graphql.Fields {
 	fields := graphql.Fields{}
 	for _, attr := range attrs {
 		fields[attr.Name] = &graphql.Field{
-			Type:        p.PropertyType(attr.GetType()),
+			Type:        PropertyType(attr.GetType()),
 			Description: attr.Description,
 			// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 			// 	fmt.Println(p.Context.Value("data"))

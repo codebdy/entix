@@ -11,10 +11,10 @@ func (p *ModelParser) InputPropertyType(property graph.Propertier) graphql.Type 
 	if property.GetType() == meta.FILE {
 		return scalars.UploadType
 	}
-	return p.PropertyType(property.GetType())
+	return PropertyType(property.GetType())
 }
 
-func (p *ModelParser) PropertyType(propType string) graphql.Output {
+func PropertyType(propType string) graphql.Output {
 	switch propType {
 	case meta.ID:
 		return graphql.ID

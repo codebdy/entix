@@ -3,6 +3,7 @@ package schema
 import (
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/app/resolve"
+	"rxdrag.com/entify/app/schema/parser"
 	"rxdrag.com/entify/model/graph"
 )
 
@@ -77,7 +78,7 @@ func (a *AppProcessor) appendThirdPartyToQueryFields(third *graph.ThirdParty, fi
 func (a *AppProcessor) appendServiceToQueryFields(service *graph.Service, fields graphql.Fields) {
 	for _, method := range service.QueryMethods() {
 		fields[service.Name()+"_"+method.GetName()] = &graphql.Field{
-			Type:        a.modelParser.PropertyType(method.GetType()),
+			Type:        parser.PropertyType(method.GetType()),
 			Args:        a.modelParser.MethodArgs(method),
 			Description: method.Method.Description,
 			Resolve:     resolve.MethodResolveFn(method, a.Model),

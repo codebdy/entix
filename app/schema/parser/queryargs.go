@@ -183,7 +183,7 @@ func (p *ModelParser) MethodArgs(method *graph.Method) graphql.FieldConfigArgume
 
 	for _, arg := range method.Method.Args {
 		args[arg.Name] = &graphql.ArgumentConfig{
-			Type: p.PropertyType(arg.Type),
+			Type: PropertyType(arg.Type),
 		}
 	}
 

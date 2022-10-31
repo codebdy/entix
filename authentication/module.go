@@ -6,6 +6,7 @@ import (
 
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/app"
+	"rxdrag.com/entify/app/schema/parser"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/orm"
@@ -20,10 +21,16 @@ func (m *AuthenticationModule) Init(ctx context.Context) {
 func (m *AuthenticationModule) QueryFields() []*graphql.Field {
 	if orm.IsEntityExists(meta.USER_ENTITY_NAME) {
 		systemApp := app.GetSystemApp()
+		userType := systemApp.GetEntityByName(meta.USER_ENTITY_NAME)
 		return []*graphql.Field{
 			{
-				Name:    consts.ME,
-				Type:    systemApp.Schema.OutputType(meta.USER_ENTITY_NAME),
+				Name: consts.ME,
+				Type: graphql.NewObject(
+					graphql.ObjectConfig{
+						Name:   "Me",
+						Fields: parser.OutputFields(userType.AllAttributes()),
+					},
+				),
 				Resolve: resolveMe,
 			},
 		}

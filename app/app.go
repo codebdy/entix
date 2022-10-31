@@ -38,6 +38,7 @@ func (l *AppLoader) load() {
 	l.Lock()
 	defer l.Unlock()
 	if !l.loaded {
+		log.Println("加载", l.appId)
 		l.app = NewApp(l.appId)
 		if l.app == nil {
 			log.Panic(errors.New("Cant load app"))
@@ -72,6 +73,9 @@ func GetAppByIdArg(idArg interface{}) (*App, error) {
 
 func Get(appId uint64) (*App, error) {
 	if result, ok := appLoaderCache.Load(appId); ok {
+		if !result.(*AppLoader).loaded {
+			result.(*AppLoader).load()
+		}
 		return result.(*AppLoader).app, nil
 	} else {
 		appLoader := &AppLoader{
@@ -114,10 +118,9 @@ func (a *App) GetEntityByInnerId(innerId uint64) *graph.Entity {
 }
 
 func (a *App) ReLoad() {
-	newApp := NewApp(a.AppId)
-	a.Model = newApp.Model
-	a.Schema = newApp.Schema
-	a.Parser = newApp.Parser
+	if result, ok := appLoaderCache.Load(a.AppId); ok {
+		result.(*AppLoader).load()
+	}
 }
 
 func NewApp(appId uint64) *App {
@@ -140,6 +143,7 @@ func NewApp(appId uint64) *App {
 
 		model := model.New(content, appId)
 		schema := schema.New(model)
+
 		return &App{
 			AppId:  appId,
 			Model:  model,
@@ -168,9 +172,7 @@ func MergeSystemModel(content *meta.MetaContent) *meta.MetaContent {
 	}
 	//合并系统Schema
 	systemModel := GetSystemApp().Model
-	fmt.Println("开始合并", len(systemModel.Meta.Classes))
 	for i := range systemModel.Meta.Classes {
-		fmt.Println("哈哈", systemModel.Meta.Classes[i].Name)
 		content.Classes = append(content.Classes, *systemModel.Meta.Classes[i])
 	}
 

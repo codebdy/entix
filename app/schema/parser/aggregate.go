@@ -13,7 +13,7 @@ func (p *ModelParser) avgFields(attrs []*graph.Attribute, methods []*domain.Meth
 	for _, column := range attrs {
 		if column.Type == meta.INT || column.Type == meta.FLOAT {
 			fields[column.Name] = &graphql.Field{
-				Type: p.PropertyType(column.Type),
+				Type: PropertyType(column.Type),
 			}
 		}
 
@@ -22,7 +22,7 @@ func (p *ModelParser) avgFields(attrs []*graph.Attribute, methods []*domain.Meth
 	for _, method := range methods {
 		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
 			fields[method.Name] = &graphql.Field{
-				Type: p.PropertyType(method.Type),
+				Type: PropertyType(method.Type),
 			}
 		}
 	}
@@ -34,14 +34,14 @@ func (p *ModelParser) maxFields(attrs []*graph.Attribute, methods []*domain.Meth
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
 			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr.Type),
+				Type: PropertyType(attr.Type),
 			}
 		}
 	}
 	for _, method := range methods {
 		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
 			fields[method.Name] = &graphql.Field{
-				Type: p.PropertyType(method.Type),
+				Type: PropertyType(method.Type),
 			}
 		}
 	}
@@ -53,7 +53,7 @@ func (p *ModelParser) minFields(attrs []*graph.Attribute, methods []*domain.Meth
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
 			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr.Type),
+				Type: PropertyType(attr.Type),
 				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				// 	fmt.Println(p.Context.Value("data"))
 				// 	return "world", nil
@@ -64,7 +64,7 @@ func (p *ModelParser) minFields(attrs []*graph.Attribute, methods []*domain.Meth
 	for _, method := range methods {
 		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
 			fields[method.Name] = &graphql.Field{
-				Type: p.PropertyType(method.Type),
+				Type: PropertyType(method.Type),
 			}
 		}
 	}
@@ -88,7 +88,7 @@ func (p *ModelParser) stddevFields(attrs []*graph.Attribute, methods []*domain.M
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
 			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr.Type),
+				Type: PropertyType(attr.Type),
 				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				// 	fmt.Println(p.Context.Value("data"))
 				// 	return "world", nil
@@ -99,7 +99,7 @@ func (p *ModelParser) stddevFields(attrs []*graph.Attribute, methods []*domain.M
 	for _, method := range methods {
 		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
 			fields[method.Name] = &graphql.Field{
-				Type: p.PropertyType(method.Type),
+				Type: PropertyType(method.Type),
 			}
 		}
 	}
@@ -111,7 +111,7 @@ func (p *ModelParser) stddevPopFields(attrs []*graph.Attribute, methods []*domai
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
 			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr.Type),
+				Type: PropertyType(attr.Type),
 				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				// 	fmt.Println(p.Context.Value("data"))
 				// 	return "world", nil
@@ -122,7 +122,7 @@ func (p *ModelParser) stddevPopFields(attrs []*graph.Attribute, methods []*domai
 	for _, method := range methods {
 		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
 			fields[method.Name] = &graphql.Field{
-				Type: p.PropertyType(method.Type),
+				Type: PropertyType(method.Type),
 			}
 		}
 	}
@@ -134,7 +134,7 @@ func (p *ModelParser) stddevSampFields(attrs []*graph.Attribute, methods []*doma
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
 			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr.Type),
+				Type: PropertyType(attr.Type),
 				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				// 	fmt.Println(p.Context.Value("data"))
 				// 	return "world", nil
@@ -145,7 +145,7 @@ func (p *ModelParser) stddevSampFields(attrs []*graph.Attribute, methods []*doma
 	for _, method := range methods {
 		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
 			fields[method.Name] = &graphql.Field{
-				Type: p.PropertyType(method.Type),
+				Type: PropertyType(method.Type),
 			}
 		}
 	}
@@ -157,7 +157,7 @@ func (p *ModelParser) sumFields(attrs []*graph.Attribute, methods []*domain.Meth
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
 			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr.Type),
+				Type: PropertyType(attr.Type),
 				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				// 	fmt.Println(p.Context.Value("data"))
 				// 	return "world", nil
@@ -169,7 +169,7 @@ func (p *ModelParser) sumFields(attrs []*graph.Attribute, methods []*domain.Meth
 	for _, method := range methods {
 		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
 			fields[method.Name] = &graphql.Field{
-				Type: p.PropertyType(method.Type),
+				Type: PropertyType(method.Type),
 			}
 		}
 	}
@@ -181,7 +181,7 @@ func (p *ModelParser) varPopFields(attrs []*graph.Attribute, methods []*domain.M
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
 			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr.Type),
+				Type: PropertyType(attr.Type),
 				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				// 	fmt.Println(p.Context.Value("data"))
 				// 	return "world", nil
@@ -192,7 +192,7 @@ func (p *ModelParser) varPopFields(attrs []*graph.Attribute, methods []*domain.M
 	for _, method := range methods {
 		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
 			fields[method.Name] = &graphql.Field{
-				Type: p.PropertyType(method.Type),
+				Type: PropertyType(method.Type),
 			}
 		}
 	}
@@ -204,7 +204,7 @@ func (p *ModelParser) varSampFields(attrs []*graph.Attribute, methods []*domain.
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
 			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr.Type),
+				Type: PropertyType(attr.Type),
 				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				// 	fmt.Println(p.Context.Value("data"))
 				// 	return "world", nil
@@ -215,7 +215,7 @@ func (p *ModelParser) varSampFields(attrs []*graph.Attribute, methods []*domain.
 	for _, method := range methods {
 		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
 			fields[method.Name] = &graphql.Field{
-				Type: p.PropertyType(method.Type),
+				Type: PropertyType(method.Type),
 			}
 		}
 	}
@@ -227,7 +227,7 @@ func (p *ModelParser) varianceFields(attrs []*graph.Attribute, methods []*domain
 	for _, attr := range attrs {
 		if attr.Type == meta.INT || attr.Type == meta.FLOAT {
 			fields[attr.Name] = &graphql.Field{
-				Type: p.PropertyType(attr.Type),
+				Type: PropertyType(attr.Type),
 				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				// 	fmt.Println(p.Context.Value("data"))
 				// 	return "world", nil
@@ -238,7 +238,7 @@ func (p *ModelParser) varianceFields(attrs []*graph.Attribute, methods []*domain
 	for _, method := range methods {
 		if (method.Type == meta.INT || method.Type == meta.FLOAT) && len(method.Args) == 0 {
 			fields[method.Name] = &graphql.Field{
-				Type: p.PropertyType(method.Type),
+				Type: PropertyType(method.Type),
 			}
 		}
 	}

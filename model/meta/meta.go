@@ -21,7 +21,9 @@ func New(m *MetaContent, appId uint64) *Model {
 
 	for i := range m.Classes {
 		model.Classes[i] = &m.Classes[i]
-		model.Classes[i].AppId = appId
+		if model.Classes[i].AppId == 0 {
+			model.Classes[i].AppId = appId
+		}
 	}
 
 	for i := range m.Codes {
@@ -30,7 +32,9 @@ func New(m *MetaContent, appId uint64) *Model {
 
 	for i := range m.Relations {
 		model.Relations[i] = &m.Relations[i]
-		model.Relations[i].AppId = appId
+		if model.Relations[i].AppId == 0 {
+			model.Relations[i].AppId = appId
+		}
 	}
 	return &model
 }

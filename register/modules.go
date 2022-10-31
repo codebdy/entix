@@ -89,6 +89,7 @@ func GetSchema(ctx context.Context) graphql.Schema {
 		Directives:   directives,
 		Types:        types,
 	}
+
 	schema, err := graphql.NewSchema(schemaConfig)
 
 	if err != nil {
