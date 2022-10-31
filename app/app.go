@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"sync"
 
 	"github.com/mitchellh/mapstructure"
 	"rxdrag.com/entify/app/schema"
@@ -26,7 +27,26 @@ type App struct {
 	Parser *parser.ModelParser
 }
 
-var appCache = map[uint64]*App{}
+type AppLoader struct {
+	appId  uint64
+	app    *App
+	loaded bool
+	sync.Mutex
+}
+
+func (l *AppLoader) load() {
+	l.Lock()
+	defer l.Unlock()
+	if !l.loaded {
+		l.app = NewApp(l.appId)
+		if l.app == nil {
+			log.Panic(errors.New("Cant load app"))
+		}
+		l.loaded = true
+	}
+}
+
+var appLoaderCache sync.Map
 
 func init() {
 	//先加载系统APP
@@ -51,25 +71,34 @@ func GetAppByIdArg(idArg interface{}) (*App, error) {
 }
 
 func Get(appId uint64) (*App, error) {
-	if appCache[appId] == nil {
-		app := NewApp(appId)
-		if app != nil {
-			appCache[appId] = app
-		} else {
-			log.Panic(errors.New("Cant load app"))
+	if result, ok := appLoaderCache.Load(appId); ok {
+		return result.(*AppLoader).app, nil
+	} else {
+		appLoader := &AppLoader{
+			appId:  appId,
+			loaded: false,
 		}
+		appLoaderCache.Store(appId, appLoader)
+		appLoader.load()
+		return appLoader.app, nil
 	}
-
-	return appCache[appId], nil
 }
 
 func GetSystemApp() *App {
-	if appCache[meta.SYSTEM_APP_ID] != nil {
-		return appCache[meta.SYSTEM_APP_ID]
+	if result, ok := appLoaderCache.Load(meta.SYSTEM_APP_ID); ok {
+		loader := result.(*AppLoader)
+		if !loader.loaded {
+			loader.load()
+		}
+		return loader.app
 	}
 
-	metaConent := meta.SystemAppData["meta"].(meta.MetaContent)
+	return GetPredefinedSystemApp()
+}
 
+func GetPredefinedSystemApp() *App {
+
+	metaConent := meta.SystemAppData["meta"].(meta.MetaContent)
 	return &App{
 		AppId: meta.SystemAppData["id"].(uint64),
 		Model: model.New(&metaConent, meta.SYSTEM_APP_ID),
@@ -92,7 +121,7 @@ func (a *App) ReLoad() {
 }
 
 func NewApp(appId uint64) *App {
-	systemApp := GetSystemApp()
+	systemApp := GetPredefinedSystemApp()
 
 	appMeta := service.QueryById(
 		systemApp.GetEntityByName(meta.APP_ENTITY_NAME),
@@ -139,7 +168,9 @@ func MergeSystemModel(content *meta.MetaContent) *meta.MetaContent {
 	}
 	//合并系统Schema
 	systemModel := GetSystemApp().Model
+	fmt.Println("开始合并", len(systemModel.Meta.Classes))
 	for i := range systemModel.Meta.Classes {
+		fmt.Println("哈哈", systemModel.Meta.Classes[i].Name)
 		content.Classes = append(content.Classes, *systemModel.Meta.Classes[i])
 	}
 
