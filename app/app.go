@@ -34,10 +34,10 @@ type AppLoader struct {
 	sync.Mutex
 }
 
-func (l *AppLoader) load() {
+func (l *AppLoader) load(force bool) {
 	l.Lock()
 	defer l.Unlock()
-	if !l.loaded {
+	if !l.loaded || force {
 		log.Println("加载", l.appId)
 		l.app = NewApp(l.appId)
 		if l.app == nil {
@@ -74,7 +74,7 @@ func GetAppByIdArg(idArg interface{}) (*App, error) {
 func Get(appId uint64) (*App, error) {
 	if result, ok := appLoaderCache.Load(appId); ok {
 		if !result.(*AppLoader).loaded {
-			result.(*AppLoader).load()
+			result.(*AppLoader).load(false)
 		}
 		return result.(*AppLoader).app, nil
 	} else {
@@ -83,7 +83,7 @@ func Get(appId uint64) (*App, error) {
 			loaded: false,
 		}
 		appLoaderCache.Store(appId, appLoader)
-		appLoader.load()
+		appLoader.load(false)
 		return appLoader.app, nil
 	}
 }
@@ -92,7 +92,7 @@ func GetSystemApp() *App {
 	if result, ok := appLoaderCache.Load(meta.SYSTEM_APP_ID); ok {
 		loader := result.(*AppLoader)
 		if !loader.loaded {
-			loader.load()
+			loader.load(false)
 		}
 		return loader.app
 	}
@@ -119,7 +119,7 @@ func (a *App) GetEntityByInnerId(innerId uint64) *graph.Entity {
 
 func (a *App) ReLoad() {
 	if result, ok := appLoaderCache.Load(a.AppId); ok {
-		result.(*AppLoader).load()
+		result.(*AppLoader).load(true)
 	}
 }
 
