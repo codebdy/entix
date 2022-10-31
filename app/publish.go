@@ -40,7 +40,7 @@ func (a *App) Publish() {
 		log.Println(err.Error())
 	}
 
-	PublishMeta(MergeSystemModel(&oldMeta), MergeSystemModel(&nextMeta), a.AppId)
+	PublishMeta(a.MergeModel(&oldMeta), a.MergeModel(&nextMeta), a.AppId)
 
 	appMap["publishedMeta"] = appMap["meta"]
 	appMap["publishMetaAt"] = time.Now()
@@ -58,24 +58,11 @@ func (a *App) Publish() {
 	a.ReLoad()
 }
 
-// func (a *App) MergeModel(content *meta.MetaContent) *meta.MetaContent {
-// 	//合并系统Schema
-// 	if a.AppId != meta.SYSTEM_APP_ID {
-// 		systemAppData := service.QueryById(
-// 			a.GetEntityByName(meta.APP_ENTITY_NAME),
-// 			meta.SYSTEM_APP_ID,
-// 		)
+func (a *App) MergeModel(content *meta.MetaContent) *meta.MetaContent {
+	//合并系统Schema
+	if a.AppId != meta.SYSTEM_APP_ID {
+		return MergeSystemModel(content)
+	}
 
-// 		systemContent := systemAppData.(map[string]interface{})["publishedMeta"].(meta.MetaContent)
-// 		//systemMetaContent := r.LoadAndDecodeMeta(consts.SYSTEM_APP_UUID)
-// 		for i := range systemContent.Classes {
-// 			content.Classes = append(content.Classes, systemContent.Classes[i])
-// 		}
-
-// 		for i := range systemContent.Relations {
-// 			content.Relations = append(content.Relations, systemContent.Relations[i])
-// 		}
-// 	}
-
-// 	return content
-// }
+	return content
+}
