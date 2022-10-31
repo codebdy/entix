@@ -37,7 +37,6 @@ func NewClass(c *meta.ClassMeta) *Class {
 		Children:      []*Class{},
 		QueryScript:   c.QueryScript,
 		MuationScript: c.MuationScript,
-		EnableVersion: c.EnableVersion,
 		AppId:         c.AppId,
 		PackageUuid:   c.PackageUuid,
 		IdNoShift:     c.IdNoShift,
