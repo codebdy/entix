@@ -20,7 +20,6 @@ func WriteModelLog(
 	contextsValues := contexts.Values(p.Context)
 	logObject := map[string]interface{}{
 		"ip":          contextsValues.IP,
-		"appUuid":     contextsValues.AppId,
 		"operateType": operate,
 		"classUuid":   cls.Uuid(),
 		"className":   cls.Name(),
@@ -32,6 +31,14 @@ func WriteModelLog(
 		logObject["user"] = map[string]interface{}{
 			"add": map[string]interface{}{
 				"id": contextsValues.Me.Id,
+			},
+		}
+	}
+
+	if contextsValues.AppId != 0 {
+		logObject["app"] = map[string]interface{}{
+			"add": map[string]interface{}{
+				"id": contextsValues.AppId,
 			},
 		}
 	}
@@ -78,6 +85,14 @@ func WriteUserBusinessLog(
 		logObject["user"] = map[string]interface{}{
 			"add": map[string]interface{}{
 				"id": useId,
+			},
+		}
+	}
+
+	if contextsValues.AppId != 0 {
+		logObject["app"] = map[string]interface{}{
+			"add": map[string]interface{}{
+				"id": contextsValues.AppId,
 			},
 		}
 	}
