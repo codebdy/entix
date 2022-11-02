@@ -314,7 +314,8 @@ func (con *Session) BatchRealAssociations(
 	rows, err := con.Dbx.Query(queryStr, paramsList...)
 	defer rows.Close()
 	if err != nil {
-		panic(err.Error())
+		log.Println("出错SQL:", queryStr)
+		log.Panic(err.Error())
 	}
 
 	for rows.Next() {

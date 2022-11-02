@@ -42,7 +42,7 @@ func (s *Session) insertOneBody(instance *data.Instance) (int64, error) {
 	values := makeFieldValues(instance.Fields)
 	result, err := s.Dbx.Exec(saveStr, values...)
 	if err != nil {
-		log.Println("Insert data failed:", err.Error())
+		log.Panic("Insert data failed:", err.Error())
 		return 0, err
 	}
 
