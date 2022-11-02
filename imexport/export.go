@@ -114,6 +114,29 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 		}
 	}
 
+	//保存image文件
+	if appJson.(utils.JSON)["imageUrl"] != nil {
+		url := appJson.(utils.JSON)["imageUrl"].(string)
+		if url != "" {
+			imagePath := url[len(hostPath):]
+			fileName := imagePath[len(IMAGE_PATH):]
+			f, err := w.Create(fileName)
+			if err != nil {
+				log.Panic(err.Error())
+			}
+
+			r, err := os.Open(imagePath)
+			defer r.Close()
+			if err != nil {
+				log.Panic(err.Error())
+			}
+
+			io.Copy(f, r)
+			appJson.(utils.JSON)["imageUrl"] = imagePath
+		}
+
+	}
+
 	//保存app.json
 	f, err := w.Create(APP_JON)
 	if err != nil {
@@ -126,6 +149,7 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 	}
 
 	f.Write(appStrBytes)
+
 	return fileUrl, nil
 }
 

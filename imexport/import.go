@@ -77,14 +77,13 @@ func (m *ImExportModule) importResolve(p graphql.ResolveParams) (interface{}, er
 	}
 
 	appMap := readAppJsonFile(appJsonFile)
-
+	hostPath := getHostPath(p.Context)
 	if appMap["plugins"] != nil {
 		plugins := appMap["plugins"].([]interface{})
 		for _, pluginData := range plugins {
 			plugin := pluginData.(map[string]interface{})
 			if plugin["type"] != "debug" {
 				pluginFiles := getPluginFiles(plugin["url"].(string), r.File)
-				hostPath := getHostPath(p.Context)
 				pluginName := uuid.New().String()
 				relativePath := fmt.Sprintf("%s/app%d/plugins/%s", consts.STATIC_PATH, appId, pluginName)
 				plugin["url"] = hostPath + relativePath
@@ -94,6 +93,19 @@ func (m *ImExportModule) importResolve(p graphql.ResolveParams) (interface{}, er
 			}
 		}
 	}
+
+	//导入图片
+	if appMap["imageUrl"] != nil {
+		url := appMap["imageUrl"].(string)
+		if url != "" {
+			imageFile := getImageFile(url, r.File)
+			if imageFile != nil {
+				extractAndCopyFile(IMAGE_PATH+url, imageFile)
+			}
+			appMap["imageUrl"] = hostPath + url
+		}
+	}
+
 	appEntity := m.app.GetEntityByName(meta.APP_ENTITY_NAME)
 	convertInstanceValue(appEntity, appMap)
 
@@ -141,6 +153,15 @@ func getPluginFiles(pluginPath string, arr []*zip.File) []*zip.File {
 		}
 	}
 	return files
+}
+
+func getImageFile(imageName string, arr []*zip.File) *zip.File {
+	for i := range arr {
+		if strings.Index(arr[i].Name, imageName) == 0 {
+			return arr[i]
+		}
+	}
+	return nil
 }
 
 func readAppJsonFile(f *zip.File) map[string]interface{} {
