@@ -133,7 +133,6 @@ func (m *ImExportModule) importResolve(p graphql.ResolveParams) (interface{}, er
 				pluginFiles := getPluginFiles(plugin["url"].(string), r.File)
 				pluginName := uuid.New().String()
 				relativePath := fmt.Sprintf("%s/app%d/plugins/%s", consts.STATIC_PATH, appId, pluginName)
-				fmt.Println("哈哈哈", relativePath)
 				plugin["url"] = hostPath + relativePath
 				for i := range pluginFiles {
 					pluginFiles[i].Name = pluginFiles[i].Name[len(fmt.Sprintf("plugins/%d/", index)):]
