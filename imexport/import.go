@@ -57,6 +57,7 @@ func (m *ImExportModule) importResolve(p graphql.ResolveParams) (interface{}, er
 		}
 		appId = intId
 	}
+
 	upload := p.Args[ARG_APP_FILE].(storage.File)
 	fileInfo := upload.Save(TEMP_DATAS)
 
@@ -77,38 +78,7 @@ func (m *ImExportModule) importResolve(p graphql.ResolveParams) (interface{}, er
 	}
 
 	appMap := readAppJsonFile(appJsonFile)
-	hostPath := getHostPath(p.Context)
-	if appMap["plugins"] != nil {
-		plugins := appMap["plugins"].([]interface{})
-		for _, pluginData := range plugins {
-			plugin := pluginData.(map[string]interface{})
-			if plugin["type"] != "debug" {
-				pluginFiles := getPluginFiles(plugin["url"].(string), r.File)
-				pluginName := uuid.New().String()
-				relativePath := fmt.Sprintf("%s/app%d/plugins/%s", consts.STATIC_PATH, appId, pluginName)
-				plugin["url"] = hostPath + relativePath
-				for i := range pluginFiles {
-					extractAndCopyFile(relativePath, pluginFiles[i])
-				}
-			}
-		}
-	}
-
-	//导入图片
-	if appMap["imageUrl"] != nil {
-		url := appMap["imageUrl"].(string)
-		if url != "" {
-			imageFile := getImageFile(url, r.File)
-			if imageFile != nil {
-				extractAndCopyFile(IMAGE_PATH+url, imageFile)
-			}
-			appMap["imageUrl"] = hostPath + url
-		}
-	}
-
 	appEntity := m.app.GetEntityByName(meta.APP_ENTITY_NAME)
-	convertInstanceValue(appEntity, appMap)
-
 	oldApp := service.QueryOneEntity(
 		appEntity,
 		map[string]interface{}{
@@ -124,16 +94,56 @@ func (m *ImExportModule) importResolve(p graphql.ResolveParams) (interface{}, er
 		log.Panic("App is exists!")
 	}
 
-	if oldApp != nil {
-		appMap[consts.ID] = oldApp.(map[string]interface{})[consts.ID]
-	}
-	instance := data.NewInstance(appMap, appEntity)
+	//先保存获取APPId
+	if oldApp == nil {
+		instance := data.NewInstance(map[string]interface{}{
+			"uuid":  appMap["uuid"],
+			"title": appMap["title"],
+		}, appEntity)
 
-	savedIns, err := service.SaveOne(instance)
+		oldApp, err = service.SaveOne(instance)
 
-	if err != nil {
-		return false, err
+		if err != nil {
+			log.Panic(err.Error())
+		}
+
+		appId = oldApp.(map[string]interface{})["id"].(uint64)
 	}
+
+	hostPath := getHostPath(p.Context)
+
+	//导入图片
+	if appMap["imageUrl"] != nil {
+		url := appMap["imageUrl"].(string)
+		if url != "" {
+			imageFile := getImageFile(url, r.File)
+			if imageFile != nil {
+				extractAndCopyFile(IMAGE_PATH+url, imageFile)
+			}
+			appMap["imageUrl"] = hostPath + url
+		}
+	}
+
+	//导入插件
+	if appMap["plugins"] != nil {
+		plugins := appMap["plugins"].([]interface{})
+		for index, pluginData := range plugins {
+			plugin := pluginData.(map[string]interface{})
+			if plugin["type"] != "debug" {
+				pluginFiles := getPluginFiles(plugin["url"].(string), r.File)
+				pluginName := uuid.New().String()
+				relativePath := fmt.Sprintf("%s/app%d/plugins/%s", consts.STATIC_PATH, appId, pluginName)
+				fmt.Println("哈哈哈", relativePath)
+				plugin["url"] = hostPath + relativePath
+				for i := range pluginFiles {
+					pluginFiles[i].Name = pluginFiles[i].Name[len(fmt.Sprintf("plugins/%d/", index)):]
+					extractAndCopyFile(relativePath, pluginFiles[i])
+				}
+			}
+		}
+	}
+
+	savedIns := m.saveApp(p, appMap, oldApp.(map[string]interface{}))
 
 	ap, err := app.Get(savedIns.(map[string]interface{})[consts.ID].(uint64))
 
@@ -143,6 +153,21 @@ func (m *ImExportModule) importResolve(p graphql.ResolveParams) (interface{}, er
 
 	ap.ReLoad()
 	return err == nil, err
+}
+
+func (m *ImExportModule) saveApp(p graphql.ResolveParams, appMap map[string]interface{}, oldApp map[string]interface{}) interface{} {
+	appEntity := m.app.GetEntityByName(meta.APP_ENTITY_NAME)
+	convertInstanceValue(appEntity, appMap)
+	appMap[consts.ID] = oldApp[consts.ID]
+	instance := data.NewInstance(appMap, appEntity)
+
+	savedIns, err := service.SaveOne(instance)
+
+	if err != nil {
+		log.Panic(err.Error())
+	}
+
+	return savedIns
 }
 
 func getPluginFiles(pluginPath string, arr []*zip.File) []*zip.File {
