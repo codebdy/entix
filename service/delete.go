@@ -56,5 +56,5 @@ func DeleteInstance(instance *data.Instance) (interface{}, error) {
 		log.Println(err.Error())
 		return nil, err
 	}
-	return instance.Id, nil
+	return instance.ValueMap, nil
 }
