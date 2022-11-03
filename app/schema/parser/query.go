@@ -2,6 +2,7 @@ package parser
 
 import (
 	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify/app/resolve"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
 )
@@ -87,7 +88,7 @@ func (p *ModelParser) makeThirdPartyObject(third *graph.ThirdParty) {
 	objType := graphql.NewObject(
 		graphql.ObjectConfig{
 			Name:        third.Name(),
-			Fields:      OutputFields(third.Attributes()),
+			Fields:      p.OutputFields(third.Attributes()),
 			Description: third.Description(),
 		},
 	)
@@ -103,7 +104,7 @@ func (p *ModelParser) ObjectType(entity *graph.Entity) *graphql.Object {
 		return graphql.NewObject(
 			graphql.ObjectConfig{
 				Name:        name,
-				Fields:      OutputFields(entity.AllAttributes()),
+				Fields:      p.OutputFields(entity.AllAttributes()),
 				Description: entity.Description(),
 				Interfaces:  interfaces,
 			},
@@ -112,7 +113,7 @@ func (p *ModelParser) ObjectType(entity *graph.Entity) *graphql.Object {
 		return graphql.NewObject(
 			graphql.ObjectConfig{
 				Name:        name,
-				Fields:      OutputFields(entity.AllAttributes()),
+				Fields:      p.OutputFields(entity.AllAttributes()),
 				Description: entity.Description(),
 			},
 		)
@@ -120,12 +121,13 @@ func (p *ModelParser) ObjectType(entity *graph.Entity) *graphql.Object {
 
 }
 
-func OutputFields(attrs []*graph.Attribute) graphql.Fields {
+func (p *ModelParser) OutputFields(attrs []*graph.Attribute) graphql.Fields {
 	fields := graphql.Fields{}
 	for _, attr := range attrs {
 		fields[attr.Name] = &graphql.Field{
 			Type:        PropertyType(attr.GetType()),
 			Description: attr.Description,
+			Resolve:     resolve.AttributeResolveFn(attr, p.model),
 			// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 			// 	fmt.Println(p.Context.Value("data"))
 			// 	return "world", nil

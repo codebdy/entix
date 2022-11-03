@@ -7,6 +7,7 @@ import (
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/graph"
+	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/service"
 	"rxdrag.com/entify/utils"
 )
@@ -86,5 +87,16 @@ func QueryAssociationFn(asso *graph.Association, model *model.Model) graphql.Fie
 			}
 			return retValue, nil
 		}, nil
+	}
+}
+
+func AttributeResolveFn(attr *graph.Attribute, model *model.Model) graphql.FieldResolveFn {
+	return func(p graphql.ResolveParams) (interface{}, error) {
+		defer utils.PrintErrorStack()
+		source := p.Source.(map[string]interface{})
+		if attr.Type == meta.PASSWORD {
+			return nil, nil
+		}
+		return source[attr.Name], nil
 	}
 }

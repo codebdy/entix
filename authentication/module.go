@@ -8,6 +8,7 @@ import (
 	"rxdrag.com/entify/app"
 	"rxdrag.com/entify/app/schema/parser"
 	"rxdrag.com/entify/consts"
+	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/orm"
 	"rxdrag.com/entify/register"
@@ -16,6 +17,17 @@ import (
 type AuthenticationModule struct {
 }
 
+func OutputFields(attrs []*graph.Attribute) graphql.Fields {
+	fields := graphql.Fields{}
+	for _, attr := range attrs {
+		fields[attr.Name] = &graphql.Field{
+			Type:        parser.PropertyType(attr.GetType()),
+			Description: attr.Description,
+		}
+	}
+
+	return fields
+}
 func (m *AuthenticationModule) Init(ctx context.Context) {
 }
 func (m *AuthenticationModule) QueryFields() []*graphql.Field {
@@ -28,7 +40,7 @@ func (m *AuthenticationModule) QueryFields() []*graphql.Field {
 				Type: graphql.NewObject(
 					graphql.ObjectConfig{
 						Name:   "Me",
-						Fields: parser.OutputFields(userType.AllAttributes()),
+						Fields: OutputFields(userType.AllAttributes()),
 					},
 				),
 				Resolve: resolveMe,
