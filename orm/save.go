@@ -1,6 +1,7 @@
 package orm
 
 import (
+	"fmt"
 	"log"
 
 	"rxdrag.com/entify/db/dialect"
@@ -129,14 +130,14 @@ func (s *Session) SaveAssociation(r *data.AssociationRef, ownerId uint64) error 
 		id, err := s.saveAssociationInstance(ins)
 
 		if err != nil {
-			panic("Save Association error:" + err.Error())
+			log.Panic("Save Association error:" + err.Error())
 		} else {
 			if id != 0 {
 				tarId := id
 				relationInstance := newAssociationPovit(r, ownerId, tarId)
 				s.SaveAssociationPovit(relationInstance)
 			} else {
-				panic("Save Association error")
+				log.Panic("Save Association error")
 			}
 		}
 
@@ -166,9 +167,15 @@ func (s *Session) SaveAssociation(r *data.AssociationRef, ownerId uint64) error 
 		return nil
 	}
 
+	//不能暴力删除，这个地方需要这么处理：
+	// 1、统计sync的ids
+	// 2、清除跟这些ids不重合的数据（先检查是否存在，再删除）
+
 	s.clearAssociation(r, ownerId)
 
-	for _, ins := range synced {
+	for i, ins := range synced {
+		fmt.Println("哈哈哈", ins.Entity.Name(), ins)
+		fmt.Println("哈哈哈2", synced[i].Entity.Name(), synced[i])
 		targetId := ins.Id
 		if !ins.IsEmperty() {
 			id, err := s.saveAssociationInstance(ins)
