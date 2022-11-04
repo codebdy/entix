@@ -7,7 +7,7 @@ import (
 	"rxdrag.com/entify/orm"
 )
 
-func Save(instances []*data.Instance) ([]interface{}, error) {
+func Save(instances []*data.Instance) ([]orm.InsanceData, error) {
 	session, err := orm.Open()
 	if err != nil {
 		log.Println(err.Error())
@@ -20,7 +20,7 @@ func Save(instances []*data.Instance) ([]interface{}, error) {
 		session.Dbx.Rollback()
 		return nil, err
 	}
-	saved := []interface{}{}
+	savedIds := []interface{}{}
 
 	for i := range instances {
 		obj, err := session.SaveOne(instances[i])
@@ -30,7 +30,12 @@ func Save(instances []*data.Instance) ([]interface{}, error) {
 			return nil, err
 		}
 
-		saved = append(saved, obj)
+		savedIds = append(savedIds, obj)
+	}
+
+	var result []orm.InsanceData
+	if len(instances) > 0 {
+		result = session.QueryByIds(instances[0].Entity, savedIds)
 	}
 
 	err = session.Commit()
@@ -39,7 +44,8 @@ func Save(instances []*data.Instance) ([]interface{}, error) {
 		return nil, err
 	}
 
-	return saved, nil
+	return result, nil
+
 }
 
 func SaveOne(instance *data.Instance) (interface{}, error) {
@@ -55,18 +61,20 @@ func SaveOne(instance *data.Instance) (interface{}, error) {
 		return nil, err
 	}
 
-	obj, err := session.SaveOne(instance)
+	id, err := session.SaveOne(instance)
 	if err != nil {
 		log.Println(err.Error())
 		session.Dbx.Rollback()
 		return nil, err
 	}
+
+	result := session.QueryOneEntityById(instance.Entity, id)
 	err = session.Commit()
 	if err != nil {
 		log.Println(err.Error())
 		return nil, err
 	}
-	return obj, nil
+	return result, nil
 }
 
 func InsertOne(instance *data.Instance) (interface{}, error) {

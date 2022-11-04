@@ -3,12 +3,11 @@ package orm
 import (
 	"log"
 
-	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/db/dialect"
 	"rxdrag.com/entify/model/data"
 )
 
-func (s *Session) SaveOne(instance *data.Instance) (interface{}, error) {
+func (s *Session) SaveOne(instance *data.Instance) (uint64, error) {
 	if instance.IsInsert() {
 		return s.InsertOne(instance)
 	} else {
@@ -16,23 +15,26 @@ func (s *Session) SaveOne(instance *data.Instance) (interface{}, error) {
 	}
 }
 
-func (s *Session) InsertOne(instance *data.Instance) (interface{}, error) {
+func (s *Session) InsertOne(instance *data.Instance) (uint64, error) {
 	id, err := s.insertOneBody(instance)
 
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 	for _, asso := range instance.Associations {
 		err := s.SaveAssociation(asso, uint64(id))
 		if err != nil {
 			log.Println("Save reference failed:", err.Error())
-			return nil, err
+			return 0, err
 		}
 	}
 
-	savedObject := s.QueryOneEntityById(instance.Entity, id)
+	// savedObject := s.QueryOneEntityById(instance.Entity, id)
 
-	return savedObject, nil
+	// if savedObject == nil {
+	// 	log.Panic("query inserted instance failed", instance.Entity.Name(), id)
+	// }
+	return uint64(id), nil
 }
 
 //只保存属性，不保存关联
@@ -54,22 +56,20 @@ func (s *Session) insertOneBody(instance *data.Instance) (int64, error) {
 	return id, nil
 }
 
-func (s *Session) UpdateOne(instance *data.Instance) (interface{}, error) {
+func (s *Session) UpdateOne(instance *data.Instance) (uint64, error) {
 
 	err := s.updateOneBody(instance)
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 	for _, ref := range instance.Associations {
 		err = s.SaveAssociation(ref, instance.Id)
 		if err != nil {
-			return nil, err
+			return 0, err
 		}
 	}
 
-	savedObject := s.QueryOneEntityById(instance.Entity, instance.Id)
-
-	return savedObject, nil
+	return instance.Id, nil
 }
 
 //只保存属性，不保存关联
@@ -101,16 +101,13 @@ func newAssociationPovit(r *data.AssociationRef, ownerId uint64, tarId uint64) *
 
 }
 
-func (s *Session) saveAssociationInstance(ins *data.Instance) (interface{}, error) {
-	targetData := InsanceData{consts.ID: ins.Id}
-
+func (s *Session) saveAssociationInstance(ins *data.Instance) (uint64, error) {
 	saved, err := s.SaveOne(ins)
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
-	targetData = saved.(InsanceData)
 
-	return targetData, nil
+	return saved, nil
 }
 func (s *Session) SaveAssociation(r *data.AssociationRef, ownerId uint64) error {
 
@@ -129,13 +126,13 @@ func (s *Session) SaveAssociation(r *data.AssociationRef, ownerId uint64) error 
 	}
 
 	for _, ins := range r.Added {
-		targetData, err := s.saveAssociationInstance(ins)
+		id, err := s.saveAssociationInstance(ins)
 
 		if err != nil {
 			panic("Save Association error:" + err.Error())
 		} else {
-			if savedIns, ok := targetData.(InsanceData); ok {
-				tarId := savedIns[consts.ID].(uint64)
+			if id != 0 {
+				tarId := id
 				relationInstance := newAssociationPovit(r, ownerId, tarId)
 				s.SaveAssociationPovit(relationInstance)
 			} else {
@@ -149,12 +146,12 @@ func (s *Session) SaveAssociation(r *data.AssociationRef, ownerId uint64) error 
 		// if ins.Id == 0 {
 		// 	panic("Can not add new instance when update")
 		// }
-		targetData, err := s.saveAssociationInstance(ins)
+		id, err := s.saveAssociationInstance(ins)
 		if err != nil {
 			panic("Save Association error:" + err.Error())
 		} else {
-			if savedIns, ok := targetData.(InsanceData); ok {
-				tarId := savedIns[consts.ID].(uint64)
+			if id != 0 {
+				tarId := id
 				relationInstance := newAssociationPovit(r, ownerId, tarId)
 
 				s.SaveAssociationPovit(relationInstance)
@@ -174,12 +171,12 @@ func (s *Session) SaveAssociation(r *data.AssociationRef, ownerId uint64) error 
 	for _, ins := range synced {
 		targetId := ins.Id
 		if !ins.IsEmperty() {
-			targetData, err := s.saveAssociationInstance(ins)
+			id, err := s.saveAssociationInstance(ins)
 			if err != nil {
 				panic("Save Association error:" + err.Error())
 			} else {
-				if savedIns, ok := targetData.(InsanceData); ok {
-					targetId = savedIns[consts.ID].(uint64)
+				if id != 0 {
+					targetId = id
 				} else {
 					panic("Save Association error")
 				}

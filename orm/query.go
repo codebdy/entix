@@ -220,16 +220,18 @@ func (con *Session) QueryOneEntity(entity *graph.Entity, args map[string]interfa
 	queryStr, params := con.buildQueryEntityRecordsSQL(entity, args)
 
 	values := makeEntityQueryValues(entity)
-	log.Println("doQueryOneEntity SQL:", queryStr)
+	log.Println("doQueryOneEntity SQL:", queryStr, params)
 	err := con.Dbx.QueryRow(queryStr, params...).Scan(values...)
 	switch {
 	case err == sql.ErrNoRows:
+		log.Println(fmt.Sprintf("Can not find instance %s, %s", entity.Name(), args))
 		return nil
 	case err != nil:
 		log.Panic(err.Error())
 	}
 
-	return convertValuesToEntity(values, entity)
+	instance := convertValuesToEntity(values, entity)
+	return instance
 }
 
 func (con *Session) QueryAssociatedInstances(r *data.AssociationRef, ownerId uint64) []InsanceData {
