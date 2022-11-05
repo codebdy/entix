@@ -36,12 +36,6 @@ func (s *Session) clearSyncedAssociation(r *data.AssociationRef, ownerId uint64,
 			s.deleteAssociationPovit(r, associatedIns[consts.ID].(uint64))
 		}
 	}
-
-	if r.Association.IsCombination() {
-
-		s.deleteAssociatedInstances(r, ownerId)
-	}
-	s.deleteAssociationPovit(r, ownerId)
 }
 func (con *Session) clearAssociation(r *data.AssociationRef, ownerId uint64) {
 	if r.Association.IsCombination() {
