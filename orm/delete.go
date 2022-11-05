@@ -3,30 +3,44 @@ package orm
 import (
 	"log"
 
+	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/db/dialect"
 	"rxdrag.com/entify/model/data"
 )
 
 type InsanceData = map[string]interface{}
 
-func (con *Session) clearSyncedAssociation(r *data.AssociationRef, ownerId uint64, synced []*data.Instance) {
-	//不能暴力删除，这个地方需要这么处理：
-	// 1、统计sync的ids
-	// 2、清除跟这些ids不重合的数据（先检查是否存在，再删除）
-	syncedIds := []uint64{}
-	for _, ins := range synced {
-		if ins.Id != 0 {
-			syncedIds = append(syncedIds, ins.Id)
+func (s *Session) clearSyncedAssociation(r *data.AssociationRef, ownerId uint64, synced []*data.Instance) {
+
+	//查出所有关联实例
+	associatedInstances := s.QueryAssociatedInstances(r, ownerId)
+
+	for _, associatedIns := range associatedInstances {
+		willBeDelete := false
+
+		//找出需要被删除的
+		for _, syncedIns := range synced {
+			if syncedIns.Id == associatedIns[consts.ID] {
+				willBeDelete = true
+			}
+		}
+
+		//删除需要被删除的
+		if willBeDelete {
+			//如果是组合，被关联实例
+			if r.Association.IsCombination() {
+				ins := data.NewInstance(associatedIns, r.Association.TypeEntity())
+				s.DeleteInstance(ins)
+			}
+			s.deleteAssociationPovit(r, associatedIns[consts.ID].(uint64))
 		}
 	}
 
-	//instancesToDeleted :=
-
 	if r.Association.IsCombination() {
 
-		con.deleteAssociatedInstances(r, ownerId)
+		s.deleteAssociatedInstances(r, ownerId)
 	}
-	con.deleteAssociationPovit(r, ownerId)
+	s.deleteAssociationPovit(r, ownerId)
 }
 func (con *Session) clearAssociation(r *data.AssociationRef, ownerId uint64) {
 	if r.Association.IsCombination() {
