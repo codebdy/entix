@@ -16,12 +16,13 @@ func (s *Session) clearSyncedAssociation(r *data.AssociationRef, ownerId uint64,
 	associatedInstances := s.QueryAssociatedInstances(r, ownerId)
 
 	for _, associatedIns := range associatedInstances {
-		willBeDelete := false
+		willBeDelete := true
 
 		//找出需要被删除的
 		for _, syncedIns := range synced {
-			if syncedIns.Id == associatedIns[consts.ID] {
-				willBeDelete = true
+			if syncedIns.Id != 0 && syncedIns.Id == associatedIns[consts.ID] {
+				willBeDelete = false
+				continue
 			}
 		}
 
