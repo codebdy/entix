@@ -7,7 +7,6 @@ import (
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/model/graph"
-	"rxdrag.com/entify/orm"
 	"rxdrag.com/entify/service"
 	"rxdrag.com/entify/utils"
 )
@@ -43,8 +42,8 @@ func SetResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolve
 		//repos.MakeEntityAbilityVerifier(p, entity.Uuid())
 
 		set := p.Args[consts.ARG_SET].(map[string]interface{})
-		objs := service.QueryEntity(entity, p.Args)[consts.NODES]
-		convertedObjs := objs.([]orm.InsanceData)
+		objs := service.QueryEntity(entity, p.Args).Nodes
+		convertedObjs := objs
 		instances := []*data.Instance{}
 
 		for i := range convertedObjs {
@@ -109,16 +108,16 @@ func DeleteResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldReso
 		//repos := repository.New(model)
 		//repos.MakeEntityAbilityVerifier(p, entity.Uuid())
 
-		objs := service.QueryEntity(entity, p.Args)[consts.NODES]
+		objs := service.QueryEntity(entity, p.Args).Nodes
 
-		if objs == nil || len(objs.([]orm.InsanceData)) == 0 {
+		if objs == nil || len(objs) == 0 {
 			return map[string]interface{}{
 				consts.RESPONSE_RETURNING:    []interface{}{},
 				consts.RESPONSE_AFFECTEDROWS: 0,
 			}, nil
 		}
 
-		convertedObjs := objs.([]orm.InsanceData)
+		convertedObjs := objs
 
 		instances := []*data.Instance{}
 		for i := range convertedObjs {

@@ -44,7 +44,7 @@ func resolveRoleIds(p graphql.ResolveParams) (interface{}, error) {
 		log.Panic(err.Error())
 	}
 
-	roles := service.QueryEntity(app.GetEntityByName(meta.ROLE_ENTITY_NAME), map[string]interface{}{
+	result := service.QueryEntity(app.GetEntityByName(meta.ROLE_ENTITY_NAME), map[string]interface{}{
 		"users": map[string]interface{}{
 			"id": map[string]interface{}{
 				consts.ARG_EQ: me.Id,
@@ -52,8 +52,8 @@ func resolveRoleIds(p graphql.ResolveParams) (interface{}, error) {
 		},
 	})
 
-	for _, role := range roles {
-		ids = append(ids, role.(map[string]interface{})[consts.ID].(uint64))
+	for _, role := range result.Nodes {
+		ids = append(ids, role[consts.ID].(uint64))
 	}
 
 	return ids, nil

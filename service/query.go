@@ -6,7 +6,7 @@ import (
 	"rxdrag.com/entify/orm"
 )
 
-func QueryInterface(intf *graph.Interface, args graph.QueryArg) map[string]interface{} {
+func QueryInterface(intf *graph.Interface, args graph.QueryArg) orm.QueryResponse {
 	session, err := orm.Open()
 	if err != nil {
 		panic(err.Error())
@@ -22,7 +22,7 @@ func QueryOneInterface(intf *graph.Interface, args graph.QueryArg) interface{} {
 	return session.QueryOneInterface(intf, args)
 }
 
-func QueryEntity(entity *graph.Entity, args graph.QueryArg) map[string]interface{} {
+func QueryEntity(entity *graph.Entity, args graph.QueryArg) orm.QueryResponse {
 	session, err := orm.Open()
 	if err != nil {
 		panic(err.Error())

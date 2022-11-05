@@ -13,6 +13,11 @@ import (
 	"rxdrag.com/entify/model/graph"
 )
 
+type QueryResponse struct {
+	Nodes []map[string]interface{} `json:"nodes"`
+	Total int                      `json:"total"`
+}
+
 func (con *Session) buildQueryInterfaceSQL(intf *graph.Interface, args map[string]interface{}) (string, []interface{}) {
 	var (
 		sqls       []string
@@ -111,7 +116,7 @@ func (con *Session) buildQueryEntityCountSQL(entity *graph.Entity, args map[stri
 	)
 }
 
-func (con *Session) QueryInterface(intf *graph.Interface, args map[string]interface{}) map[string]interface{} {
+func (con *Session) QueryInterface(intf *graph.Interface, args map[string]interface{}) QueryResponse {
 	sql, params := con.buildQueryInterfaceSQL(intf, args)
 
 	rows, err := con.Dbx.Query(sql, params...)
@@ -140,13 +145,13 @@ func (con *Session) QueryInterface(intf *graph.Interface, args map[string]interf
 		merageInstances(instances, oneEntityInstances)
 	}
 
-	return map[string]interface{}{
-		consts.NODES: instances,
-		consts.TOTAL: 0,
+	return QueryResponse{
+		Nodes: instances,
+		Total: 0,
 	}
 }
 
-func (con *Session) QueryEntity(entity *graph.Entity, args map[string]interface{}) map[string]interface{} {
+func (con *Session) QueryEntity(entity *graph.Entity, args map[string]interface{}) QueryResponse {
 	sqlStr, params := con.buildQueryEntityRecordsSQL(entity, args)
 	log.Println("doQueryEntity SQL:", sqlStr, params)
 	rows, err := con.Dbx.Query(sqlStr, params...)
@@ -177,9 +182,9 @@ func (con *Session) QueryEntity(entity *graph.Entity, args map[string]interface{
 
 	defer rows.Close()
 
-	return map[string]interface{}{
-		consts.NODES: instances,
-		consts.TOTAL: count,
+	return QueryResponse{
+		Nodes: instances,
+		Total: 0,
 	}
 }
 
