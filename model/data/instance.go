@@ -37,6 +37,10 @@ func NewInstance(object map[string]interface{}, entity *graph.Entity) *Instance 
 		instance.Id = parseId(object[consts.ID])
 	}
 
+	if instance.IsEmperty() {
+		return &instance
+	}
+
 	columns := entity.Table.Columns
 	for i := range columns {
 		column := columns[i]
@@ -77,7 +81,9 @@ func NewInstance(object map[string]interface{}, entity *graph.Entity) *Instance 
 }
 
 func (ins *Instance) IsEmperty() bool {
-	return len(ins.Fields) == 0 && len(ins.Associations) == 0
+	id := ins.ValueMap[consts.ID]
+	return len(ins.ValueMap) <= 1 &&
+		(id != nil || ins.Id != 0)
 }
 
 //清空其它字段，保留ID跟关系，供二次保存使用

@@ -107,12 +107,15 @@ func newAssociationPovit(r *data.AssociationRef, ownerId uint64, tarId uint64) *
 }
 
 func (s *Session) saveAssociationInstance(ins *data.Instance) (uint64, error) {
-	saved, err := s.SaveOne(ins)
-	if err != nil {
-		return 0, err
-	}
+	if !ins.IsEmperty() {
+		saved, err := s.SaveOne(ins)
+		if err != nil {
+			return 0, err
+		}
 
-	return saved, nil
+		return saved, nil
+	}
+	return ins.Id, nil
 }
 func (s *Session) SaveAssociation(r *data.AssociationRef, ownerId uint64) error {
 	if r.Clear {
@@ -145,7 +148,9 @@ func (s *Session) SaveAssociation(r *data.AssociationRef, ownerId uint64) error 
 			if id != 0 {
 				tarId := id
 				relationInstance := newAssociationPovit(r, ownerId, tarId)
-				s.SaveAssociationPovit(relationInstance)
+				if !s.povitExists(relationInstance) {
+					s.SaveAssociationPovit(relationInstance)
+				}
 			} else {
 				log.Panic("Save Association error")
 			}
@@ -159,30 +164,35 @@ func (s *Session) SaveAssociation(r *data.AssociationRef, ownerId uint64) error 
 
 func (s *Session) saveAssociationInstances(instances []*data.Instance, r *data.AssociationRef, ownerId uint64) {
 	for _, ins := range instances {
-		newInstance := false
-		if ins.Id == 0 {
-			newInstance = true
-		}
 		targetId := ins.Id
-		if !ins.IsEmperty() {
-			id, err := s.saveAssociationInstance(ins)
-			if err != nil {
-				panic("Save Association error:" + err.Error())
+		id, err := s.saveAssociationInstance(ins)
+		if err != nil {
+			panic("Save Association error:" + err.Error())
+		} else {
+			if id != 0 {
+				targetId = id
 			} else {
-				if id != 0 {
-					targetId = id
-				} else {
-					panic("Save Association error")
-				}
+				panic("Save Association error")
 			}
 		}
-		//只有新增实例才更新关联表
-		if newInstance {
-			relationInstance := newAssociationPovit(r, ownerId, targetId)
+		relationInstance := newAssociationPovit(r, ownerId, targetId)
+		if !s.povitExists(relationInstance) {
 			s.SaveAssociationPovit(relationInstance)
 		}
 	}
 }
+
+func (s *Session) povitExists(p *data.AssociationPovit) bool {
+	sqlBuilder := dialect.GetSQLBuilder()
+	sqlStr := sqlBuilder.BuildCheckPovitSQL(p)
+	count := s.queryCount(sqlStr)
+	if count == 0 {
+		return false
+	}
+
+	return true
+}
+
 func (s *Session) SaveAssociationPovit(povit *data.AssociationPovit) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	sql := sqlBuilder.BuildQueryPovitSQL(povit)

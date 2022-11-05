@@ -44,6 +44,10 @@ func (con *Session) clearAssociation(r *data.AssociationRef, ownerId uint64) {
 	con.deleteAssociationPovit(r, ownerId)
 }
 
+func (s *Session) checkAssociationPovit(r *data.AssociationRef, ownerId uint64) {
+
+}
+
 func (s *Session) deleteAssociationPovit(r *data.AssociationRef, ownerId uint64) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	//先检查是否有数据，如果有再删除，避免死锁
