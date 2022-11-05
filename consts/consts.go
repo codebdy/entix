@@ -175,7 +175,7 @@ const (
 const ROOT = "root"
 
 //普通角色的ID永远不会是1
-const GUEST_ROLE_ID = "1"
+const GUEST_ROLE_ID = 1
 const PREDEFINED_QUERYUSER = "$queryUser"
 const PREDEFINED_ME = "$me"
 

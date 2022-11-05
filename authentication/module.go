@@ -34,13 +34,21 @@ func (m *AuthenticationModule) QueryFields() []*graphql.Field {
 	if orm.IsEntityExists(meta.USER_ENTITY_NAME) {
 		systemApp := app.GetSystemApp()
 		userType := systemApp.GetEntityByName(meta.USER_ENTITY_NAME)
+		fields := OutputFields(userType.AllAttributes())
+		fields["roleIds"] = &graphql.Field{
+			Type: &graphql.List{
+				OfType: graphql.ID,
+			},
+			Description: "User role ids include guest id",
+			Resolve:     resolveRoleIds,
+		}
 		return []*graphql.Field{
 			{
 				Name: consts.ME,
 				Type: graphql.NewObject(
 					graphql.ObjectConfig{
 						Name:   "Me",
-						Fields: OutputFields(userType.AllAttributes()),
+						Fields: fields,
 					},
 				),
 				Resolve: resolveMe,
