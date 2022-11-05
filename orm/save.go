@@ -59,6 +59,10 @@ func (s *Session) insertOneBody(instance *data.Instance) (int64, error) {
 
 func (s *Session) UpdateOne(instance *data.Instance) (uint64, error) {
 
+	instanceForUpdate := s.QueryOneEntityById(instance.Entity, instance.Id)
+	if instanceForUpdate == nil {
+		log.Panic(fmt.Sprintf("Update instance is not exist, entity: %s, instanceId:%d", instance.Entity.Name(), instance.Id))
+	}
 	err := s.updateOneBody(instance)
 	if err != nil {
 		return 0, err
@@ -111,10 +115,16 @@ func (s *Session) saveAssociationInstance(ins *data.Instance) (uint64, error) {
 	return saved, nil
 }
 func (s *Session) SaveAssociation(r *data.AssociationRef, ownerId uint64) error {
-
-	//这块逻辑还需要优化
 	if r.Clear {
 		s.clearAssociation(r, ownerId)
+		return nil
+	}
+
+	synced := r.Synced
+	if len(synced) != 0 {
+		s.clearSyncedAssociation(r, ownerId, synced)
+		s.saveAssociationInstances(synced, r, ownerId)
+		return nil
 	}
 
 	for _, ins := range r.Deleted {
@@ -140,42 +150,19 @@ func (s *Session) SaveAssociation(r *data.AssociationRef, ownerId uint64) error 
 				log.Panic("Save Association error")
 			}
 		}
-
 	}
 
-	for _, ins := range r.Updated {
-		// if ins.Id == 0 {
-		// 	panic("Can not add new instance when update")
-		// }
-		id, err := s.saveAssociationInstance(ins)
-		if err != nil {
-			panic("Save Association error:" + err.Error())
-		} else {
-			if id != 0 {
-				tarId := id
-				relationInstance := newAssociationPovit(r, ownerId, tarId)
+	s.saveAssociationInstances(r.Updated, r, ownerId)
 
-				s.SaveAssociationPovit(relationInstance)
-			} else {
-				panic("Save Association error")
-			}
+	return nil
+}
+
+func (s *Session) saveAssociationInstances(instances []*data.Instance, r *data.AssociationRef, ownerId uint64) {
+	for _, ins := range instances {
+		newInstance := false
+		if ins.Id == 0 {
+			newInstance = true
 		}
-	}
-
-	synced := r.Synced
-	if len(synced) == 0 {
-		return nil
-	}
-
-	//不能暴力删除，这个地方需要这么处理：
-	// 1、统计sync的ids
-	// 2、清除跟这些ids不重合的数据（先检查是否存在，再删除）
-
-	s.clearAssociation(r, ownerId)
-
-	for i, ins := range synced {
-		fmt.Println("哈哈哈", ins.Entity.Name(), ins)
-		fmt.Println("哈哈哈2", synced[i].Entity.Name(), synced[i])
 		targetId := ins.Id
 		if !ins.IsEmperty() {
 			id, err := s.saveAssociationInstance(ins)
@@ -189,13 +176,13 @@ func (s *Session) SaveAssociation(r *data.AssociationRef, ownerId uint64) error 
 				}
 			}
 		}
-		relationInstance := newAssociationPovit(r, ownerId, targetId)
-		s.SaveAssociationPovit(relationInstance)
+		//只有新增实例才更新关联表
+		if newInstance {
+			relationInstance := newAssociationPovit(r, ownerId, targetId)
+			s.SaveAssociationPovit(relationInstance)
+		}
 	}
-
-	return nil
 }
-
 func (s *Session) SaveAssociationPovit(povit *data.AssociationPovit) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	sql := sqlBuilder.BuildQueryPovitSQL(povit)
