@@ -8,7 +8,6 @@ import (
 	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/common/errorx"
 	"rxdrag.com/entify/consts"
-	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/service"
 	"rxdrag.com/entify/utils"
 )
@@ -44,18 +43,6 @@ func resolveRoleIds(p graphql.ResolveParams) (interface{}, error) {
 		log.Panic(err.Error())
 	}
 
-	s := service.NewSystem()
-	result := s.QueryEntity(app.GetEntityByName(meta.ROLE_ENTITY_NAME), map[string]interface{}{
-		"users": map[string]interface{}{
-			"id": map[string]interface{}{
-				consts.ARG_EQ: me.Id,
-			},
-		},
-	})
+	return service.QueryRoleIds(p.Context, app.Model.Graph), nil
 
-	for _, role := range result.Nodes {
-		ids = append(ids, role[consts.ID].(uint64))
-	}
-
-	return ids, nil
 }
