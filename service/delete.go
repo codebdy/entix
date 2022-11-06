@@ -7,7 +7,7 @@ import (
 	"rxdrag.com/entify/orm"
 )
 
-func DeleteInstances(instances []*data.Instance) (interface{}, error) {
+func (s *Service) DeleteInstances(instances []*data.Instance) (interface{}, error) {
 	session, err := orm.Open()
 	if err != nil {
 		log.Println(err.Error())
@@ -37,7 +37,7 @@ func DeleteInstances(instances []*data.Instance) (interface{}, error) {
 	return deletedIds, nil
 }
 
-func DeleteInstance(instance *data.Instance) (interface{}, error) {
+func (s *Service) DeleteInstance(instance *data.Instance) (interface{}, error) {
 	session, err := orm.Open()
 	if err != nil {
 		log.Println(err.Error())

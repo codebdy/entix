@@ -44,7 +44,8 @@ func resolveRoleIds(p graphql.ResolveParams) (interface{}, error) {
 		log.Panic(err.Error())
 	}
 
-	result := service.QueryEntity(app.GetEntityByName(meta.ROLE_ENTITY_NAME), map[string]interface{}{
+	s := service.NewSystem()
+	result := s.QueryEntity(app.GetEntityByName(meta.ROLE_ENTITY_NAME), map[string]interface{}{
 		"users": map[string]interface{}{
 			"id": map[string]interface{}{
 				consts.ARG_EQ: me.Id,

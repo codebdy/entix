@@ -22,7 +22,7 @@ import (
 // 	return session.QueryOneInterface(intf, args)
 // }
 
-func QueryEntity(entity *graph.Entity, args graph.QueryArg) orm.QueryResponse {
+func (s *Service) QueryEntity(entity *graph.Entity, args graph.QueryArg) orm.QueryResponse {
 	session, err := orm.Open()
 	if err != nil {
 		panic(err.Error())
@@ -30,7 +30,7 @@ func QueryEntity(entity *graph.Entity, args graph.QueryArg) orm.QueryResponse {
 	return session.QueryEntity(entity, args)
 }
 
-func QueryOneEntity(entity *graph.Entity, args graph.QueryArg) interface{} {
+func (s *Service) QueryOneEntity(entity *graph.Entity, args graph.QueryArg) interface{} {
 	session, err := orm.Open()
 	if err != nil {
 		panic(err.Error())
@@ -38,8 +38,8 @@ func QueryOneEntity(entity *graph.Entity, args graph.QueryArg) interface{} {
 	return session.QueryOneEntity(entity, args)
 }
 
-func QueryById(entity *graph.Entity, id uint64) interface{} {
-	return QueryOneEntity(entity, graph.QueryArg{
+func (s *Service) QueryById(entity *graph.Entity, id uint64) interface{} {
+	return s.QueryOneEntity(entity, graph.QueryArg{
 		consts.ARG_WHERE: graph.QueryArg{
 			consts.ID: graph.QueryArg{
 				consts.ARG_EQ: id,
@@ -48,7 +48,7 @@ func QueryById(entity *graph.Entity, id uint64) interface{} {
 	})
 }
 
-func BatchQueryAssociations(
+func (s *Service) BatchQueryAssociations(
 	association *graph.Association,
 	ids []uint64,
 	args graph.QueryArg,

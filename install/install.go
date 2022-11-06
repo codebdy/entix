@@ -109,8 +109,8 @@ func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 		systemAppData,
 		systemApp.GetEntityByName(meta.APP_ENTITY_NAME),
 	)
-
-	_, err := service.InsertOne(instance)
+	s := service.NewSystem()
+	_, err := s.InsertOne(instance)
 
 	if err != nil {
 		log.Panic(err.Error())
@@ -126,7 +126,7 @@ func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 			adminInstance(input.Admin, input.Password),
 			systemApp.GetEntityByName(meta.USER_ENTITY_NAME),
 		)
-		_, err = service.SaveOne(instance)
+		_, err = s.SaveOne(instance)
 		if err != nil {
 			logs.WriteBusinessLog(systemApp.Model, p, logs.INSTALL, logs.FAILURE, err.Error())
 			return nil, err
@@ -136,7 +136,7 @@ func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 				demoInstance(),
 				systemApp.GetEntityByName(meta.USER_ENTITY_NAME),
 			)
-			_, err = service.SaveOne(instance)
+			_, err = s.SaveOne(instance)
 			if err != nil {
 				logs.WriteBusinessLog(systemApp.Model, p, logs.INSTALL, logs.FAILURE, err.Error())
 				return nil, err

@@ -17,7 +17,8 @@ func DeployProcessResolveFn(model *model.Model) graphql.FieldResolveFn {
 		//repos := repository.New(model)
 		//@@@后面需要修改权限
 		//repos.MakeEntityAbilityVerifier(p, model.Graph.GetEntityByName("Process").Uuid())
-		process := service.QueryOneEntity(model.Graph.GetEntityByName("Process"), graph.QueryArg{
+		s := service.New(p.Context)
+		process := s.QueryOneEntity(model.Graph.GetEntityByName("Process"), graph.QueryArg{
 			consts.ARG_WHERE: graph.QueryArg{
 				consts.ID: graph.QueryArg{
 					consts.ARG_EQ: argId,

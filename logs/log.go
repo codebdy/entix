@@ -44,7 +44,8 @@ func WriteModelLog(
 	}
 
 	instance := data.NewInstance(logObject, model.Graph.GetEntityByName("ModelLog"))
-	service.SaveOne(instance)
+	s := service.NewSystem()
+	s.SaveOne(instance)
 }
 
 func WriteBusinessLog(
@@ -98,5 +99,6 @@ func WriteUserBusinessLog(
 	}
 
 	instance := data.NewInstance(logObject, model.Graph.GetEntityByName("BusinessLog"))
-	service.SaveOne(instance)
+	s := service.NewSystem()
+	s.SaveOne(instance)
 }

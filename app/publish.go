@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"log"
 	"time"
 
@@ -19,10 +20,10 @@ func PublishMeta(published, next *meta.MetaContent, appId uint64) {
 	orm.Migrage(diff)
 }
 
-func (a *App) Publish() {
+func (a *App) Publish(ctx context.Context) {
 	entity := a.GetEntityByName(meta.APP_ENTITY_NAME)
-
-	appData := service.QueryById(
+	s := service.New(ctx)
+	appData := s.QueryById(
 		entity,
 		a.AppId,
 	)
@@ -49,7 +50,7 @@ func (a *App) Publish() {
 		entity,
 	)
 
-	_, err = service.SaveOne(instance)
+	_, err = s.SaveOne(instance)
 
 	if err != nil {
 		log.Panic(err.Error())

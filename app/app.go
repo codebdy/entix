@@ -125,8 +125,8 @@ func (a *App) ReLoad() {
 
 func NewApp(appId uint64) *App {
 	systemApp := GetPredefinedSystemApp()
-
-	appMeta := service.QueryById(
+	s := service.NewSystem()
+	appMeta := s.QueryById(
 		systemApp.GetEntityByName(meta.APP_ENTITY_NAME),
 		appId,
 	)

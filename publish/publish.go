@@ -1,6 +1,8 @@
 package publish
 
 import (
+	"context"
+
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/app"
 	"rxdrag.com/entify/logs"
@@ -10,12 +12,12 @@ import (
 func PublishMetaResolveFn(app *app.App) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
-		doPublish(app)
+		doPublish(app, p.Context)
 		logs.WriteBusinessLog(app.Model, p, logs.PUBLISH_META, logs.SUCCESS, "")
 		return true, nil
 	}
 }
 
-func doPublish(app *app.App) {
-	app.Publish()
+func doPublish(app *app.App, ctx context.Context) {
+	app.Publish(ctx)
 }

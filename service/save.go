@@ -7,7 +7,7 @@ import (
 	"rxdrag.com/entify/orm"
 )
 
-func Save(instances []*data.Instance) ([]orm.InsanceData, error) {
+func (s *Service) Save(instances []*data.Instance) ([]orm.InsanceData, error) {
 	session, err := orm.Open()
 	if err != nil {
 		log.Println(err.Error())
@@ -48,7 +48,7 @@ func Save(instances []*data.Instance) ([]orm.InsanceData, error) {
 
 }
 
-func SaveOne(instance *data.Instance) (interface{}, error) {
+func (s *Service) SaveOne(instance *data.Instance) (interface{}, error) {
 	session, err := orm.Open()
 	if err != nil {
 		log.Println(err.Error())
@@ -77,7 +77,7 @@ func SaveOne(instance *data.Instance) (interface{}, error) {
 	return result, nil
 }
 
-func InsertOne(instance *data.Instance) (interface{}, error) {
+func (s *Service) InsertOne(instance *data.Instance) (interface{}, error) {
 	instance.AsInsert()
-	return SaveOne(instance)
+	return s.SaveOne(instance)
 }

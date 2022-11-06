@@ -79,7 +79,8 @@ func (m *ImExportModule) importResolve(p graphql.ResolveParams) (interface{}, er
 
 	appMap := readAppJsonFile(appJsonFile)
 	appEntity := m.app.GetEntityByName(meta.APP_ENTITY_NAME)
-	oldApp := service.QueryOneEntity(
+	s := service.New(p.Context)
+	oldApp := s.QueryOneEntity(
 		appEntity,
 		map[string]interface{}{
 			consts.ARG_WHERE: map[string]interface{}{
@@ -101,7 +102,7 @@ func (m *ImExportModule) importResolve(p graphql.ResolveParams) (interface{}, er
 			"title": appMap["title"],
 		}, appEntity)
 
-		oldApp, err = service.SaveOne(instance)
+		oldApp, err = s.SaveOne(instance)
 
 		if err != nil {
 			log.Panic(err.Error())
@@ -159,8 +160,8 @@ func (m *ImExportModule) saveApp(p graphql.ResolveParams, appMap map[string]inte
 	convertInstanceValue(appEntity, appMap)
 	appMap[consts.ID] = oldApp[consts.ID]
 	instance := data.NewInstance(appMap, appEntity)
-
-	savedIns, err := service.SaveOne(instance)
+	s := service.New(p.Context)
+	savedIns, err := s.SaveOne(instance)
 
 	if err != nil {
 		log.Panic(err.Error())

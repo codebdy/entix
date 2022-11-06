@@ -126,7 +126,8 @@ func (m *SnapshotModule) makeVersion(p graphql.ResolveParams) (interface{}, erro
 			},
 			m.app.GetEntityByName("Snapshot"),
 		)
-		_, err := service.SaveOne(ins)
+		s := service.New(p.Context)
+		_, err := s.SaveOne(ins)
 		if err != nil {
 			log.Panic(err.Error())
 		}

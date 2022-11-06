@@ -53,8 +53,8 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 	if err != nil {
 		log.Panic(err.Error())
 	}
-
-	appSnapshot := service.QueryById(m.app.GetEntityByName("Snapshot"), snapshotId)
+	s := service.New(p.Context)
+	appSnapshot := s.QueryById(m.app.GetEntityByName("Snapshot"), snapshotId)
 
 	if appSnapshot == nil {
 		log.Panicf("App snapshot is nil on id:%d", snapshotId)

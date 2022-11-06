@@ -35,9 +35,8 @@ import (
 func QueryOneEntityResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
-		//repos := repository.New(model)
-		//repos.MakeEntityAbilityVerifier(p, entity.Uuid())
-		instance := service.QueryOneEntity(entity, p.Args)
+		s := service.New(p.Context)
+		instance := s.QueryOneEntity(entity, p.Args)
 		return instance, nil
 	}
 }
@@ -45,9 +44,8 @@ func QueryOneEntityResolveFn(entity *graph.Entity, model *model.Model) graphql.F
 func QueryEntityResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
-		//repos := repository.New(model)
-		//repos.MakeEntityAbilityVerifier(p, entity.Uuid())
-		result := service.QueryEntity(entity, p.Args)
+		s := service.New(p.Context)
+		result := s.QueryEntity(entity, p.Args)
 		return result, nil
 	}
 }
