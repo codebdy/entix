@@ -51,10 +51,10 @@ func (s *Session) checkAssociationPovit(r *data.AssociationRef, ownerId uint64) 
 func (s *Session) deleteAssociationPovit(r *data.AssociationRef, ownerId uint64) {
 	sqlBuilder := dialect.GetSQLBuilder()
 	//先检查是否有数据，如果有再删除，避免死锁
-	sql := sqlBuilder.BuildCheckAssociationSQL(ownerId, r.Table().Name, r.OwnerColumn().Name)
+	sql := sqlBuilder.BuildCheckAssociationSQL(ownerId, r.Table().Name, r.TypeColumn().Name)
 	count := s.queryCount(sql)
 	if count > 0 {
-		sql = sqlBuilder.BuildClearAssociationSQL(ownerId, r.Table().Name, r.OwnerColumn().Name)
+		sql = sqlBuilder.BuildClearAssociationSQL(ownerId, r.Table().Name, r.TypeColumn().Name)
 		_, err := s.Dbx.Exec(sql)
 		log.Println("deleteAssociationPovit SQL:" + sql)
 		if err != nil {
