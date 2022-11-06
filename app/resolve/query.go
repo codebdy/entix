@@ -22,15 +22,15 @@ import (
 // 	}
 // }
 
-func QueryInterfaceResolveFn(intf *graph.Interface, model *model.Model) graphql.FieldResolveFn {
-	return func(p graphql.ResolveParams) (interface{}, error) {
-		defer utils.PrintErrorStack()
-		//repos := repository.New(model)
-		//repos.MakeInterfaceAbilityVerifier(p, intf)
-		result := service.QueryInterface(intf, p.Args)
-		return result, nil
-	}
-}
+// func QueryInterfaceResolveFn(intf *graph.Interface, model *model.Model) graphql.FieldResolveFn {
+// 	return func(p graphql.ResolveParams) (interface{}, error) {
+// 		defer utils.PrintErrorStack()
+// 		//repos := repository.New(model)
+// 		//repos.MakeInterfaceAbilityVerifier(p, intf)
+// 		result := service.QueryInterface(intf, p.Args)
+// 		return result, nil
+// 	}
+// }
 
 func QueryOneEntityResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {

@@ -6,13 +6,13 @@ import (
 	"rxdrag.com/entify/orm"
 )
 
-func QueryInterface(intf *graph.Interface, args graph.QueryArg) orm.QueryResponse {
-	session, err := orm.Open()
-	if err != nil {
-		panic(err.Error())
-	}
-	return session.QueryInterface(intf, args)
-}
+// func QueryInterface(intf *graph.Interface, args graph.QueryArg) orm.QueryResponse {
+// 	session, err := orm.Open()
+// 	if err != nil {
+// 		panic(err.Error())
+// 	}
+// 	return session.QueryInterface(intf, args)
+// }
 
 // func QueryOneInterface(intf *graph.Interface, args graph.QueryArg) interface{} {
 // 	session, err := orm.Open()
