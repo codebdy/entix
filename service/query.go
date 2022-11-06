@@ -14,13 +14,13 @@ func QueryInterface(intf *graph.Interface, args graph.QueryArg) orm.QueryRespons
 	return session.QueryInterface(intf, args)
 }
 
-func QueryOneInterface(intf *graph.Interface, args graph.QueryArg) interface{} {
-	session, err := orm.Open()
-	if err != nil {
-		panic(err.Error())
-	}
-	return session.QueryOneInterface(intf, args)
-}
+// func QueryOneInterface(intf *graph.Interface, args graph.QueryArg) interface{} {
+// 	session, err := orm.Open()
+// 	if err != nil {
+// 		panic(err.Error())
+// 	}
+// 	return session.QueryOneInterface(intf, args)
+// }
 
 func QueryEntity(entity *graph.Entity, args graph.QueryArg) orm.QueryResponse {
 	session, err := orm.Open()

@@ -12,15 +12,15 @@ import (
 	"rxdrag.com/entify/utils"
 )
 
-func QueryOneInterfaceResolveFn(intf *graph.Interface, model *model.Model) graphql.FieldResolveFn {
-	return func(p graphql.ResolveParams) (interface{}, error) {
-		defer utils.PrintErrorStack()
-		//repos := repository.New(model)
-		//repos.MakeInterfaceAbilityVerifier(p, intf)
-		instance := service.QueryOneInterface(intf, p.Args)
-		return instance, nil
-	}
-}
+// func QueryOneInterfaceResolveFn(intf *graph.Interface, model *model.Model) graphql.FieldResolveFn {
+// 	return func(p graphql.ResolveParams) (interface{}, error) {
+// 		defer utils.PrintErrorStack()
+// 		//repos := repository.New(model)
+// 		//repos.MakeInterfaceAbilityVerifier(p, intf)
+// 		instance := service.QueryOneInterface(intf, p.Args)
+// 		return instance, nil
+// 	}
+// }
 
 func QueryInterfaceResolveFn(intf *graph.Interface, model *model.Model) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {

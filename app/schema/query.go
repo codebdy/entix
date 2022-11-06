@@ -10,9 +10,9 @@ import (
 func (a *AppProcessor) QueryFields() []*graphql.Field {
 	queryFields := graphql.Fields{}
 
-	for _, intf := range a.Model.Graph.RootInterfaces() {
-		a.appendInterfaceToQueryFields(intf, queryFields)
-	}
+	// for _, intf := range a.Model.Graph.RootInterfaces() {
+	// 	a.appendInterfaceToQueryFields(intf, queryFields)
+	// }
 
 	for _, entity := range a.Model.Graph.RootEnities() {
 		a.appendEntityToQueryFields(entity, queryFields)
@@ -34,18 +34,18 @@ func (a *AppProcessor) ClassQueryResponseType(cls *graph.Class) graphql.Output {
 	return a.modelParser.ClassListType(cls)
 }
 
-func (a *AppProcessor) appendInterfaceToQueryFields(intf *graph.Interface, fields graphql.Fields) {
-	// (fields)[intf.QueryName()] = &graphql.Field{
-	// 	Type:    a.QueryResponseType(&intf.Class),
-	// 	Args:    a.modelParser.QueryArgs(intf.Name()),
-	// 	Resolve: resolve.QueryInterfaceResolveFn(intf, a.Model),
-	// }
-	(fields)[intf.QueryOneName()] = &graphql.Field{
-		Type:    a.modelParser.OutputType(intf.Name()),
-		Args:    a.modelParser.QueryArgs(intf.Name()),
-		Resolve: resolve.QueryOneInterfaceResolveFn(intf, a.Model),
-	}
-}
+// func (a *AppProcessor) appendInterfaceToQueryFields(intf *graph.Interface, fields graphql.Fields) {
+// 	// (fields)[intf.QueryName()] = &graphql.Field{
+// 	// 	Type:    a.QueryResponseType(&intf.Class),
+// 	// 	Args:    a.modelParser.QueryArgs(intf.Name()),
+// 	// 	Resolve: resolve.QueryInterfaceResolveFn(intf, a.Model),
+// 	// }
+// 	(fields)[intf.QueryOneName()] = &graphql.Field{
+// 		Type:    a.modelParser.OutputType(intf.Name()),
+// 		Args:    a.modelParser.QueryArgs(intf.Name()),
+// 		Resolve: resolve.QueryOneInterfaceResolveFn(intf, a.Model),
+// 	}
+// }
 
 func (a *AppProcessor) appendEntityToQueryFields(entity *graph.Entity, fields graphql.Fields) {
 	(fields)[entity.QueryName()] = &graphql.Field{
