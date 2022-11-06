@@ -22,7 +22,7 @@ func PublishMeta(published, next *meta.MetaContent, appId uint64) {
 
 func (a *App) Publish(ctx context.Context) {
 	entity := a.GetEntityByName(meta.APP_ENTITY_NAME)
-	s := service.New(ctx)
+	s := service.New(ctx, a.Model.Graph)
 	appData := s.QueryById(
 		entity,
 		a.AppId,

@@ -41,6 +41,10 @@ func QueryRoleIds(ctx context.Context, model *graph.Model) []uint64 {
 
 	me := contexts.Values(ctx).Me
 
+	if me == nil {
+		return ids
+	}
+
 	session, err := orm.Open()
 	if err != nil {
 		log.Panic(err.Error())

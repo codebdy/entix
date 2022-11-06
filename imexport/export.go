@@ -53,7 +53,7 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 	if err != nil {
 		log.Panic(err.Error())
 	}
-	s := service.New(p.Context)
+	s := service.New(p.Context, m.app.Model.Graph)
 	appSnapshot := s.QueryById(m.app.GetEntityByName("Snapshot"), snapshotId)
 
 	if appSnapshot == nil {

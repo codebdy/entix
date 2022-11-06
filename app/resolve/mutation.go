@@ -24,7 +24,7 @@ func PostResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolv
 			instance := data.NewInstance(object.(map[string]interface{}), entity)
 			instances = append(instances, instance)
 		}
-		s := service.New(p.Context)
+		s := service.New(p.Context, model.Graph)
 		returing, err := s.Save(instances)
 
 		if err != nil {
@@ -43,7 +43,7 @@ func SetResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolve
 		//repos.MakeEntityAbilityVerifier(p, entity.Uuid())
 
 		set := p.Args[consts.ARG_SET].(map[string]interface{})
-		s := service.New(p.Context)
+		s := service.New(p.Context, model.Graph)
 		objs := s.QueryEntity(entity, p.Args).Nodes
 		convertedObjs := objs
 		instances := []*data.Instance{}
@@ -83,7 +83,7 @@ func PostOneResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldRes
 		//repos := repository.New(model)
 		//repos.MakeEntityAbilityVerifier(p, entity.Uuid())
 		instance := data.NewInstance(object, entity)
-		s := service.New(p.Context)
+		s := service.New(p.Context, model.Graph)
 		result, err := s.SaveOne(instance)
 		logs.WriteModelLog(model, &entity.Class, p, logs.UPSERT, logs.SUCCESS, "")
 		return result, err
@@ -99,7 +99,7 @@ func DeleteByIdResolveFn(entity *graph.Entity, model *model.Model) graphql.Field
 		instance := data.NewInstance(map[string]interface{}{
 			consts.ID: ConvertId(argId),
 		}, entity)
-		s := service.New(p.Context)
+		s := service.New(p.Context, model.Graph)
 		result, err := s.DeleteInstance(instance)
 		logs.WriteModelLog(model, &entity.Class, p, logs.DELETE, logs.SUCCESS, "")
 		return result, err
@@ -111,7 +111,7 @@ func DeleteResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldReso
 		defer utils.PrintErrorStack()
 		//repos := repository.New(model)
 		//repos.MakeEntityAbilityVerifier(p, entity.Uuid())
-		s := service.New(p.Context)
+		s := service.New(p.Context, model.Graph)
 		objs := s.QueryEntity(entity, p.Args).Nodes
 
 		if objs == nil || len(objs) == 0 {
