@@ -53,9 +53,9 @@ func BatchQueryAssociations(
 	ids []uint64,
 	args graph.QueryArg,
 ) []map[string]interface{} {
-	con, err := orm.Open()
+	session, err := orm.Open()
 	if err != nil {
 		panic(err.Error())
 	}
-	return con.BatchRealAssociations(association, ids, args)
+	return session.BatchRealAssociations(association, ids, args)
 }
