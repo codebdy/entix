@@ -15,13 +15,16 @@ type Service struct {
 	isSystem bool
 	ctx      context.Context
 	roleIds  []uint64
+	model    *graph.Model
 }
 
-func New(ctx context.Context) *Service {
+func New(ctx context.Context, model *graph.Model) *Service {
 
 	return &Service{
 		isSystem: false,
 		ctx:      ctx,
+		model:    model,
+		roleIds:  QueryRoleIds(ctx, model),
 	}
 }
 
