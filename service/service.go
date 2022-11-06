@@ -34,6 +34,14 @@ func NewSystem() *Service {
 	}
 }
 
+func (s *Service) canReadEntity(entity *graph.Entity) bool {
+	return false
+}
+
+func (s *Service) queryArg() map[string]interface{} {
+	return map[string]interface{}{}
+}
+
 func QueryRoleIds(ctx context.Context, model *graph.Model) []uint64 {
 	ids := []uint64{
 		consts.GUEST_ROLE_ID,
