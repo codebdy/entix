@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 
 	"rxdrag.com/entify/common/auth"
@@ -45,6 +46,9 @@ func (s *Service) appId() uint64 {
 
 func (s *Service) canReadEntity(entity *graph.Entity) (bool, graph.QueryArg) {
 	whereArgs := map[string]interface{}{}
+	if s.isSystem || (s.me() != nil && (s.me().IsSupper || s.me().IsDemo)) {
+		return true, whereArgs
+	}
 	session, err := orm.Open()
 	if err != nil {
 		log.Println(err.Error())
@@ -89,8 +93,19 @@ func (s *Service) canReadEntity(entity *graph.Entity) (bool, graph.QueryArg) {
 
 		if classAuthCfg["readExpression"] != nil {
 			readExpression := classAuthCfg["readExpression"].(string)
-		}
 
+			var expressionArgs graph.QueryArg
+			err := json.Unmarshal([]byte(readExpression), &expressionArgs)
+			if err != nil {
+				log.Panic(err.Error())
+			}
+
+			orArgs = append(orArgs, expressionArgs)
+		}
+	}
+
+	if len(orArgs) > 0 {
+		whereArgs[consts.ARG_OR] = orArgs
 	}
 
 	return canRead, whereArgs
