@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/thinkeridea/go-extend/exnet"
 	"rxdrag.com/entify/authentication"
@@ -17,7 +16,7 @@ import (
 func ContextMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		//为了测试loading状态，生产版需要删掉
-		time.Sleep(time.Duration(300) * time.Millisecond)
+		//time.Sleep(time.Duration(300) * time.Millisecond)
 
 		reqToken := r.Header.Get(consts.AUTHORIZATION)
 		splitToken := strings.Split(reqToken, consts.BEARER)
