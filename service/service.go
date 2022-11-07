@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"rxdrag.com/entify/common/auth"
 	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
@@ -34,12 +35,17 @@ func NewSystem() *Service {
 	}
 }
 
-func (s *Service) canReadEntity(entity *graph.Entity) bool {
-	return false
+func (s *Service) me() *auth.User {
+	return contexts.Values(s.ctx).Me
 }
 
-func (s *Service) queryArg() map[string]interface{} {
-	return map[string]interface{}{}
+func (s *Service) appId() uint64 {
+	return contexts.Values(s.ctx).AppId
+}
+
+func (s *Service) canReadEntity(entity *graph.Entity) (bool, graph.QueryArg) {
+	whereArgs := map[string]interface{}{}
+	return false, whereArgs
 }
 
 func QueryRoleIds(ctx context.Context, model *graph.Model) []uint64 {

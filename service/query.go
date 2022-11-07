@@ -1,6 +1,8 @@
 package service
 
 import (
+	"log"
+
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/orm"
@@ -21,31 +23,59 @@ import (
 // 	}
 // 	return session.QueryOneInterface(intf, args)
 // }
+func mergeWhereArgs(whereArgs, authArgs graph.QueryArg) graph.QueryArg {
+	if len(whereArgs) == 0 {
+		return authArgs
+	}
+
+	if len(authArgs) == 0 {
+		return whereArgs
+	}
+
+	return graph.QueryArg{
+		consts.ARG_AND: []graph.QueryArg{
+			whereArgs,
+			authArgs,
+		},
+	}
+}
 
 func (s *Service) QueryEntity(entity *graph.Entity, args graph.QueryArg) orm.QueryResponse {
+	canRead, authArgs := s.canReadEntity(entity)
+	if !canRead {
+		log.Panic("No access")
+	}
 	session, err := orm.Open()
 	if err != nil {
 		panic(err.Error())
 	}
-	return session.QueryEntity(entity, args)
+	return session.QueryEntity(entity, mergeWhereArgs(args, authArgs))
 }
 
 func (s *Service) QueryOneEntity(entity *graph.Entity, args graph.QueryArg) interface{} {
+	canRead, authArgs := s.canReadEntity(entity)
+	if !canRead {
+		log.Panic("No access")
+	}
 	session, err := orm.Open()
 	if err != nil {
-		panic(err.Error())
+		log.Panic(err.Error())
 	}
-	return session.QueryOneEntity(entity, args)
+	return session.QueryOneEntity(entity, mergeWhereArgs(args, authArgs))
 }
 
 func (s *Service) QueryById(entity *graph.Entity, id uint64) interface{} {
-	return s.QueryOneEntity(entity, graph.QueryArg{
+	canRead, authArgs := s.canReadEntity(entity)
+	if !canRead {
+		log.Panic("No access")
+	}
+	return s.QueryOneEntity(entity, mergeWhereArgs(graph.QueryArg{
 		consts.ARG_WHERE: graph.QueryArg{
 			consts.ID: graph.QueryArg{
 				consts.ARG_EQ: id,
 			},
 		},
-	})
+	}, authArgs))
 }
 
 func (s *Service) BatchQueryAssociations(
