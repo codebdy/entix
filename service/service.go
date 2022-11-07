@@ -45,7 +45,55 @@ func (s *Service) appId() uint64 {
 
 func (s *Service) canReadEntity(entity *graph.Entity) (bool, graph.QueryArg) {
 	whereArgs := map[string]interface{}{}
-	return false, whereArgs
+	session, err := orm.Open()
+	if err != nil {
+		log.Println(err.Error())
+	}
+
+	appArg := graph.QueryArg{
+		"app": map[string]interface{}{
+			consts.ID: map[string]interface{}{
+				consts.ARG_EQ: s.appId(),
+			},
+		},
+	}
+
+	classUuidArg := graph.QueryArg{
+		"classUuid": map[string]interface{}{
+			consts.ARG_EQ: entity.Uuid(),
+		},
+	}
+
+	roleIdsArg := graph.QueryArg{
+		"roleId": map[string]interface{}{
+			consts.ARG_IN: s.roleIds,
+		},
+	}
+
+	result := session.QueryEntity(s.model.GetEntityByName("ClassAuthConfig"),
+		graph.QueryArg{
+			consts.ARG_AND: []graph.QueryArg{
+				appArg,
+				roleIdsArg,
+				classUuidArg,
+			},
+		},
+	)
+
+	canRead := false
+	orArgs := []graph.QueryArg{}
+	for _, classAuthCfg := range result.Nodes {
+		if classAuthCfg["canRead"] != nil && classAuthCfg["canRead"].(bool) {
+			canRead = true
+		}
+
+		if classAuthCfg["readExpression"] != nil {
+			readExpression := classAuthCfg["readExpression"].(string)
+		}
+
+	}
+
+	return canRead, whereArgs
 }
 
 func QueryRoleIds(ctx context.Context, model *graph.Model) []uint64 {
