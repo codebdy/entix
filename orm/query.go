@@ -157,7 +157,7 @@ func (con *Session) QueryEntity(entity *graph.Entity, args map[string]interface{
 	rows, err := con.Dbx.Query(sqlStr, params...)
 	defer rows.Close()
 	if err != nil {
-		panic(err.Error())
+		log.Panic(err.Error(), sqlStr)
 	}
 	var instances []InsanceData
 	for rows.Next() {

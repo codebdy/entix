@@ -151,7 +151,8 @@ func (m *ImExportModule) importResolve(p graphql.ResolveParams) (interface{}, er
 		return false, err
 	}
 
-	ap.ReLoad()
+	ap.Publish(p.Context)
+	//ap.ReLoad()
 	return err == nil, err
 }
 
@@ -159,6 +160,7 @@ func (m *ImExportModule) saveApp(p graphql.ResolveParams, appMap map[string]inte
 	appEntity := m.app.GetEntityByName(meta.APP_ENTITY_NAME)
 	convertInstanceValue(appEntity, appMap)
 	appMap[consts.ID] = oldApp[consts.ID]
+	appMap["publishedMeta"] = oldApp["publishedMeta"]
 	instance := data.NewInstance(appMap, appEntity)
 	s := service.New(p.Context, m.app.Model.Graph)
 	savedIns, err := s.SaveOne(instance)
