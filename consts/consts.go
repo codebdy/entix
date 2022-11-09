@@ -101,6 +101,7 @@ const (
 	RESPONSE_AFFECTEDROWS string = "affectedRows"
 	ARG_SET               string = "set"
 	ARG_FILE              string = "file"
+	ARG_FOLDER            string = "folder"
 )
 
 const (

@@ -1,3 +1,3 @@
 package schema
 
-const UPLOAD_PLUGIN = "uploadPlugin"
+const UPLOAD_ZIP = "uploadZip"

@@ -16,10 +16,11 @@ func UploadResolveResolve(p graphql.ResolveParams) (interface{}, error) {
 	return GetFileUrl(fileInfo, p)
 }
 
-func UploadPluginResolveResolve(p graphql.ResolveParams) (interface{}, error) {
+func UploadZipResolveResolve(p graphql.ResolveParams) (interface{}, error) {
 	defer utils.PrintErrorStack()
 	file := p.Args[consts.ARG_FILE].(storage.File)
-	fileInfo := file.Save(consts.PLUGINS_PATH)
+	folder := p.Args[consts.ARG_FOLDER].(string)
+	fileInfo := file.Save(folder)
 	err := storage.Unzip(fileInfo.Path, fileInfo.Dir+fileInfo.NameBody)
 	if err != nil {
 		log.Panic(err.Error())

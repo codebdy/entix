@@ -15,20 +15,29 @@ func (a *AppProcessor) mutationFields() []*graphql.Field {
 		Type: graphql.String,
 		Args: graphql.FieldConfigArgument{
 			consts.ARG_FILE: &graphql.ArgumentConfig{
-				Type: scalars.UploadType,
+				Type: &graphql.NonNull{
+					OfType: scalars.UploadType,
+				},
 			},
 		},
 		Resolve: resolve.UploadResolveResolve,
 	}
 
-	mutationFields[UPLOAD_PLUGIN] = &graphql.Field{
+	mutationFields[UPLOAD_ZIP] = &graphql.Field{
 		Type: graphql.String,
 		Args: graphql.FieldConfigArgument{
 			consts.ARG_FILE: &graphql.ArgumentConfig{
-				Type: scalars.UploadType,
+				Type: &graphql.NonNull{
+					OfType: scalars.UploadType,
+				},
+			},
+			consts.ARG_FOLDER: &graphql.ArgumentConfig{
+				Type: &graphql.NonNull{
+					OfType: graphql.String,
+				},
 			},
 		},
-		Resolve: resolve.UploadPluginResolveResolve,
+		Resolve: resolve.UploadZipResolveResolve,
 	}
 
 	for _, entity := range a.Model.Graph.RootEnities() {
