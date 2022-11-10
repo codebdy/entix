@@ -45,7 +45,8 @@ func QueryEntityResolveFn(entity *graph.Entity, model *model.Model) graphql.Fiel
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
 		s := service.New(p.Context, model.Graph)
-		result := s.QueryEntity(entity, p.Args)
+		fields := parseListFields(p.Info)
+		result := s.QueryEntity(entity, p.Args, fields)
 		return result, nil
 	}
 }

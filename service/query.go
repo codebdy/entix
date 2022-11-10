@@ -40,7 +40,7 @@ func mergeWhereArgs(whereArgs, authArgs graph.QueryArg) graph.QueryArg {
 	}
 }
 
-func (s *Service) QueryEntity(entity *graph.Entity, args graph.QueryArg) orm.QueryResponse {
+func (s *Service) QueryEntity(entity *graph.Entity, args graph.QueryArg, fieldNames []string) orm.QueryResponse {
 	canRead, authArgs := s.canReadEntity(entity)
 	if !canRead {
 		log.Panic("No access")
@@ -49,7 +49,19 @@ func (s *Service) QueryEntity(entity *graph.Entity, args graph.QueryArg) orm.Que
 	if err != nil {
 		panic(err.Error())
 	}
-	return session.QueryEntity(entity, mergeWhereArgs(args, authArgs))
+
+	fields := []*graph.Attribute{}
+	allAttributes := entity.AllAttributes()
+
+	for i := range allAttributes {
+		for _, name := range fieldNames {
+			if allAttributes[i].Name == name {
+				fields = append(fields, allAttributes[i])
+			}
+		}
+	}
+
+	return session.QueryEntity(entity, mergeWhereArgs(args, authArgs), fields)
 }
 
 func (s *Service) QueryOneEntity(entity *graph.Entity, args graph.QueryArg) interface{} {

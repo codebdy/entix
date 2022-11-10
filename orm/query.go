@@ -151,8 +151,8 @@ func (con *Session) buildQueryEntityCountSQL(entity *graph.Entity, args map[stri
 // 	}
 // }
 
-func (con *Session) QueryEntity(entity *graph.Entity, args map[string]interface{}) QueryResponse {
-	sqlStr, params := con.buildQueryEntityRecordsSQL(entity, args, entity.SmallAttributes())
+func (con *Session) QueryEntity(entity *graph.Entity, args map[string]interface{}, fields []*graph.Attribute) QueryResponse {
+	sqlStr, params := con.buildQueryEntityRecordsSQL(entity, args, fields)
 	log.Println("doQueryEntity SQL:", sqlStr, params)
 	rows, err := con.Dbx.Query(sqlStr, params...)
 	defer rows.Close()
@@ -161,12 +161,12 @@ func (con *Session) QueryEntity(entity *graph.Entity, args map[string]interface{
 	}
 	var instances []InsanceData
 	for rows.Next() {
-		values := makeEntityQueryValues(entity.SmallAttributes())
+		values := makeEntityQueryValues(fields)
 		err = rows.Scan(values...)
 		if err != nil {
 			panic(err.Error())
 		}
-		instances = append(instances, convertValuesToEntity(values, entity.SmallAttributes()))
+		instances = append(instances, convertValuesToEntity(values, fields))
 	}
 
 	sqlStr, params = con.buildQueryEntityCountSQL(entity, args)

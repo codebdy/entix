@@ -44,7 +44,7 @@ func SetResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolve
 
 		set := p.Args[consts.ARG_SET].(map[string]interface{})
 		s := service.New(p.Context, model.Graph)
-		objs := s.QueryEntity(entity, p.Args).Nodes
+		objs := s.QueryEntity(entity, p.Args, []string{}).Nodes
 		convertedObjs := objs
 		instances := []*data.Instance{}
 
@@ -112,7 +112,7 @@ func DeleteResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldReso
 		//repos := repository.New(model)
 		//repos.MakeEntityAbilityVerifier(p, entity.Uuid())
 		s := service.New(p.Context, model.Graph)
-		objs := s.QueryEntity(entity, p.Args).Nodes
+		objs := s.QueryEntity(entity, p.Args, []string{consts.ID}).Nodes
 
 		if objs == nil || len(objs) == 0 {
 			return map[string]interface{}{

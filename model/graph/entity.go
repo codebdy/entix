@@ -3,7 +3,6 @@ package graph
 import (
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/domain"
-	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/model/table"
 	"rxdrag.com/entify/utils"
 )
@@ -46,19 +45,6 @@ func (e *Entity) AllAttributes() []*Attribute {
 		}
 	}
 	return attrs
-}
-
-func (e *Entity) SmallAttributes() []*Attribute {
-	attributes := []*Attribute{}
-	//列表时，滤除大字段
-	allAttributes := e.AllAttributes()
-	for i := range allAttributes {
-		attr := allAttributes[i]
-		if attr.Type != meta.JSON && attr.Length < 10000 {
-			attributes = append(attributes, attr)
-		}
-	}
-	return attributes
 }
 
 func (e *Entity) AllMethods() []*Method {

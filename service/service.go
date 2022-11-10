@@ -74,7 +74,8 @@ func (s *Service) canReadEntity(entity *graph.Entity) (bool, graph.QueryArg) {
 		},
 	}
 
-	result := session.QueryEntity(s.model.GetEntityByName("ClassAuthConfig"),
+	authEntity := s.model.GetEntityByName("ClassAuthConfig")
+	result := session.QueryEntity(authEntity,
 		graph.QueryArg{
 			consts.ARG_AND: []graph.QueryArg{
 				appArg,
@@ -82,6 +83,7 @@ func (s *Service) canReadEntity(entity *graph.Entity) (bool, graph.QueryArg) {
 				classUuidArg,
 			},
 		},
+		authEntity.AllAttributes(),
 	)
 
 	canRead := false
@@ -127,13 +129,17 @@ func QueryRoleIds(ctx context.Context, model *graph.Model) []uint64 {
 		log.Panic(err.Error())
 	}
 
-	result := session.QueryEntity(model.GetEntityByName(meta.ROLE_ENTITY_NAME), map[string]interface{}{
-		"users": map[string]interface{}{
-			"id": map[string]interface{}{
-				consts.ARG_EQ: me.Id,
+	roleEntity := model.GetEntityByName(meta.ROLE_ENTITY_NAME)
+	result := session.QueryEntity(roleEntity,
+		map[string]interface{}{
+			"users": map[string]interface{}{
+				"id": map[string]interface{}{
+					consts.ARG_EQ: me.Id,
+				},
 			},
 		},
-	})
+		roleEntity.AllAttributes(),
+	)
 
 	for _, role := range result.Nodes {
 		ids = append(ids, role[consts.ID].(uint64))
