@@ -116,7 +116,7 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 	}
 
 	//处理模板
-	templatesData := appJson.(utils.JSON)["templates"]
+	templatesData := appJson.(utils.JSON)["partsOfTemplateInfo"]
 
 	if templatesData != nil {
 		templates := templatesData.([]interface{})
@@ -127,7 +127,7 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 				url := urlData.(string)
 				imagePath := url[len(hostPath):]
 				fileName := imagePath[len(IMAGE_PATH):]
-				zipTemplateFile(urlData.(string), fileName, w)
+				zipTemplateFile(imagePath, fileName, w)
 				template["imageUrl"] = fileName
 			}
 		}
@@ -172,13 +172,13 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 	return fileUrl, nil
 }
 
-func zipTemplateFile(url, fileName string, w *zip.Writer) {
-	f, err := w.Create(url)
+func zipTemplateFile(filePath, fileName string, w *zip.Writer) {
+	f, err := w.Create("templates/" + fileName)
 	if err != nil {
 		log.Panic(err.Error())
 	}
 
-	r, err := os.Open("templates/" + fileName)
+	r, err := os.Open(filePath)
 	defer r.Close()
 	if err != nil {
 		log.Panic(err.Error())
