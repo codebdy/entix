@@ -126,7 +126,7 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 			if urlData != nil {
 				url := urlData.(string)
 				imagePath := url[len(hostPath):]
-				fileName := imagePath[len(IMAGE_PATH):]
+				fileName := filepath.Base(imagePath)
 				zipTemplateFile(imagePath, fileName, w)
 				template["imageUrl"] = fileName
 			}
