@@ -127,6 +127,15 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 				url := urlData.(string)
 				imagePath := url[len(hostPath):]
 				fileName := filepath.Base(imagePath)
+				_, err := os.Stat(imagePath)
+				if err != nil {
+					//如果文件不存在，删掉文件信息
+					if os.IsNotExist(err) {
+						template["imageUrl"] = ""
+						continue
+					}
+				}
+
 				zipTemplateFile(imagePath, fileName, w)
 				template["imageUrl"] = fileName
 			}
