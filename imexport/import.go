@@ -128,14 +128,17 @@ func (m *ImExportModule) importResolve(p graphql.ResolveParams) (interface{}, er
 	//导入模板
 	if appMap[TEMPLATES_ATTR_NAME] != nil {
 		templates := appMap[TEMPLATES_ATTR_NAME].([]interface{})
+		relativePath := fmt.Sprintf("%s/app%d/templates", consts.STATIC_PATH, appId)
 		for _, templateData := range templates {
 			template := templateData.(map[string]interface{})
-			templateFiles := getTemplateFiles(r.File)
-			relativePath := fmt.Sprintf("%s/app%d/templates", consts.STATIC_PATH, appId)
-			template["imageUrl"] = hostPath + relativePath
-			for i := range templateFiles {
-				extractAndCopyFile(relativePath, templateFiles[i])
+			if template["imageUrl"] != nil {
+				template["imageUrl"] = hostPath + relativePath + "/" + template["imageUrl"].(string)
 			}
+		}
+		templateFiles := getTemplateFiles(r.File)
+		for i := range templateFiles {
+			templateFiles[i].Name = templateFiles[i].Name[len("templates/"):]
+			extractAndCopyFile(relativePath, templateFiles[i])
 		}
 	}
 
