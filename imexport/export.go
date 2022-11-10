@@ -116,7 +116,7 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 	}
 
 	//处理模板
-	templatesData := appJson.(utils.JSON)["partsOfTemplateInfo"]
+	templatesData := appJson.(utils.JSON)[TEMPLATES_ATTR_NAME]
 
 	if templatesData != nil {
 		templates := templatesData.([]interface{})

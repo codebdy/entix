@@ -125,9 +125,23 @@ func (m *ImExportModule) importResolve(p graphql.ResolveParams) (interface{}, er
 		}
 	}
 
+	//导入模板
+	if appMap[TEMPLATES_ATTR_NAME] != nil {
+		templates := appMap[TEMPLATES_ATTR_NAME].([]interface{})
+		for _, templateData := range templates {
+			template := templateData.(map[string]interface{})
+			templateFiles := getTemplateFiles(r.File)
+			relativePath := fmt.Sprintf("%s/app%d/templates", consts.STATIC_PATH, appId)
+			template["imageUrl"] = hostPath + relativePath
+			for i := range templateFiles {
+				extractAndCopyFile(relativePath, templateFiles[i])
+			}
+		}
+	}
+
 	//导入插件
-	if appMap["plugins"] != nil {
-		plugins := appMap["plugins"].([]interface{})
+	if appMap[PLUGIN_ATTR_NAME] != nil {
+		plugins := appMap[PLUGIN_ATTR_NAME].([]interface{})
 		for index, pluginData := range plugins {
 			plugin := pluginData.(map[string]interface{})
 			if plugin["type"] != "debug" {
@@ -176,6 +190,16 @@ func getPluginFiles(pluginPath string, arr []*zip.File) []*zip.File {
 	files := []*zip.File{}
 	for i := range arr {
 		if strings.Index(arr[i].Name, fmt.Sprintf("plugins/%s/", pluginPath)) == 0 {
+			files = append(files, arr[i])
+		}
+	}
+	return files
+}
+
+func getTemplateFiles(arr []*zip.File) []*zip.File {
+	files := []*zip.File{}
+	for i := range arr {
+		if strings.Index(arr[i].Name, "templates/") == 0 {
 			files = append(files, arr[i])
 		}
 	}
