@@ -105,6 +105,8 @@ func (s *Session) DeleteInstance(instance *data.Instance) {
 	} else {
 		sql = sqlBuilder.BuildDeleteSQL(instance.Id, tableName)
 	}
+
+	log.Println("DeleteInstance:", sql)
 	_, err := s.Dbx.Exec(sql)
 	if err != nil {
 		panic(err.Error())
