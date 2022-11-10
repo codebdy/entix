@@ -96,6 +96,7 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 		log.Panic(err.Error())
 	}
 
+	//处理插件
 	pluginsData := appJson.(utils.JSON)["plugins"]
 
 	if pluginsData != nil {
@@ -108,8 +109,26 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 				url := urlData.(string)
 				folderPath := url[len(hostPath):]
 
-				zipFolder(folderPath, pluginName, w)
+				zipPluginFolder(folderPath, pluginName, w)
 				plugin["url"] = pluginName
+			}
+		}
+	}
+
+	//处理模板
+	templatesData := appJson.(utils.JSON)["templates"]
+
+	if templatesData != nil {
+		templates := templatesData.([]interface{})
+		for _, templateData := range templates {
+			template := templateData.(map[string]interface{})
+			urlData := template["imageUrl"]
+			if urlData != nil {
+				url := urlData.(string)
+				imagePath := url[len(hostPath):]
+				fileName := imagePath[len(IMAGE_PATH):]
+				zipTemplateFile(urlData.(string), fileName, w)
+				template["imageUrl"] = fileName
 			}
 		}
 	}
@@ -153,8 +172,23 @@ func (m *ImExportModule) exportResolve(p graphql.ResolveParams) (interface{}, er
 	return fileUrl, nil
 }
 
+func zipTemplateFile(url, fileName string, w *zip.Writer) {
+	f, err := w.Create(url)
+	if err != nil {
+		log.Panic(err.Error())
+	}
+
+	r, err := os.Open("templates/" + fileName)
+	defer r.Close()
+	if err != nil {
+		log.Panic(err.Error())
+	}
+
+	io.Copy(f, r)
+}
+
 // Add folder to zip
-func zipFolder(folder string, pluginName string, w *zip.Writer) {
+func zipPluginFolder(folder string, pluginName string, w *zip.Writer) {
 	walker := func(path string, info os.FileInfo, err error) error {
 		log.Printf("Crawling: %#v\n", path)
 		if err != nil {
