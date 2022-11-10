@@ -60,14 +60,11 @@ func makeInterfaceQueryValues(intf *graph.Interface) []interface{} {
 	return values
 }
 
-func makeEntityQueryValues(ent *graph.Entity) []interface{} {
-	names := ent.AllAttributeNames()
-	values := make([]interface{}, len(names))
-	for i, attrName := range names {
-		attr := ent.GetAttributeByName(attrName)
+func makeEntityQueryValues(attributes []*graph.Attribute) []interface{} {
+	values := make([]interface{}, len(attributes))
+	for i, attr := range attributes {
 		values[i] = makeAttributeValue(attr)
 	}
-
 	return values
 }
 
@@ -122,13 +119,11 @@ func convertValuesToInterface(values []interface{}, intf *graph.Interface) map[s
 	return object
 }
 
-func convertValuesToEntity(values []interface{}, ent *graph.Entity) map[string]interface{} {
+func convertValuesToEntity(values []interface{}, attributes []*graph.Attribute) map[string]interface{} {
 	object := make(map[string]interface{})
-	names := ent.AllAttributeNames()
-	for i := range names {
+	for i := range attributes {
 		value := values[i]
-		attrName := names[i]
-		column := ent.GetAttributeByName(attrName)
+		column := attributes[i]
 		object[column.Name] = convertOneColumnValue(column, value)
 	}
 	return object
