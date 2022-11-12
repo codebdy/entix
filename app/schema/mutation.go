@@ -3,8 +3,10 @@ package schema
 import (
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/app/resolve"
+	"rxdrag.com/entify/app/schema/parser"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
+	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/scalars"
 )
 
@@ -43,6 +45,12 @@ func (a *AppProcessor) mutationFields() []*graphql.Field {
 	for _, entity := range a.Model.Graph.RootEnities() {
 		if entity.Domain.Root {
 			a.appendEntityMutationToFields(entity, mutationFields)
+		}
+	}
+
+	for _, orchestration := range a.Model.Meta.Orchestrations {
+		if orchestration.OperateType == consts.MUTATION {
+			a.appendOrchestrationToMutationFields(orchestration, mutationFields)
 		}
 	}
 
@@ -132,5 +140,14 @@ func (a *AppProcessor) appendEntityMutationToFields(entity *graph.Entity, feilds
 			Args:    a.setArgs(entity),
 			Resolve: resolve.SetResolveFn(entity, a.Model),
 		}
+	}
+}
+
+func (a *AppProcessor) appendOrchestrationToMutationFields(orchestration *meta.OrchestrationMeta, fields graphql.Fields) {
+	fields[orchestration.Name] = &graphql.Field{
+		Type:        parser.PropertyType(orchestration.Type),
+		Args:        a.modelParser.MethodArgs(&orchestration.MethodMeta),
+		Description: orchestration.Description,
+		Resolve:     resolve.MethodResolveFn(&orchestration.MethodMeta, a.Model),
 	}
 }

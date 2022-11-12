@@ -69,5 +69,4 @@ func (a *AppProcessor) appendOrchestrationToQueryFields(orchestration *meta.Orch
 		Description: orchestration.Description,
 		Resolve:     resolve.MethodResolveFn(&orchestration.MethodMeta, a.Model),
 	}
-
 }
