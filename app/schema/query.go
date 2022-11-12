@@ -3,7 +3,10 @@ package schema
 import (
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/app/resolve"
+	"rxdrag.com/entify/app/schema/parser"
+	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
+	"rxdrag.com/entify/model/meta"
 )
 
 func (a *AppProcessor) QueryFields() []*graphql.Field {
@@ -16,6 +19,11 @@ func (a *AppProcessor) QueryFields() []*graphql.Field {
 		a.appendThirdPartyToQueryFields(third, queryFields)
 	}
 
+	for _, orchestration := range a.Model.Meta.Orchestrations {
+		if orchestration.OperateType == consts.QUERY {
+			a.appendOrchestrationToQueryFields(orchestration, queryFields)
+		}
+	}
 	return convertFieldsArray(queryFields)
 }
 
@@ -54,13 +62,12 @@ func (a *AppProcessor) appendThirdPartyToQueryFields(third *graph.ThirdParty, fi
 
 }
 
-// func (a *AppProcessor) appendServiceToQueryFields(service *graph.Service, fields graphql.Fields) {
-// 	for _, method := range service.QueryMethods() {
-// 		fields[service.Name()+"_"+method.GetName()] = &graphql.Field{
-// 			Type:        parser.PropertyType(method.GetType()),
-// 			Args:        a.modelParser.MethodArgs(method),
-// 			Description: method.Method.Description,
-// 			Resolve:     resolve.MethodResolveFn(method, a.Model),
-// 		}
-// 	}
-// }
+func (a *AppProcessor) appendOrchestrationToQueryFields(orchestration *meta.OrchestrationMeta, fields graphql.Fields) {
+	fields[orchestration.Name] = &graphql.Field{
+		Type:        parser.PropertyType(orchestration.Type),
+		Args:        a.modelParser.MethodArgs(&orchestration.MethodMeta),
+		Description: orchestration.Description,
+		Resolve:     resolve.MethodResolveFn(&orchestration.MethodMeta, a.Model),
+	}
+
+}

@@ -8,19 +8,19 @@ import (
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/app/script"
 	"rxdrag.com/entify/model"
-	"rxdrag.com/entify/model/graph"
+	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/utils"
 )
 
-func argsString(method *graph.Method) string {
+func argsString(method *meta.MethodMeta) string {
 	names := []string{}
-	for _, arg := range method.Method.Args {
+	for _, arg := range method.Args {
 		names = append(names, arg.Name)
 	}
 	return strings.Join(names, ", ")
 }
 
-func MethodResolveFn(method *graph.Method, model *model.Model) graphql.FieldResolveFn {
+func MethodResolveFn(method *meta.MethodMeta, model *model.Model) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
 		vm := goja.New()
@@ -37,7 +37,7 @@ func MethodResolveFn(method *graph.Method, model *model.Model) graphql.FieldReso
 			}`,
 			script.GetCodes(model),
 			argsString(method),
-			method.Method.Script,
+			method.Script,
 		)
 
 		_, err := vm.RunString(funcStr)

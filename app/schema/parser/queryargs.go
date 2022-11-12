@@ -4,6 +4,7 @@ import (
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
+	"rxdrag.com/entify/model/meta"
 )
 
 func (p *ModelParser) makeQueryArgs() {
@@ -178,10 +179,10 @@ func (p *ModelParser) QueryArgs(name string) graphql.FieldConfigArgument {
 	return config
 }
 
-func (p *ModelParser) MethodArgs(method *graph.Method) graphql.FieldConfigArgument {
+func (p *ModelParser) MethodArgs(method *meta.MethodMeta) graphql.FieldConfigArgument {
 	args := graphql.FieldConfigArgument{}
 
-	for _, arg := range method.Method.Args {
+	for _, arg := range method.Args {
 		args[arg.Name] = &graphql.ArgumentConfig{
 			Type: PropertyType(arg.Type),
 		}
