@@ -25,16 +25,14 @@ func MethodResolveFn(code string, methodArgs []meta.ArgMeta, model *model.Model)
 		defer utils.PrintErrorStack()
 		vm := goja.New()
 		script.Enable(vm)
-		vm.Set("args", p.Args)
+		vm.Set("$args", p.Args)
 		script.Enable(vm)
 		funcStr := fmt.Sprintf(
 			`
 			%s
-			const {%s} = args;
 			%s
 			`,
 			script.GetCodes(model),
-			argsString(methodArgs),
 			code,
 		)
 
