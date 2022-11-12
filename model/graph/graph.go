@@ -13,7 +13,6 @@ type Model struct {
 	Interfaces   []*Interface
 	Entities     []*Entity
 	ThirdParties []*ThirdParty
-	Services     []*Service
 	ValueObjects []*Class
 	Relations    []*Relation
 	Tables       []*table.Table
@@ -66,8 +65,6 @@ func New(m *domain.Model) *Model {
 			model.ValueObjects = append(model.ValueObjects, NewClass(cls))
 		} else if cls.StereoType == meta.CLASS_THIRDPARTY {
 			model.ThirdParties = append(model.ThirdParties, NewThirdParty(cls))
-		} else if cls.StereoType == meta.CLASS_SERVICE {
-			model.Services = append(model.Services, NewService(cls))
 		}
 	}
 
@@ -238,11 +235,6 @@ func (m *Model) Validate() {
 			panic(fmt.Sprintf("Entity %s should have one normal field at least", entity.Name()))
 		}
 	}
-	for _, service := range m.Services {
-		if len(service.methods) == 0 {
-			panic(fmt.Sprintf("Service %s should have one method field at least", service.Name()))
-		}
-	}
 }
 
 func (m *Model) RootEnities() []*Entity {
@@ -284,16 +276,6 @@ func (m *Model) GetEntityByUuid(uuid string) *Entity {
 		ent := m.Entities[i]
 		if ent.Uuid() == uuid {
 			return ent
-		}
-	}
-	return nil
-}
-
-func (m *Model) GetServiceByUuid(uuid string) *Service {
-	for i := range m.Services {
-		partial := m.Services[i]
-		if partial.Uuid() == uuid {
-			return partial
 		}
 	}
 	return nil
@@ -349,16 +331,6 @@ func (m *Model) GetThirdPartyByName(name string) *ThirdParty {
 	return nil
 }
 
-func (m *Model) GetServiceByName(name string) *Service {
-	for i := range m.Services {
-		service := m.Services[i]
-		if service.Name() == name {
-			return service
-		}
-	}
-	return nil
-}
-
 func (m *Model) GetEnumByUuid(uuid string) *Enum {
 	for i := range m.Enums {
 		enum := m.Enums[i]
@@ -367,10 +339,4 @@ func (m *Model) GetEnumByUuid(uuid string) *Enum {
 		}
 	}
 	return nil
-}
-
-func (m *Model) GetServicesByPackageUuid(packageUuid string) []*Service {
-	services := []*Service{}
-
-	return services
 }

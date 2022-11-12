@@ -46,10 +46,6 @@ func (a *AppProcessor) mutationFields() []*graphql.Field {
 		}
 	}
 
-	for _, service := range a.Model.Graph.Services {
-		a.appendServiceMutationToFields(service, mutationFields)
-	}
-
 	return convertFieldsArray(mutationFields)
 }
 
@@ -137,18 +133,4 @@ func (a *AppProcessor) appendEntityMutationToFields(entity *graph.Entity, feilds
 			Resolve: resolve.SetResolveFn(entity, a.Model),
 		}
 	}
-}
-
-func (a *AppProcessor) appendServiceMutationToFields(service *graph.Service, feilds graphql.Fields) {
-
-	// (feilds)[service.DeleteName()] = &graphql.Field{
-	// 	Type: a.modelParser.MutationResponse(service.Name()),
-	// 	Args: a.deleteArgs(&service.Entity),
-	// 	//Resolve: entity.QueryResolve(),
-	// }
-	// (feilds)[service.DeleteByIdName()] = &graphql.Field{
-	// 	Type: a.modelParser.OutputType(service.Name()),
-	// 	Args: deleteByIdArgs(),
-	// 	//Resolve: entity.QueryResolve(),
-	// }
 }

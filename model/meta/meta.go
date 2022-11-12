@@ -1,18 +1,20 @@
 package meta
 
 type Model struct {
-	Classes   []*ClassMeta
-	Relations []*RelationMeta
-	Packages  []*PackageMeta
-	Codes     []*CodeMeta
+	Classes        []*ClassMeta
+	Relations      []*RelationMeta
+	Packages       []*PackageMeta
+	Codes          []*CodeMeta
+	Orchestrations []*OrchestrationMeta
 }
 
 func New(m *MetaContent, appId uint64) *Model {
 	model := Model{
-		Classes:   make([]*ClassMeta, len(m.Classes)),
-		Relations: make([]*RelationMeta, len(m.Relations)),
-		Packages:  make([]*PackageMeta, len(m.Relations)),
-		Codes:     make([]*CodeMeta, len(m.Codes)),
+		Classes:        make([]*ClassMeta, len(m.Classes)),
+		Relations:      make([]*RelationMeta, len(m.Relations)),
+		Packages:       make([]*PackageMeta, len(m.Relations)),
+		Codes:          make([]*CodeMeta, len(m.Codes)),
+		Orchestrations: make([]*OrchestrationMeta, len(m.Orchestrations)),
 	}
 
 	for i := range m.Packages {
@@ -28,6 +30,10 @@ func New(m *MetaContent, appId uint64) *Model {
 
 	for i := range m.Codes {
 		model.Codes[i] = &m.Codes[i]
+	}
+
+	for i := range m.Orchestrations {
+		model.Orchestrations[i] = &m.Orchestrations[i]
 	}
 
 	for i := range m.Relations {
