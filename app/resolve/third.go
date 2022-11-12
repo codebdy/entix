@@ -31,7 +31,7 @@ func QueryThirdPartyResolveFn(third *graph.ThirdParty, model *model.Model) graph
 				
 			%s
 			}`,
-			script.GetCommonCodes()+script.GetPackageCodes(model, third.Class.Domain.PackageUuid),
+			script.GetCommonCodes()+script.GetCodes(model),
 			//argsString(method),
 			third.Domain.QueryScript,
 		)

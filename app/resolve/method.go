@@ -35,7 +35,7 @@ func MethodResolveFn(method *graph.Method, model *model.Model) graphql.FieldReso
 				const {%s} = args;
 			%s
 			}`,
-			script.GetPackageCodes(model, method.Class.Domain.PackageUuid),
+			script.GetCodes(model),
 			argsString(method),
 			method.Method.Script,
 		)

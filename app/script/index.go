@@ -12,13 +12,11 @@ func Enable(vm *goja.Runtime) {
 	vm.Set("readFromCache", ReadFromCache)
 }
 
-func GetPackageCodes(model *model.Model, packageUuid string) string {
+func GetCodes(model *model.Model) string {
 	codeStr := ""
 	for i := range model.Meta.Codes {
 		code := model.Meta.Codes[i]
-		if code.PackageUuid == packageUuid {
-			codeStr = "\n" + code.Code
-		}
+		codeStr = "\n" + code.Script
 	}
 	return codeStr
 }
