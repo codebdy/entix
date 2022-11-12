@@ -30,27 +30,18 @@ func MethodResolveFn(code string, methodArgs []meta.ArgMeta, model *model.Model)
 		funcStr := fmt.Sprintf(
 			`
 			%s
-
-			function doMethod() {
-				const {%s} = args;
+			const {%s} = args;
 			%s
-			}`,
+			`,
 			script.GetCodes(model),
 			argsString(methodArgs),
 			code,
 		)
 
-		_, err := vm.RunString(funcStr)
+		result, err := vm.RunString(funcStr)
 		if err != nil {
 			panic(err)
 		}
-		var doMethod func() interface{}
-		err = vm.ExportTo(vm.Get("doMethod"), &doMethod)
-		if err != nil {
-			panic(err)
-		}
-
-		result := doMethod()
 		return result, nil
 	}
 }
