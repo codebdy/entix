@@ -12,15 +12,15 @@ import (
 	"rxdrag.com/entify/utils"
 )
 
-func argsString(method *meta.MethodMeta) string {
+func argsString(methodArgs []meta.ArgMeta) string {
 	names := []string{}
-	for _, arg := range method.Args {
+	for _, arg := range methodArgs {
 		names = append(names, arg.Name)
 	}
 	return strings.Join(names, ", ")
 }
 
-func MethodResolveFn(method *meta.MethodMeta, model *model.Model) graphql.FieldResolveFn {
+func MethodResolveFn(code string, methodArgs []meta.ArgMeta, model *model.Model) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
 		vm := goja.New()
@@ -36,8 +36,8 @@ func MethodResolveFn(method *meta.MethodMeta, model *model.Model) graphql.FieldR
 			%s
 			}`,
 			script.GetCodes(model),
-			argsString(method),
-			method.Script,
+			argsString(methodArgs),
+			code,
 		)
 
 		_, err := vm.RunString(funcStr)

@@ -179,10 +179,10 @@ func (p *ModelParser) QueryArgs(name string) graphql.FieldConfigArgument {
 	return config
 }
 
-func (p *ModelParser) MethodArgs(method *meta.MethodMeta) graphql.FieldConfigArgument {
+func (p *ModelParser) MethodArgs(methodArgs []meta.ArgMeta) graphql.FieldConfigArgument {
 	args := graphql.FieldConfigArgument{}
 
-	for _, arg := range method.Args {
+	for _, arg := range methodArgs {
 		args[arg.Name] = &graphql.ArgumentConfig{
 			Type: PropertyType(arg.Type),
 		}

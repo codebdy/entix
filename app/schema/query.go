@@ -65,8 +65,8 @@ func (a *AppProcessor) appendThirdPartyToQueryFields(third *graph.ThirdParty, fi
 func (a *AppProcessor) appendOrchestrationToQueryFields(orchestration *meta.OrchestrationMeta, fields graphql.Fields) {
 	fields[orchestration.Name] = &graphql.Field{
 		Type:        parser.PropertyType(orchestration.Type),
-		Args:        a.modelParser.MethodArgs(&orchestration.MethodMeta),
+		Args:        a.modelParser.MethodArgs(orchestration.Args),
 		Description: orchestration.Description,
-		Resolve:     resolve.MethodResolveFn(&orchestration.MethodMeta, a.Model),
+		Resolve:     resolve.MethodResolveFn(orchestration.Script, orchestration.Args, a.Model),
 	}
 }
