@@ -1,11 +1,16 @@
 package script
 
-var cache = map[string]interface{}{}
+import "sync"
+
+var cache sync.Map
 
 func WriteToCache(key string, value interface{}) {
-	cache[key] = value
+	cache.Store(key, value)
 }
 
 func ReadFromCache(key string) interface{} {
-	return cache[key]
+	if value, ok := cache.Load(key); ok {
+		return value
+	}
+	return nil
 }
