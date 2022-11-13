@@ -2,7 +2,6 @@ package resolve
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/dop251/goja"
 	"github.com/graphql-go/graphql"
@@ -12,20 +11,14 @@ import (
 	"rxdrag.com/entify/utils"
 )
 
-func argsString(methodArgs []meta.ArgMeta) string {
-	names := []string{}
-	for _, arg := range methodArgs {
-		names = append(names, arg.Name)
-	}
-	return strings.Join(names, ", ")
-}
-
 func MethodResolveFn(code string, methodArgs []meta.ArgMeta, model *model.Model) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
+		scriptService := script.NewService(p.Context, model.Graph)
 		vm := goja.New()
 		script.Enable(vm)
 		vm.Set("$args", p.Args)
+		vm.Set("$BeginTx", scriptService.BeginTx)
 		script.Enable(vm)
 		funcStr := fmt.Sprintf(
 			`
