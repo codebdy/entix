@@ -5,6 +5,7 @@ import (
 	"rxdrag.com/entify/app/resolve"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
+	"rxdrag.com/entify/model/meta"
 )
 
 func (p *ModelParser) ClassListType(cls *graph.Class) *graphql.Object {
@@ -124,14 +125,16 @@ func (p *ModelParser) ObjectType(entity *graph.Entity) *graphql.Object {
 func (p *ModelParser) OutputFields(attrs []*graph.Attribute) graphql.Fields {
 	fields := graphql.Fields{}
 	for _, attr := range attrs {
-		fields[attr.Name] = &graphql.Field{
-			Type:        PropertyType(attr.GetType()),
-			Description: attr.Description,
-			Resolve:     resolve.AttributeResolveFn(attr, p.model),
-			// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-			// 	fmt.Println(p.Context.Value("data"))
-			// 	return "world", nil
-			// },
+		if attr.Type != meta.PASSWORD {
+			fields[attr.Name] = &graphql.Field{
+				Type:        PropertyType(attr.GetType()),
+				Description: attr.Description,
+				Resolve:     resolve.AttributeResolveFn(attr, p.model),
+				// Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				// 	fmt.Println(p.Context.Value("data"))
+				// 	return "world", nil
+				// },
+			}
 		}
 	}
 
