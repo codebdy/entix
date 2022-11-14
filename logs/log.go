@@ -3,9 +3,7 @@ package logs
 import (
 	"context"
 
-	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/common/contexts"
-	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/service"
@@ -52,31 +50,31 @@ func WriteModelLog(
 }
 
 func WriteBusinessLog(
-	model *model.Model,
-	p graphql.ResolveParams,
+	model *graph.Model,
+	ctx context.Context,
 	operate string,
 	result string,
 	message string,
 ) {
-	contextsValues := contexts.Values(p.Context)
+	contextsValues := contexts.Values(ctx)
 
 	useId := ""
 	if contextsValues.Me != nil {
 		useId = contextsValues.Me.Id
 	}
 
-	WriteUserBusinessLog(model, useId, p, operate, result, message)
+	WriteUserBusinessLog(model, useId, ctx, operate, result, message)
 }
 
 func WriteUserBusinessLog(
-	model *model.Model,
+	model *graph.Model,
 	useId string,
-	p graphql.ResolveParams,
+	ctx context.Context,
 	operate string,
 	result string,
 	message string,
 ) {
-	contextsValues := contexts.Values(p.Context)
+	contextsValues := contexts.Values(ctx)
 
 	logObject := map[string]interface{}{
 		"ip":          contextsValues.IP,
@@ -101,7 +99,7 @@ func WriteUserBusinessLog(
 		}
 	}
 
-	instance := data.NewInstance(logObject, model.Graph.GetEntityByName("BusinessLog"))
+	instance := data.NewInstance(logObject, model.GetEntityByName("BusinessLog"))
 	s := service.NewSystem()
 	s.SaveOne(instance)
 }

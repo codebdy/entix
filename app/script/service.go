@@ -118,3 +118,11 @@ func (s *ScriptService) SaveOne(object interface{}, entityName string) interface
 
 	return result
 }
+
+func (s *ScriptService) WriteLog(
+	operate string,
+	result string,
+	message string,
+) {
+	logs.WriteBusinessLog(s.model, s.ctx, operate, result, message)
+}

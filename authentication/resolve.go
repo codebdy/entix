@@ -16,9 +16,9 @@ func LoginResolveFn() func(p graphql.ResolveParams) (interface{}, error) {
 		loginName := p.Args[consts.LOGIN_NAME].(string)
 		result, err := auth.Login(loginName, p.Args[consts.PASSWORD].(string))
 		if err != nil {
-			logs.WriteBusinessLog(app.GetSystemApp().Model, p, logs.LOGIN, logs.FAILURE, ("Login name:"+loginName+", ")+err.Error())
+			logs.WriteBusinessLog(app.GetSystemApp().Model.Graph, p.Context, logs.LOGIN, logs.FAILURE, ("Login name:"+loginName+", ")+err.Error())
 		} else {
-			logs.WriteBusinessLog(app.GetSystemApp().Model, p, logs.LOGIN, logs.SUCCESS, ("Login name:" + loginName))
+			logs.WriteBusinessLog(app.GetSystemApp().Model.Graph, p.Context, logs.LOGIN, logs.SUCCESS, ("Login name:" + loginName))
 		}
 		return result, err
 	}
@@ -31,7 +31,7 @@ func LogoutResolveFn() func(p graphql.ResolveParams) (interface{}, error) {
 		if token != "" {
 			Logout(token)
 		}
-		logs.WriteBusinessLog(app.GetSystemApp().Model, p, logs.LOGOUT, logs.SUCCESS, "")
+		logs.WriteBusinessLog(app.GetSystemApp().Model.Graph, p.Context, logs.LOGOUT, logs.SUCCESS, "")
 		return true, nil
 	}
 

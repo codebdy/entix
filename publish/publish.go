@@ -13,7 +13,7 @@ func PublishMetaResolveFn(app *app.App) graphql.FieldResolveFn {
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
 		doPublish(app, p.Context)
-		logs.WriteBusinessLog(app.Model, p, logs.PUBLISH_META, logs.SUCCESS, "")
+		logs.WriteBusinessLog(app.Model.Graph, p.Context, logs.PUBLISH_META, logs.SUCCESS, "")
 		return true, nil
 	}
 }
