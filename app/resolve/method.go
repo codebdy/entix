@@ -39,6 +39,6 @@ func MethodResolveFn(code string, methodArgs []meta.ArgMeta, model *model.Model)
 		if err != nil {
 			panic(err)
 		}
-		return result, nil
+		return result.Export(), nil
 	}
 }
