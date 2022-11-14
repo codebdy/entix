@@ -24,6 +24,7 @@ func MethodResolveFn(code string, methodArgs []meta.ArgMeta, model *model.Model)
 		vm.Set("$rollback", scriptService.Rollback)
 		vm.Set("$save", scriptService.Save)
 		vm.Set("$saveOne", scriptService.SaveOne)
+		vm.Set("$log", scriptService.WriteLog)
 		script.Enable(vm)
 		funcStr := fmt.Sprintf(
 			`
