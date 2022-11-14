@@ -4,10 +4,12 @@ import (
 	"context"
 	"log"
 
+	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/logs"
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/orm"
+	"rxdrag.com/entify/register"
 	"rxdrag.com/entify/service"
 )
 
@@ -125,4 +127,26 @@ func (s *ScriptService) WriteLog(
 	message string,
 ) {
 	logs.WriteBusinessLog(s.model, s.ctx, operate, result, message)
+}
+
+func (s *ScriptService) Query(gql string, variables interface{}) interface{} {
+	var newVariables map[string]interface{}
+
+	if variables != nil {
+		newVariables = variables.(map[string]interface{})
+	}
+	params := graphql.Params{
+		Schema:         register.GetSchema(s.ctx),
+		RequestString:  gql,
+		VariableValues: newVariables,
+		Context:        context.WithValue(s.ctx, "gql", gql),
+	}
+
+	r := graphql.Do(params)
+	if len(r.Errors) > 0 {
+		log.Printf("failed to execute graphql operation, errors: %+v", r.Errors)
+		log.Panic(r.Errors[0].Error())
+	}
+
+	return r.Data.(map[string]interface{})["users"]
 }
