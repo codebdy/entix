@@ -3,7 +3,6 @@ package schema
 import (
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/app/resolve"
-	"rxdrag.com/entify/app/schema/parser"
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/model/meta"
@@ -145,7 +144,7 @@ func (a *AppProcessor) appendEntityMutationToFields(entity *graph.Entity, feilds
 
 func (a *AppProcessor) appendOrchestrationToMutationFields(orchestration *meta.OrchestrationMeta, fields graphql.Fields) {
 	fields[orchestration.Name] = &graphql.Field{
-		Type:        parser.PropertyType(orchestration.Type),
+		Type:        a.modelParser.OrchestrationType(orchestration),
 		Args:        a.modelParser.MethodArgs(orchestration.Args),
 		Description: orchestration.Description,
 		Resolve:     resolve.MethodResolveFn(orchestration.Script, orchestration.Args, a.Model),
