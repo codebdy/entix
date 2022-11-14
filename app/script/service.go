@@ -148,5 +148,5 @@ func (s *ScriptService) Query(gql string, variables interface{}) interface{} {
 		log.Panic(r.Errors[0].Error())
 	}
 
-	return r.Data.(map[string]interface{})["users"]
+	return r.Data
 }
