@@ -20,7 +20,7 @@ func PostResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolv
 		instances := []*data.Instance{}
 		for i := range objects {
 			object := objects[i]
-			ConvertObjectId(object.(map[string]interface{}))
+			data.ConvertObjectId(object.(map[string]interface{}))
 			instance := data.NewInstance(object.(map[string]interface{}), entity)
 			instances = append(instances, instance)
 		}
@@ -30,7 +30,7 @@ func PostResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolv
 		if err != nil {
 			return nil, err
 		}
-		logs.WriteModelLog(model, &entity.Class, p, logs.UPSERT, logs.SUCCESS, "")
+		logs.WriteModelLog(model.Graph, &entity.Class, p.Context, logs.UPSERT, logs.SUCCESS, "", p.Context.Value("gql"))
 		return returing, nil
 	}
 }
@@ -66,7 +66,7 @@ func SetResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldResolve
 			return nil, err
 		}
 
-		logs.WriteModelLog(model, &entity.Class, p, logs.SET, logs.SUCCESS, "")
+		logs.WriteModelLog(model.Graph, &entity.Class, p.Context, logs.SET, logs.SUCCESS, "", p.Context.Value("gql"))
 
 		return map[string]interface{}{
 			consts.RESPONSE_RETURNING:    returing,
@@ -79,13 +79,13 @@ func PostOneResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldRes
 	return func(p graphql.ResolveParams) (interface{}, error) {
 		defer utils.PrintErrorStack()
 		object := p.Args[consts.ARG_OBJECT].(map[string]interface{})
-		ConvertObjectId(object)
+		data.ConvertObjectId(object)
 		//repos := repository.New(model)
 		//repos.MakeEntityAbilityVerifier(p, entity.Uuid())
 		instance := data.NewInstance(object, entity)
 		s := service.New(p.Context, model.Graph)
 		result, err := s.SaveOne(instance)
-		logs.WriteModelLog(model, &entity.Class, p, logs.UPSERT, logs.SUCCESS, "")
+		logs.WriteModelLog(model.Graph, &entity.Class, p.Context, logs.UPSERT, logs.SUCCESS, "", p.Context.Value("gql"))
 		return result, err
 	}
 }
@@ -97,11 +97,11 @@ func DeleteByIdResolveFn(entity *graph.Entity, model *model.Model) graphql.Field
 		//repos := repository.New(model)
 		//repos.MakeEntityAbilityVerifier(p, entity.Uuid())
 		instance := data.NewInstance(map[string]interface{}{
-			consts.ID: ConvertId(argId),
+			consts.ID: data.ConvertId(argId),
 		}, entity)
 		s := service.New(p.Context, model.Graph)
 		result, err := s.DeleteInstance(instance)
-		logs.WriteModelLog(model, &entity.Class, p, logs.DELETE, logs.SUCCESS, "")
+		logs.WriteModelLog(model.Graph, &entity.Class, p.Context, logs.DELETE, logs.SUCCESS, "", p.Context.Value("gql"))
 		return result, err
 	}
 }
@@ -126,14 +126,14 @@ func DeleteResolveFn(entity *graph.Entity, model *model.Model) graphql.FieldReso
 		instances := []*data.Instance{}
 		for i := range convertedObjs {
 			instance := data.NewInstance(map[string]interface{}{
-				consts.ID: ConvertId(convertedObjs[i][consts.ID]),
+				consts.ID: data.ConvertId(convertedObjs[i][consts.ID]),
 			}, entity)
 
 			instances = append(instances, instance)
 		}
 
 		s.DeleteInstances(instances)
-		logs.WriteModelLog(model, &entity.Class, p, logs.DELETE, logs.SUCCESS, "")
+		logs.WriteModelLog(model.Graph, &entity.Class, p.Context, logs.DELETE, logs.SUCCESS, "", p.Context.Value("gql"))
 		return map[string]interface{}{
 			consts.RESPONSE_RETURNING:    objs,
 			consts.RESPONSE_AFFECTEDROWS: len(instances),

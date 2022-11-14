@@ -1,6 +1,8 @@
 package logs
 
 import (
+	"context"
+
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/model"
@@ -10,20 +12,21 @@ import (
 )
 
 func WriteModelLog(
-	model *model.Model,
+	model *graph.Model,
 	cls *graph.Class,
-	p graphql.ResolveParams,
+	ctx context.Context,
 	operate string,
 	result string,
 	message string,
+	gql interface{},
 ) {
-	contextsValues := contexts.Values(p.Context)
+	contextsValues := contexts.Values(ctx)
 	logObject := map[string]interface{}{
 		"ip":          contextsValues.IP,
 		"operateType": operate,
 		"classUuid":   cls.Uuid(),
 		"className":   cls.Name(),
-		"gql":         p.Context.Value("gql"),
+		"gql":         gql,
 		"result":      result,
 		"message":     message,
 	}
@@ -43,7 +46,7 @@ func WriteModelLog(
 		}
 	}
 
-	instance := data.NewInstance(logObject, model.Graph.GetEntityByName("ModelLog"))
+	instance := data.NewInstance(logObject, model.GetEntityByName("ModelLog"))
 	s := service.NewSystem()
 	s.SaveOne(instance)
 }

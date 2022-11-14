@@ -18,7 +18,12 @@ func MethodResolveFn(code string, methodArgs []meta.ArgMeta, model *model.Model)
 		vm := goja.New()
 		script.Enable(vm)
 		vm.Set("$args", p.Args)
-		vm.Set("$BeginTx", scriptService.BeginTx)
+		vm.Set("$beginTx", scriptService.BeginTx)
+		vm.Set("$clearTx", scriptService.ClearTx)
+		vm.Set("$commit", scriptService.Commit)
+		vm.Set("$rollback", scriptService.Rollback)
+		vm.Set("$save", scriptService.Save)
+		vm.Set("$saveOne", scriptService.SaveOne)
 		script.Enable(vm)
 		funcStr := fmt.Sprintf(
 			`
