@@ -23,3 +23,5 @@ func New(c *meta.MetaContent, appid uint64) *Model {
 	}
 	return &model
 }
+
+var SystemModel *Model

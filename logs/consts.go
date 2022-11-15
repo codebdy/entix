@@ -1,12 +1,14 @@
 package logs
 
 const (
-	SUCCESS = "success"
-	FAILURE = "failure"
-	QUERY   = "query"
-	UPSERT  = "upsert"
-	SET     = "set"
-	DELETE  = "delete"
+	SUCCESS      = "success"
+	FAILURE      = "failure"
+	QUERY        = "query"
+	UPSERT       = "upsert"
+	MULTI_UPSERT = "multiUpsert"
+	SET          = "set"
+	DELETE       = "delete"
+	MULTI_DELETE = "multiDelete"
 
 	INSTALL        = "install"
 	LOGIN          = "login"

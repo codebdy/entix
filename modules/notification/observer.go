@@ -7,6 +7,7 @@ import (
 
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/consts"
+	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/model/observer"
 	"rxdrag.com/entify/modules/app"
 	"rxdrag.com/entify/modules/register"
@@ -33,26 +34,26 @@ func (o *NotificationObserver) Key() string {
 	return o.key
 }
 
-func (o *NotificationObserver) ObjectPosted(object map[string]interface{}, entityName string, ctx context.Context) {
-	if entityName == EntityNotificationName {
+func (o *NotificationObserver) ObjectPosted(object map[string]interface{}, entity *graph.Entity, ctx context.Context) {
+	if entity.Name() == EntityNotificationName {
 		o.distributeChanged(object, ctx)
 	}
 }
-func (o *NotificationObserver) ObjectMultiPosted(objects []map[string]interface{}, entityName string, ctx context.Context) {
-	if entityName == EntityNotificationName {
+func (o *NotificationObserver) ObjectMultiPosted(objects []map[string]interface{}, entity *graph.Entity, ctx context.Context) {
+	if entity.Name() == EntityNotificationName {
 		for _, object := range objects {
 			o.distributeChanged(object, ctx)
 		}
 	}
 }
-func (o *NotificationObserver) ObjectDeleted(object map[string]interface{}, entityName string, ctx context.Context) {
-	if entityName == EntityNotificationName {
+func (o *NotificationObserver) ObjectDeleted(object map[string]interface{}, entity *graph.Entity, ctx context.Context) {
+	if entity.Name() == EntityNotificationName {
 		o.distributeDeleted(ctx)
 	}
 }
 
-func (o *NotificationObserver) ObjectMultiDeleted(objects []map[string]interface{}, entityName string, ctx context.Context) {
-	if entityName == EntityNotificationName {
+func (o *NotificationObserver) ObjectMultiDeleted(objects []map[string]interface{}, entity *graph.Entity, ctx context.Context) {
+	if entity.Name() == EntityNotificationName {
 		o.distributeDeleted(ctx)
 	}
 }

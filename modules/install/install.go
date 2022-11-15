@@ -128,7 +128,7 @@ func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 		)
 		_, err = s.SaveOne(instance)
 		if err != nil {
-			logs.WriteBusinessLog(systemApp.Model.Graph, p.Context, logs.INSTALL, logs.FAILURE, err.Error())
+			logs.WriteBusinessLog(p.Context, logs.INSTALL, logs.FAILURE, err.Error())
 			return nil, err
 		}
 		if input.WithDemo {
@@ -138,13 +138,13 @@ func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 			)
 			_, err = s.SaveOne(instance)
 			if err != nil {
-				logs.WriteBusinessLog(systemApp.Model.Graph, p.Context, logs.INSTALL, logs.FAILURE, err.Error())
+				logs.WriteBusinessLog(p.Context, logs.INSTALL, logs.FAILURE, err.Error())
 				return nil, err
 			}
 		}
 	}
 	isExist := orm.IsEntityExists(meta.APP_ENTITY_NAME)
-	logs.WriteBusinessLog(systemApp.Model.Graph, p.Context, logs.INSTALL, logs.SUCCESS, "")
+	logs.WriteBusinessLog(p.Context, logs.INSTALL, logs.SUCCESS, "")
 	app.Installed = true
 	return isExist, nil
 }

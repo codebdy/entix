@@ -8,6 +8,7 @@ import (
 	"rxdrag.com/entify/logs"
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/model/graph"
+	"rxdrag.com/entify/model/observer"
 	"rxdrag.com/entify/modules/register"
 	"rxdrag.com/entify/orm"
 	"rxdrag.com/entify/service"
@@ -91,8 +92,8 @@ func (s *ScriptService) Save(objects []interface{}, entityName string) []orm.Ins
 		savedIds = append(savedIds, obj)
 	}
 	if len(savedIds) > 0 {
-		logs.WriteModelLog(s.model, &entity.Class, s.ctx, logs.SET, logs.SUCCESS, "", "script")
-		return s.session.QueryByIds(entity, savedIds)
+		objects := s.session.QueryByIds(entity, savedIds)
+		observer.EmitObjectMultiPosted(objects, entity, s.ctx)
 	}
 
 	return []orm.InsanceData{}
@@ -117,7 +118,7 @@ func (s *ScriptService) SaveOne(object interface{}, entityName string) interface
 	}
 
 	result := s.session.QueryOneById(instance.Entity, id)
-
+	observer.EmitObjectPosted(result.(map[string]interface{}), entity, s.ctx)
 	return result
 }
 
@@ -126,7 +127,7 @@ func (s *ScriptService) WriteLog(
 	result string,
 	message string,
 ) {
-	logs.WriteBusinessLog(s.model, s.ctx, operate, result, message)
+	logs.WriteBusinessLog(s.ctx, operate, result, message)
 }
 
 func (s *ScriptService) Query(gql string, variables interface{}) interface{} {
