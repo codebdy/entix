@@ -18,14 +18,14 @@ func (m *SubscriptionModule) SubscriptionFields() []*graphql.Field {
 					return p.Source, nil
 				},
 				Subscribe: func(p graphql.ResolveParams) (interface{}, error) {
-					observer := newObserver(p, m.app.Model)
+					subscrber := newSubscriber(p, m.app.Model)
 					go func() {
 						<-p.Context.Done()
-						observer.destory()
+						subscrber.destory()
 						return
 					}()
 
-					return observer.channel, nil
+					return subscrber.channel, nil
 				},
 			},
 		}

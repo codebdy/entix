@@ -2,83 +2,116 @@ package notification
 
 import (
 	"log"
+	"sync"
 
-	"github.com/google/uuid"
-	"github.com/graphql-go/graphql"
-	"rxdrag.com/entify/common/contexts"
-	"rxdrag.com/entify/model"
-	"rxdrag.com/entify/model/graph"
 	"rxdrag.com/entify/model/observer"
-	"rxdrag.com/entify/orm"
+	"rxdrag.com/entify/modules/app"
 )
 
 const EntityNotificationName = "Notification"
 
+var NoticeModelObserver *NotificationObserver
+
 type NotificationObserver struct {
-	channel chan (interface{})
-	key     string
-	p       graphql.ResolveParams
-	model   *model.Model
+	key         string
+	subscribers sync.Map
 }
 
-func newObserver(p graphql.ResolveParams, model *model.Model) *NotificationObserver {
-	ntObserver := &NotificationObserver{
-		channel: make(chan interface{}),
-		key:     uuid.New().String(),
-		p:       p,
-		model:   model,
+func init() {
+	//创建模型监听器
+	NoticeModelObserver = &NotificationObserver{
+		key: "NotificationObserver",
 	}
-	observer.AddObserver(ntObserver)
-
-	return ntObserver
+	observer.AddObserver(NoticeModelObserver)
 }
+
 func (o *NotificationObserver) Key() string {
 	return o.key
 }
 
-func (o *NotificationObserver) ObjectCreated(object map[string]interface{}, entityName string) {
+func (o *NotificationObserver) ObjectPosted(object map[string]interface{}, entityName string, userId, appId uint64) {
 	if entityName == EntityNotificationName {
-		o.calculateCounts(object)
+		o.distributeChanged(object)
 	}
 }
-func (o *NotificationObserver) ObjectUpdated(object map[string]interface{}, entityName string) {
+func (o *NotificationObserver) ObjectMultiPosted(objects []map[string]interface{}, entityName string, userId, appId uint64) {
 	if entityName == EntityNotificationName {
-		o.calculateCounts(object)
+		for _, object := range objects {
+			o.distributeChanged(object)
+		}
 	}
 }
-func (o *NotificationObserver) ObjectDeleted(object map[string]interface{}, entityName string) {
+func (o *NotificationObserver) ObjectDeleted(object map[string]interface{}, entityName string, userId, appId uint64) {
 	if entityName == EntityNotificationName {
-		o.calculateCounts(object)
+		o.distributeDeleted(userId, appId)
 	}
 }
 
-func (o *NotificationObserver) calculateCounts(object map[string]interface{}) {
-	entity := o.model.Graph.GetEntityByName(EntityNotificationName)
+func (o *NotificationObserver) ObjectMultiDeleted(objects []map[string]interface{}, entityName string, userId, appId uint64) {
+	if entityName == EntityNotificationName {
+		o.distributeDeleted(userId, appId)
+	}
+}
+
+func (o *NotificationObserver) isEmperty() bool {
+	emperty := true
+	o.subscribers.Range(func(key interface{}, value interface{}) bool {
+		emperty = false
+		return true
+	})
+	return emperty
+}
+
+//分发详细信息到各订阅者
+func (o *NotificationObserver) distributeChanged(object map[string]interface{}) {
+	if o.isEmperty() {
+		return
+	}
+	model := app.GetSystemApp().Model
+	entity := model.Graph.GetEntityByName(EntityNotificationName)
 	if entity == nil {
 		log.Panic("Can find entity Notification")
 	}
 
-	me := contexts.Values(o.p.Context).Me
-	appId := contexts.Values(o.p.Context).AppId
+	//补全信息
+	newObject := object
 
-	if me == nil || appId == 0 {
-		log.Panic("User or app not set!")
-	}
-	session, err := orm.Open()
-	if err != nil {
-		log.Panic(err.Error())
-	}
+	//分发
+	o.subscribers.Range(func(key interface{}, value interface{}) bool {
+		value.(*Subscriber).notificationChanged(newObject)
+		return true
+	})
 
-	if object["user"] == nil {
-		log.Panic()
-	}
+	// me := contexts.Values(o.p.Context).Me
+	// appId := contexts.Values(o.p.Context).AppId
 
-	result := session.Query(entity, map[string]interface{}{}, []*graph.Attribute{})
+	// if me == nil || appId == 0 {
+	// 	log.Panic("User or app not set!")
+	// }
+	// session, err := orm.Open()
+	// if err != nil {
+	// 	log.Panic(err.Error())
+	// }
 
-	o.channel <- result.Total
+	// if object["user"] == nil {
+	// 	log.Panic()
+	// }
+
+	//result := session.Query(entity, map[string]interface{}{}, []*graph.Attribute{})
+
 }
 
-func (o *NotificationObserver) destory() {
-	close(o.channel)
-	observer.RemoveObserver(o.key)
+func (o *NotificationObserver) distributeDeleted(userId, appId uint64) {
+	o.subscribers.Range(func(key interface{}, value interface{}) bool {
+		value.(*Subscriber).notificationDeleted(userId, appId)
+		return true
+	})
+}
+
+func (o *NotificationObserver) addSubscriber(s *Subscriber) {
+	o.subscribers.Store(s.key, s)
+}
+
+func (o *NotificationObserver) delteSubscriber(key string) {
+	o.subscribers.Delete(key)
 }
