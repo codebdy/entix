@@ -40,9 +40,6 @@ func (m *SubscriptionModule) MutationFields() []*graphql.Field {
 	return []*graphql.Field{}
 }
 
-func (m *SubscriptionModule) SubscriptionFields() []*graphql.Field {
-	return []*graphql.Field{}
-}
 func (m *SubscriptionModule) Directives() []*graphql.Directive {
 	return []*graphql.Directive{}
 }
