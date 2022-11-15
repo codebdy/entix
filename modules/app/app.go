@@ -52,11 +52,10 @@ var appLoaderCache sync.Map
 func init() {
 	//先加载系统APP
 	if orm.IsEntityExists(meta.APP_ENTITY_NAME) {
-		systemApp, err := Get(meta.SYSTEM_APP_ID)
+		_, err := Get(meta.SYSTEM_APP_ID)
 		if err != nil {
 			log.Panic(err.Error())
 		}
-		model.SystemModel = systemApp.Model
 	}
 }
 
@@ -88,6 +87,9 @@ func Get(appId uint64) (*App, error) {
 		}
 		appLoaderCache.Store(appId, appLoader)
 		appLoader.load(false)
+		if appId == meta.SYSTEM_APP_ID {
+			model.SystemModel = appLoader.app.Model
+		}
 		return appLoader.app, nil
 	}
 }

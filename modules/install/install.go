@@ -117,6 +117,7 @@ func InstallResolve(p graphql.ResolveParams) (interface{}, error) {
 	}
 
 	systemApp, err = app.Get(meta.SYSTEM_APP_ID)
+
 	if err != nil {
 		log.Panic(err.Error())
 	}
