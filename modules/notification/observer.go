@@ -78,8 +78,22 @@ func (o *NotificationObserver) distributeChanged(object map[string]interface{}, 
 	}
 
 	//补全信息
-
 	gql := `
+		query($id:ID!){
+			oneNotification(where:{
+				id:{
+					_eq:$id
+				}
+			}){
+				id
+				app{
+					id
+				}
+				user{
+					id
+				}
+			}
+		}
 	`
 
 	params := graphql.Params{
@@ -105,24 +119,6 @@ func (o *NotificationObserver) distributeChanged(object map[string]interface{}, 
 		})
 
 	}
-
-	// me := contexts.Values(o.p.Context).Me
-	// appId := contexts.Values(o.p.Context).AppId
-
-	// if me == nil || appId == 0 {
-	// 	log.Panic("User or app not set!")
-	// }
-	// session, err := orm.Open()
-	// if err != nil {
-	// 	log.Panic(err.Error())
-	// }
-
-	// if object["user"] == nil {
-	// 	log.Panic()
-	// }
-
-	//result := session.Query(entity, map[string]interface{}{}, []*graph.Attribute{})
-
 }
 
 func (o *NotificationObserver) distributeDeleted(ctx context.Context) {

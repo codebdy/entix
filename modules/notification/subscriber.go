@@ -27,6 +27,22 @@ func newSubscriber(p graphql.ResolveParams, model *model.Model) *Subscriber {
 }
 
 func (s *Subscriber) notificationChanged(notification map[string]interface{}) {
+	// me := contexts.Values(o.p.Context).Me
+	// appId := contexts.Values(o.p.Context).AppId
+
+	// if me == nil || appId == 0 {
+	// 	log.Panic("User or app not set!")
+	// }
+	// session, err := orm.Open()
+	// if err != nil {
+	// 	log.Panic(err.Error())
+	// }
+
+	// if object["user"] == nil {
+	// 	log.Panic()
+	// }
+
+	//result := session.Query(entity, map[string]interface{}{}, []*graph.Attribute{})
 
 }
 
