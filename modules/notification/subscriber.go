@@ -1,6 +1,8 @@
 package notification
 
 import (
+	"context"
+
 	"github.com/google/uuid"
 	"github.com/graphql-go/graphql"
 	"rxdrag.com/entify/model"
@@ -28,7 +30,7 @@ func (s *Subscriber) notificationChanged(notification map[string]interface{}) {
 
 }
 
-func (s *Subscriber) notificationDeleted(userId, appId uint64) {
+func (s *Subscriber) notificationDeleted(ctx context.Context) {
 
 }
 

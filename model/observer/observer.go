@@ -1,13 +1,16 @@
 package observer
 
-import "sync"
+import (
+	"context"
+	"sync"
+)
 
 type ModelObserver interface {
 	Key() string
-	ObjectPosted(object map[string]interface{}, entityName string, userId, appId uint64)
-	ObjectMultiPosted(objects []map[string]interface{}, entityName string, userId, appId uint64)
-	ObjectDeleted(object map[string]interface{}, entityName string, userId, appId uint64)
-	ObjectMultiDeleted(objects []map[string]interface{}, entityName string, userId, appId uint64)
+	ObjectPosted(object map[string]interface{}, entityName string, ctx context.Context)
+	ObjectMultiPosted(objects []map[string]interface{}, entityName string, ctx context.Context)
+	ObjectDeleted(object map[string]interface{}, entityName string, ctx context.Context)
+	ObjectMultiDeleted(objects []map[string]interface{}, entityName string, ctx context.Context)
 }
 
 var ModelObservers sync.Map
@@ -20,37 +23,37 @@ func RemoveObserver(key string) {
 	ModelObservers.Delete(key)
 }
 
-func EmitObjectPosted(object map[string]interface{}, entityName string, userId, appId uint64) {
+func EmitObjectPosted(object map[string]interface{}, entityName string, ctx context.Context) {
 	go func() {
 		ModelObservers.Range(func(key interface{}, value interface{}) bool {
-			value.(ModelObserver).ObjectPosted(object, entityName, userId, appId)
+			value.(ModelObserver).ObjectPosted(object, entityName, ctx)
 			return true
 		})
 	}()
 }
 
-func EmitObjectMultiPosted(objects []map[string]interface{}, entityName string, userId, appId uint64) {
+func EmitObjectMultiPosted(objects []map[string]interface{}, entityName string, ctx context.Context) {
 	go func() {
 		ModelObservers.Range(func(key interface{}, value interface{}) bool {
-			value.(ModelObserver).ObjectMultiPosted(objects, entityName, userId, appId)
+			value.(ModelObserver).ObjectMultiPosted(objects, entityName, ctx)
 			return true
 		})
 	}()
 }
 
-func EmitObjectDeleted(object map[string]interface{}, entityName string, userId, appId uint64) {
+func EmitObjectDeleted(object map[string]interface{}, entityName string, ctx context.Context) {
 	go func() {
 		ModelObservers.Range(func(key interface{}, value interface{}) bool {
-			value.(ModelObserver).ObjectDeleted(object, entityName, userId, appId)
+			value.(ModelObserver).ObjectDeleted(object, entityName, ctx)
 			return true
 		})
 	}()
 }
 
-func EmitObjectMultiDeleted(objects []map[string]interface{}, entityName string, userId, appId uint64) {
+func EmitObjectMultiDeleted(objects []map[string]interface{}, entityName string, ctx context.Context) {
 	go func() {
 		ModelObservers.Range(func(key interface{}, value interface{}) bool {
-			value.(ModelObserver).ObjectMultiDeleted(objects, entityName, userId, appId)
+			value.(ModelObserver).ObjectMultiDeleted(objects, entityName, ctx)
 			return true
 		})
 	}()

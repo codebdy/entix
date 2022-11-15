@@ -1,11 +1,15 @@
 package notification
 
 import (
+	"context"
 	"log"
 	"sync"
 
+	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/observer"
 	"rxdrag.com/entify/modules/app"
+	"rxdrag.com/entify/modules/register"
 )
 
 const EntityNotificationName = "Notification"
@@ -29,27 +33,27 @@ func (o *NotificationObserver) Key() string {
 	return o.key
 }
 
-func (o *NotificationObserver) ObjectPosted(object map[string]interface{}, entityName string, userId, appId uint64) {
+func (o *NotificationObserver) ObjectPosted(object map[string]interface{}, entityName string, ctx context.Context) {
 	if entityName == EntityNotificationName {
-		o.distributeChanged(object)
+		o.distributeChanged(object, ctx)
 	}
 }
-func (o *NotificationObserver) ObjectMultiPosted(objects []map[string]interface{}, entityName string, userId, appId uint64) {
+func (o *NotificationObserver) ObjectMultiPosted(objects []map[string]interface{}, entityName string, ctx context.Context) {
 	if entityName == EntityNotificationName {
 		for _, object := range objects {
-			o.distributeChanged(object)
+			o.distributeChanged(object, ctx)
 		}
 	}
 }
-func (o *NotificationObserver) ObjectDeleted(object map[string]interface{}, entityName string, userId, appId uint64) {
+func (o *NotificationObserver) ObjectDeleted(object map[string]interface{}, entityName string, ctx context.Context) {
 	if entityName == EntityNotificationName {
-		o.distributeDeleted(userId, appId)
+		o.distributeDeleted(ctx)
 	}
 }
 
-func (o *NotificationObserver) ObjectMultiDeleted(objects []map[string]interface{}, entityName string, userId, appId uint64) {
+func (o *NotificationObserver) ObjectMultiDeleted(objects []map[string]interface{}, entityName string, ctx context.Context) {
 	if entityName == EntityNotificationName {
-		o.distributeDeleted(userId, appId)
+		o.distributeDeleted(ctx)
 	}
 }
 
@@ -63,7 +67,7 @@ func (o *NotificationObserver) isEmperty() bool {
 }
 
 //分发详细信息到各订阅者
-func (o *NotificationObserver) distributeChanged(object map[string]interface{}) {
+func (o *NotificationObserver) distributeChanged(object map[string]interface{}, ctx context.Context) {
 	if o.isEmperty() {
 		return
 	}
@@ -74,13 +78,33 @@ func (o *NotificationObserver) distributeChanged(object map[string]interface{}) 
 	}
 
 	//补全信息
-	newObject := object
 
-	//分发
-	o.subscribers.Range(func(key interface{}, value interface{}) bool {
-		value.(*Subscriber).notificationChanged(newObject)
-		return true
-	})
+	gql := `
+	`
+
+	params := graphql.Params{
+		Schema:        register.GetSchema(ctx),
+		RequestString: gql,
+		VariableValues: map[string]interface{}{
+			consts.ID: object[consts.ID],
+		},
+		Context: context.WithValue(ctx, "gql", gql),
+	}
+
+	r := graphql.Do(params)
+	if len(r.Errors) > 0 {
+		log.Printf("failed to execute graphql operation, errors: %+v", r.Errors)
+		log.Panic(r.Errors[0].Error())
+	}
+
+	if r.Data != nil {
+		//分发
+		o.subscribers.Range(func(key interface{}, value interface{}) bool {
+			value.(*Subscriber).notificationChanged(r.Data.(map[string]interface{}))
+			return true
+		})
+
+	}
 
 	// me := contexts.Values(o.p.Context).Me
 	// appId := contexts.Values(o.p.Context).AppId
@@ -101,9 +125,9 @@ func (o *NotificationObserver) distributeChanged(object map[string]interface{}) 
 
 }
 
-func (o *NotificationObserver) distributeDeleted(userId, appId uint64) {
+func (o *NotificationObserver) distributeDeleted(ctx context.Context) {
 	o.subscribers.Range(func(key interface{}, value interface{}) bool {
-		value.(*Subscriber).notificationDeleted(userId, appId)
+		value.(*Subscriber).notificationDeleted(ctx)
 		return true
 	})
 }
