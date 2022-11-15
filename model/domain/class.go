@@ -16,30 +16,32 @@ type Class struct {
 	Children      []*Class
 	AppId         uint64
 	IdNoShift     bool
-	QueryScript   string
-	MuationScript string
+	OnCreated     string
+	OnUpdated     string
+	OnDeleted     string
 	EnableVersion bool
 	PackageUuid   string
 }
 
 func NewClass(c *meta.ClassMeta) *Class {
 	cls := Class{
-		Uuid:          c.Uuid,
-		InnerId:       c.InnerId,
-		StereoType:    c.StereoType,
-		Name:          c.Name,
-		Description:   c.Description,
-		Root:          c.Root,
-		SoftDelete:    c.SoftDelete,
-		Attributes:    make([]*Attribute, len(c.Attributes)),
-		Methods:       make([]*Method, len(c.Methods)),
-		Parents:       []*Class{},
-		Children:      []*Class{},
-		QueryScript:   c.QueryScript,
-		MuationScript: c.MuationScript,
-		AppId:         c.AppId,
-		PackageUuid:   c.PackageUuid,
-		IdNoShift:     c.IdNoShift,
+		Uuid:        c.Uuid,
+		InnerId:     c.InnerId,
+		StereoType:  c.StereoType,
+		Name:        c.Name,
+		Description: c.Description,
+		Root:        c.Root,
+		SoftDelete:  c.SoftDelete,
+		Attributes:  make([]*Attribute, len(c.Attributes)),
+		Methods:     make([]*Method, len(c.Methods)),
+		Parents:     []*Class{},
+		Children:    []*Class{},
+		OnCreated:   c.OnCreated,
+		OnUpdated:   c.OnUpdated,
+		OnDeleted:   c.OnDeleted,
+		AppId:       c.AppId,
+		PackageUuid: c.PackageUuid,
+		IdNoShift:   c.IdNoShift,
 	}
 
 	for i := range c.Attributes {
