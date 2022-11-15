@@ -14,7 +14,7 @@ import (
 	"github.com/graphql-go/graphql/gqlerrors"
 	"github.com/mitchellh/mapstructure"
 	"rxdrag.com/entify/common/contexts"
-	"rxdrag.com/entify/register"
+	"rxdrag.com/entify/modules/register"
 	"rxdrag.com/entify/storage"
 )
 

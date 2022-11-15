@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/thinkeridea/go-extend/exnet"
-	"rxdrag.com/entify/authentication"
 	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/consts"
+	"rxdrag.com/entify/modules/authentication"
 )
 
 // 传递公共参数中间件

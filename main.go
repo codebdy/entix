@@ -7,7 +7,6 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
-	"rxdrag.com/entify/app"
 	"rxdrag.com/entify/common/errorx"
 	"rxdrag.com/entify/common/middlewares"
 	"rxdrag.com/entify/config"
@@ -15,15 +14,16 @@ import (
 	"rxdrag.com/entify/db"
 	"rxdrag.com/entify/handler"
 	"rxdrag.com/entify/model/meta"
+	"rxdrag.com/entify/modules/app"
+	"rxdrag.com/entify/modules/register"
 	"rxdrag.com/entify/orm"
-	"rxdrag.com/entify/register"
 
-	_ "rxdrag.com/entify/app"
-	_ "rxdrag.com/entify/authentication"
-	_ "rxdrag.com/entify/imexport"
-	_ "rxdrag.com/entify/install"
-	_ "rxdrag.com/entify/publish"
-	_ "rxdrag.com/entify/snapshot"
+	_ "rxdrag.com/entify/modules/app"
+	_ "rxdrag.com/entify/modules/authentication"
+	_ "rxdrag.com/entify/modules/imexport"
+	_ "rxdrag.com/entify/modules/install"
+	_ "rxdrag.com/entify/modules/publish"
+	_ "rxdrag.com/entify/modules/snapshot"
 )
 
 const PORT = 4000
