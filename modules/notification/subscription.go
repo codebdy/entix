@@ -18,7 +18,7 @@ func (m *SubscriptionModule) SubscriptionFields() []*graphql.Field {
 					return p.Source, nil
 				},
 				Subscribe: func(p graphql.ResolveParams) (interface{}, error) {
-					observer := newObserver(p)
+					observer := newObserver(p, m.app.Model)
 					go func() {
 						<-p.Context.Done()
 						observer.destory()

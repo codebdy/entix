@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"strings"
 
 	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/db"
@@ -18,36 +17,36 @@ type QueryResponse struct {
 	Total int                      `json:"total"`
 }
 
-func (con *Session) buildQueryInterfaceSQL(intf *graph.Interface, args map[string]interface{}) (string, []interface{}) {
-	var (
-		sqls       []string
-		paramsList []interface{}
-	)
-	builder := dialect.GetSQLBuilder()
-	for i := range intf.Children {
-		entity := intf.Children[i]
-		whereArgs := args[consts.ARG_WHERE]
-		argEntity := graph.BuildArgEntity(
-			entity,
-			whereArgs,
-			con,
-		)
-		queryStr := builder.BuildQuerySQLBody(argEntity, intf.AllAttributes())
-		if where, ok := whereArgs.(graph.QueryArg); ok {
-			whereSQL, params := builder.BuildWhereSQL(argEntity, intf.AllAttributes(), where)
-			if whereSQL != "" {
-				queryStr = queryStr + " WHERE " + whereSQL
-			}
+// func (con *Session) buildQueryInterfaceSQL(intf *graph.Interface, args map[string]interface{}) (string, []interface{}) {
+// 	var (
+// 		sqls       []string
+// 		paramsList []interface{}
+// 	)
+// 	builder := dialect.GetSQLBuilder()
+// 	for i := range intf.Children {
+// 		entity := intf.Children[i]
+// 		whereArgs := args[consts.ARG_WHERE]
+// 		argEntity := graph.BuildArgEntity(
+// 			entity,
+// 			whereArgs,
+// 			con,
+// 		)
+// 		queryStr := builder.BuildQuerySQLBody(argEntity, intf.AllAttributes())
+// 		if where, ok := whereArgs.(graph.QueryArg); ok {
+// 			whereSQL, params := builder.BuildWhereSQL(argEntity, intf.AllAttributes(), where)
+// 			if whereSQL != "" {
+// 				queryStr = queryStr + " WHERE " + whereSQL
+// 			}
 
-			paramsList = append(paramsList, params...)
-		}
-		queryStr = queryStr + builder.BuildOrderBySQL(argEntity, args[consts.ARG_ORDERBY])
+// 			paramsList = append(paramsList, params...)
+// 		}
+// 		queryStr = queryStr + builder.BuildOrderBySQL(argEntity, args[consts.ARG_ORDERBY])
 
-		sqls = append(sqls, queryStr)
-	}
+// 		sqls = append(sqls, queryStr)
+// 	}
 
-	return strings.Join(sqls, " UNION "), paramsList
-}
+// 	return strings.Join(sqls, " UNION "), paramsList
+// }
 
 func (con *Session) buildQueryEntitySQL(
 	entity *graph.Entity,
@@ -152,27 +151,31 @@ func (con *Session) buildQueryEntityCountSQL(entity *graph.Entity, args map[stri
 // }
 
 func (con *Session) QueryEntity(entity *graph.Entity, args map[string]interface{}, fields []*graph.Attribute) QueryResponse {
-	sqlStr, params := con.buildQueryEntityRecordsSQL(entity, args, fields)
-	log.Println("doQueryEntity SQL:", sqlStr, params)
-	rows, err := con.Dbx.Query(sqlStr, params...)
-	defer rows.Close()
-	if err != nil {
-		log.Panic(err.Error(), sqlStr)
-	}
 	var instances []InsanceData
-	for rows.Next() {
-		values := makeEntityQueryValues(fields)
-		err = rows.Scan(values...)
+
+	if len(fields) > 0 {
+		sqlStr, params := con.buildQueryEntityRecordsSQL(entity, args, fields)
+		log.Println("doQueryEntity SQL:", sqlStr, params)
+		rows, err := con.Dbx.Query(sqlStr, params...)
+		defer rows.Close()
 		if err != nil {
-			panic(err.Error())
+			log.Panic(err.Error(), sqlStr)
 		}
-		instances = append(instances, convertValuesToEntity(values, fields))
+
+		for rows.Next() {
+			values := makeEntityQueryValues(fields)
+			err = rows.Scan(values...)
+			if err != nil {
+				panic(err.Error())
+			}
+			instances = append(instances, convertValuesToEntity(values, fields))
+		}
 	}
 
-	sqlStr, params = con.buildQueryEntityCountSQL(entity, args)
+	sqlStr, params := con.buildQueryEntityCountSQL(entity, args)
 	log.Println("doQueryEntity count SQL:", sqlStr, params)
 	count := 0
-	err = con.Dbx.QueryRow(sqlStr, params...).Scan(&count)
+	err := con.Dbx.QueryRow(sqlStr, params...).Scan(&count)
 	switch {
 	case err == sql.ErrNoRows:
 		count = 0
@@ -180,11 +183,9 @@ func (con *Session) QueryEntity(entity *graph.Entity, args map[string]interface{
 		log.Panic(err.Error())
 	}
 
-	defer rows.Close()
-
 	return QueryResponse{
 		Nodes: instances,
-		Total: 0,
+		Total: count,
 	}
 }
 

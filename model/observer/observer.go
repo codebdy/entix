@@ -4,9 +4,9 @@ import "sync"
 
 type ModelObserver interface {
 	Key() string
-	ObjectCreated(object map[string]interface{})
-	ObjectUpdated(object map[string]interface{})
-	ObjectDeleted(object map[string]interface{})
+	ObjectCreated(object map[string]interface{}, entityName string)
+	ObjectUpdated(object map[string]interface{}, entityName string)
+	ObjectDeleted(object map[string]interface{}, entityName string)
 }
 
 var ModelObservers sync.Map
