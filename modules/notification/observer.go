@@ -7,16 +7,16 @@ import (
 )
 
 type NotificationObserver struct {
-	c   chan (interface{})
-	key string
-	p   graphql.ResolveParams
+	channel chan (interface{})
+	key     string
+	p       graphql.ResolveParams
 }
 
 func newObserver(p graphql.ResolveParams) *NotificationObserver {
 	ntObserver := &NotificationObserver{
-		c:   make(chan interface{}),
-		key: uuid.New().String(),
-		p:   p,
+		channel: make(chan interface{}),
+		key:     uuid.New().String(),
+		p:       p,
 	}
 	observer.AddObserver(ntObserver)
 
@@ -27,16 +27,20 @@ func (o *NotificationObserver) Key() string {
 }
 
 func (o *NotificationObserver) ObjectCreated(object map[string]interface{}) {
-
+	o.calculateCounts(object)
 }
 func (o *NotificationObserver) ObjectUpdated(object map[string]interface{}) {
-
+	o.calculateCounts(object)
 }
 func (o *NotificationObserver) ObjectDeleted(object map[string]interface{}) {
+	o.calculateCounts(object)
+}
 
+func (o *NotificationObserver) calculateCounts(object map[string]interface{}) {
+	//o.channel <- 0
 }
 
 func (o *NotificationObserver) destory() {
-	close(o.c)
+	close(o.channel)
 	observer.RemoveObserver(o.key)
 }

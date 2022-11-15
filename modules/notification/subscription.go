@@ -25,7 +25,7 @@ func (m *SubscriptionModule) SubscriptionFields() []*graphql.Field {
 						return
 					}()
 
-					return observer.c, nil
+					return observer.channel, nil
 				},
 			},
 		}
