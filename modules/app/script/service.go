@@ -5,6 +5,8 @@ import (
 	"log"
 
 	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify/common/contexts"
+	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/logs"
 	"rxdrag.com/entify/model/data"
 	"rxdrag.com/entify/model/graph"
@@ -131,7 +133,23 @@ func (s *ScriptService) WriteLog(
 }
 
 func (s *ScriptService) EmitNotification(text string, noticeType string, userId uint64) {
-
+	s.SaveOne(
+		map[string]interface{}{
+			"text":       text,
+			"noticeType": noticeType,
+			"user": map[string]interface{}{
+				"sync": map[string]interface{}{
+					consts.ID: userId,
+				},
+			},
+			"app": map[string]interface{}{
+				"sync": map[string]interface{}{
+					consts.ID: contexts.Values(s.ctx).AppId,
+				},
+			},
+		},
+		"Notification",
+	)
 }
 
 func (s *ScriptService) Query(gql string, variables interface{}) interface{} {
