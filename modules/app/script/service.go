@@ -130,6 +130,10 @@ func (s *ScriptService) WriteLog(
 	logs.WriteBusinessLog(s.ctx, operate, result, message)
 }
 
+func (s *ScriptService) EmitNotification(text string, noticeType string, userId uint64) {
+
+}
+
 func (s *ScriptService) Query(gql string, variables interface{}) interface{} {
 	var newVariables map[string]interface{}
 

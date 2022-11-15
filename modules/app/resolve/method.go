@@ -25,6 +25,7 @@ func MethodResolveFn(code string, methodArgs []meta.ArgMeta, model *model.Model)
 		vm.Set("$save", scriptService.Save)
 		vm.Set("$saveOne", scriptService.SaveOne)
 		vm.Set("$log", scriptService.WriteLog)
+		vm.Set("$notice", scriptService.EmitNotification)
 		vm.Set("$query", scriptService.Query)
 		script.Enable(vm)
 		funcStr := fmt.Sprintf(
