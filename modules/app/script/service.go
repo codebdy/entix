@@ -32,6 +32,10 @@ func NewService(ctx context.Context, model *graph.Model) *ScriptService {
 	}
 }
 
+func (s *ScriptService) SetSession(session *orm.Session) {
+	s.session = session
+}
+
 func (s *ScriptService) BeginTx() {
 	session, err := orm.Open()
 	if err != nil {
@@ -75,7 +79,18 @@ func (s *ScriptService) Rollback() {
 	s.session = nil
 }
 
+func (s *ScriptService) checkSession() {
+	if s.session == nil {
+		session, err := orm.Open()
+		if err != nil {
+			log.Panic(err.Error())
+		}
+		s.session = session
+	}
+}
+
 func (s *ScriptService) Save(objects []interface{}, entityName string) []orm.InsanceData {
+	s.checkSession()
 	entity := s.model.GetEntityByName(entityName)
 
 	if entity == nil {
@@ -102,6 +117,7 @@ func (s *ScriptService) Save(objects []interface{}, entityName string) []orm.Ins
 }
 
 func (s *ScriptService) SaveOne(object interface{}, entityName string) interface{} {
+	s.checkSession()
 	entity := s.model.GetEntityByName(entityName)
 
 	if entity == nil {
