@@ -14,7 +14,19 @@ func (m *SubscriptionModule) SubscriptionFields() []*graphql.Field {
 			{
 				Name: "unreadNoticationCounts",
 				Type: graphql.Int,
-				//Resolve: PublishMetaResolveFn(m.app),
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					return p.Source, nil
+				},
+				Subscribe: func(p graphql.ResolveParams) (interface{}, error) {
+					observer := newObserver(p)
+					go func() {
+						<-p.Context.Done()
+						observer.destory()
+						return
+					}()
+
+					return observer.c, nil
+				},
 			},
 		}
 	} else {

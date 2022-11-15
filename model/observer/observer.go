@@ -6,7 +6,7 @@ type ModelObserver interface {
 	Key() string
 	ObjectCreated(object map[string]interface{})
 	ObjectUpdated(object map[string]interface{})
-	OjbectDeleted(object map[string]interface{})
+	ObjectDeleted(object map[string]interface{})
 }
 
 var ModelObservers sync.Map
