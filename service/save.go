@@ -68,7 +68,7 @@ func (s *Service) SaveOne(instance *data.Instance) (interface{}, error) {
 		return nil, err
 	}
 
-	result := session.QueryOneEntityById(instance.Entity, id)
+	result := session.QueryOneById(instance.Entity, id)
 	err = session.Commit()
 	if err != nil {
 		log.Println(err.Error())

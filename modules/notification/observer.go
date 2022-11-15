@@ -68,7 +68,12 @@ func (o *NotificationObserver) calculateCounts(object map[string]interface{}) {
 	if err != nil {
 		log.Panic(err.Error())
 	}
-	result := session.QueryEntity(entity, map[string]interface{}{}, []*graph.Attribute{})
+
+	if object["user"] == nil {
+		log.Panic()
+	}
+
+	result := session.Query(entity, map[string]interface{}{}, []*graph.Attribute{})
 
 	o.channel <- result.Total
 }

@@ -116,7 +116,7 @@ func (s *ScriptService) SaveOne(object interface{}, entityName string) interface
 		log.Panic(err.Error())
 	}
 
-	result := s.session.QueryOneEntityById(instance.Entity, id)
+	result := s.session.QueryOneById(instance.Entity, id)
 
 	return result
 }

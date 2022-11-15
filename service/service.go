@@ -75,7 +75,7 @@ func (s *Service) canReadEntity(entity *graph.Entity) (bool, graph.QueryArg) {
 	}
 
 	authEntity := s.model.GetEntityByName("ClassAuthConfig")
-	result := session.QueryEntity(authEntity,
+	result := session.Query(authEntity,
 		graph.QueryArg{
 			consts.ARG_AND: []graph.QueryArg{
 				appArg,
@@ -130,7 +130,7 @@ func QueryRoleIds(ctx context.Context, model *graph.Model) []uint64 {
 	}
 
 	roleEntity := model.GetEntityByName(meta.ROLE_ENTITY_NAME)
-	result := session.QueryEntity(roleEntity,
+	result := session.Query(roleEntity,
 		map[string]interface{}{
 			"users": map[string]interface{}{
 				"id": map[string]interface{}{

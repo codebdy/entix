@@ -59,7 +59,7 @@ func (s *Session) insertOneBody(instance *data.Instance) (int64, error) {
 
 func (s *Session) UpdateOne(instance *data.Instance) (uint64, error) {
 
-	instanceForUpdate := s.QueryOneEntityById(instance.Entity, instance.Id)
+	instanceForUpdate := s.QueryOneById(instance.Entity, instance.Id)
 	if instanceForUpdate == nil {
 		log.Panic(fmt.Sprintf("Update instance is not exist, entity: %s, instanceId:%d", instance.Entity.Name(), instance.Id))
 	}

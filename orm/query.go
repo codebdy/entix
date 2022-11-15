@@ -150,7 +150,7 @@ func (con *Session) buildQueryEntityCountSQL(entity *graph.Entity, args map[stri
 // 	}
 // }
 
-func (con *Session) QueryEntity(entity *graph.Entity, args map[string]interface{}, fields []*graph.Attribute) QueryResponse {
+func (con *Session) Query(entity *graph.Entity, args map[string]interface{}, fields []*graph.Attribute) QueryResponse {
 	var instances []InsanceData
 
 	if len(fields) > 0 {
@@ -189,8 +189,8 @@ func (con *Session) QueryEntity(entity *graph.Entity, args map[string]interface{
 	}
 }
 
-func (con *Session) QueryOneEntityById(entity *graph.Entity, id interface{}) interface{} {
-	return con.QueryOneEntity(entity, graph.QueryArg{
+func (con *Session) QueryOneById(entity *graph.Entity, id interface{}) interface{} {
+	return con.QueryOne(entity, graph.QueryArg{
 		consts.ARG_WHERE: graph.QueryArg{
 			consts.ID: graph.QueryArg{
 				consts.ARG_EQ: id,
@@ -223,7 +223,7 @@ func (con *Session) QueryOneEntityById(entity *graph.Entity, id interface{}) int
 // 	return nil
 // }
 
-func (con *Session) QueryOneEntity(entity *graph.Entity, args map[string]interface{}) interface{} {
+func (con *Session) QueryOne(entity *graph.Entity, args map[string]interface{}) interface{} {
 	queryStr, params := con.buildQueryEntityRecordsSQL(entity, args, entity.AllAttributes())
 
 	values := makeEntityQueryValues(entity.AllAttributes())

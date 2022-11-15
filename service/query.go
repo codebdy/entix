@@ -61,7 +61,7 @@ func (s *Service) QueryEntity(entity *graph.Entity, args graph.QueryArg, fieldNa
 		}
 	}
 
-	return session.QueryEntity(entity, mergeWhereArgs(args, authArgs), fields)
+	return session.Query(entity, mergeWhereArgs(args, authArgs), fields)
 }
 
 func (s *Service) QueryOneEntity(entity *graph.Entity, args graph.QueryArg) interface{} {
@@ -73,7 +73,7 @@ func (s *Service) QueryOneEntity(entity *graph.Entity, args graph.QueryArg) inte
 	if err != nil {
 		log.Panic(err.Error())
 	}
-	return session.QueryOneEntity(entity, mergeWhereArgs(args, authArgs))
+	return session.QueryOne(entity, mergeWhereArgs(args, authArgs))
 }
 
 func (s *Service) QueryById(entity *graph.Entity, id uint64) interface{} {
