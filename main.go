@@ -22,6 +22,7 @@ import (
 	_ "rxdrag.com/entify/modules/authentication"
 	_ "rxdrag.com/entify/modules/imexport"
 	_ "rxdrag.com/entify/modules/install"
+	_ "rxdrag.com/entify/modules/notification"
 	_ "rxdrag.com/entify/modules/publish"
 	_ "rxdrag.com/entify/modules/snapshot"
 )

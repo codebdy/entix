@@ -1,4 +1,4 @@
-package subscription
+package notification
 
 import (
 	"context"
