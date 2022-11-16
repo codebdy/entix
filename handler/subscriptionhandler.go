@@ -13,6 +13,9 @@ import (
 	"rxdrag.com/entify/modules/register"
 )
 
+type SubscriptionHandler struct {
+}
+
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
@@ -30,36 +33,43 @@ type ConnectionACKMessage struct {
 	} `json:"payload,omitempty"`
 }
 
-func NewFunc() func(w http.ResponseWriter, r *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		conn, err := upgrader.Upgrade(w, r, nil)
-		if err != nil {
-			log.Printf("failed to do websocket upgrade: %v", err)
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
-		connectionACK, err := json.Marshal(map[string]string{
-			"type": "connection_ack",
-		})
-		if err != nil {
-			log.Printf("failed to marshal ws connection ack: %v", err)
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
-		if err := conn.WriteMessage(websocket.TextMessage, connectionACK); err != nil {
-			log.Printf("failed to write to ws connection: %v", err)
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		go handleSubscription(conn)
-	}
+func NewSubscription() *SubscriptionHandler {
+	return &SubscriptionHandler{}
 }
 
-func handleSubscription(conn *websocket.Conn) {
+// ServeHTTP provides an entrypoint into executing graphQL queries.
+func (h *SubscriptionHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	h.ContextHandler(r.Context(), w, r)
+}
+
+func (h *SubscriptionHandler) ContextHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Printf("failed to do websocket upgrade: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	connectionACK, err := json.Marshal(map[string]string{
+		"type": "connection_ack",
+	})
+	if err != nil {
+		log.Printf("failed to marshal ws connection ack: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	if err := conn.WriteMessage(websocket.TextMessage, connectionACK); err != nil {
+		log.Printf("failed to write to ws connection: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	go handleSubscription(conn, ctx)
+}
+
+func handleSubscription(conn *websocket.Conn, ctx context.Context) {
 	var subscriber *Subscriber
-	subscriptionCtx, subscriptionCancelFn := context.WithCancel(context.Background())
+	subscriptionCtx, subscriptionCancelFn := context.WithCancel(ctx)
 
 	handleClosedConnection := func() {
 		log.Println("[SubscriptionsHandler] subscriber closed connection")

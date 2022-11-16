@@ -77,7 +77,16 @@ func main() {
 			),
 		),
 	)
-	http.HandleFunc("/subscriptions", handler.NewFunc())
+	fmt.Println(fmt.Sprintf("🚀 Graphql server ready at http://localhost:%d/graphql", PORT))
+
+	http.Handle("/subscriptions",
+		middlewares.CorsMiddleware(
+			middlewares.ContextMiddleware(
+				register.AppendMiddlewares(handler.NewSubscription()),
+			),
+		),
+	)
+	fmt.Println(fmt.Sprintf("🎉 Subscriptions endpoint is ws://localhost:%d/subscriptions", PORT))
 
 	if config.Storage() == consts.LOCAL {
 		prefix := "/" + consts.STATIC_PATH + "/"
@@ -88,9 +97,6 @@ func main() {
 				middlewares.CorsMiddleware(http.FileServer(http.Dir("./"+consts.STATIC_PATH)))),
 		)
 	}
-
-	fmt.Println(fmt.Sprintf("🚀 Graphql server ready at http://localhost:%d/graphql", PORT))
-	fmt.Println(fmt.Sprintf("Subscriptions endpoint is ws://localhost:%d/subscriptions", PORT))
 	err := http.ListenAndServe(fmt.Sprintf(":%d", PORT), nil)
 	if err != nil {
 		fmt.Printf("启动失败:%s", err)
