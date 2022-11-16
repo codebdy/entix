@@ -115,7 +115,13 @@ func (o *NotificationObserver) distributeChanged(object map[string]interface{}, 
 	if r.Data != nil {
 		//分发
 		o.subscribers.Range(func(key interface{}, value interface{}) bool {
-			value.(*Subscriber).notificationChanged(r.Data.(map[string]interface{}))
+			notification := r.Data.(map[string]interface{})["oneNotification"]
+			if notification != nil {
+				value.(*Subscriber).notificationChanged(notification.(map[string]interface{}), ctx)
+			} else {
+				log.Panicln("Can not query notification")
+			}
+
 			return true
 		})
 

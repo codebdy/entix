@@ -2,10 +2,14 @@ package notification
 
 import (
 	"context"
+	"log"
 
 	"github.com/google/uuid"
 	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/model"
+	"rxdrag.com/entify/model/graph"
+	"rxdrag.com/entify/orm"
 )
 
 type Subscriber struct {
@@ -26,24 +30,28 @@ func newSubscriber(p graphql.ResolveParams, model *model.Model) *Subscriber {
 	return s
 }
 
-func (s *Subscriber) notificationChanged(notification map[string]interface{}) {
-	// me := contexts.Values(o.p.Context).Me
-	// appId := contexts.Values(o.p.Context).AppId
+func (s *Subscriber) notificationChanged(notification map[string]interface{}, ctx context.Context) {
+	me := contexts.Values(ctx).Me
+	appId := contexts.Values(ctx).AppId
 
-	// if me == nil || appId == 0 {
-	// 	log.Panic("User or app not set!")
-	// }
-	// session, err := orm.Open()
-	// if err != nil {
-	// 	log.Panic(err.Error())
-	// }
+	if me == nil || appId == 0 {
+		log.Panic("User or app not set!")
+	}
+	session, err := orm.Open()
+	if err != nil {
+		log.Panic(err.Error())
+	}
 
-	// if object["user"] == nil {
-	// 	log.Panic()
-	// }
+	if notification["user"] == nil {
+		log.Panic("Notification no user")
+	}
 
-	//result := session.Query(entity, map[string]interface{}{}, []*graph.Attribute{})
-
+	result := session.Query(
+		s.model.Graph.GetEntityByName(EntityNotificationName),
+		map[string]interface{}{},
+		[]*graph.Attribute{},
+	)
+	s.channel <- result.Total
 }
 
 func (s *Subscriber) notificationDeleted(ctx context.Context) {
