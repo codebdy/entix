@@ -77,6 +77,7 @@ func main() {
 			),
 		),
 	)
+	http.HandleFunc("/subscriptions", handler.NewFunc())
 
 	if config.Storage() == consts.LOCAL {
 		prefix := "/" + consts.STATIC_PATH + "/"
