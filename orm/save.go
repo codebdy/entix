@@ -152,7 +152,7 @@ func (s *Session) SaveAssociation(r *data.AssociationRef, ownerId uint64) error 
 					s.SaveAssociationPovit(relationInstance)
 				}
 			} else {
-				log.Panic("Save Association error")
+				log.Panic("Save Association error, id is 0")
 			}
 		}
 	}

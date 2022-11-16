@@ -1,10 +1,12 @@
 package resolve
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/dop251/goja"
 	"github.com/graphql-go/graphql"
+	"rxdrag.com/entify/common/contexts"
 	"rxdrag.com/entify/model"
 	"rxdrag.com/entify/model/meta"
 	"rxdrag.com/entify/modules/app/script"
@@ -17,6 +19,13 @@ func MethodResolveFn(code string, methodArgs []meta.ArgMeta, model *model.Model)
 		scriptService := script.NewService(p.Context, model.Graph)
 		vm := goja.New()
 		script.Enable(vm)
+
+		me := contexts.Values(p.Context).Me
+
+		marshalContent, err := json.Marshal(me)
+		var meMap map[string]interface{}
+		json.Unmarshal(marshalContent, &meMap)
+
 		vm.Set("$args", p.Args)
 		vm.Set("$beginTx", scriptService.BeginTx)
 		vm.Set("$clearTx", scriptService.ClearTx)
@@ -27,6 +36,8 @@ func MethodResolveFn(code string, methodArgs []meta.ArgMeta, model *model.Model)
 		vm.Set("$log", scriptService.WriteLog)
 		vm.Set("$notice", scriptService.EmitNotification)
 		vm.Set("$query", scriptService.Query)
+		vm.Set("$me", meMap)
+		vm.Set("$appId", contexts.Values(p.Context).AppId)
 		script.Enable(vm)
 		funcStr := fmt.Sprintf(
 			`
