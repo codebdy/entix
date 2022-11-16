@@ -90,7 +90,7 @@ func main() {
 
 	if config.Storage() == consts.LOCAL {
 		prefix := "/" + consts.STATIC_PATH + "/"
-		fmt.Println(fmt.Sprintf("Running a file server at http://localhost:%d/static/", PORT))
+		fmt.Println(fmt.Sprintf("📄 Running a file server at http://localhost:%d/static/", PORT))
 		http.Handle(prefix,
 			http.StripPrefix(
 				prefix,
