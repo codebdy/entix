@@ -4,6 +4,8 @@ import (
 	"context"
 	"sync"
 
+	"rxdrag.com/entify/common/contexts"
+	"rxdrag.com/entify/consts"
 	"rxdrag.com/entify/model/graph"
 )
 
@@ -26,9 +28,11 @@ func RemoveObserver(key string) {
 }
 
 func EmitObjectPosted(object map[string]interface{}, entity *graph.Entity, ctx context.Context) {
+	newCtx := context.WithValue(context.Background(), consts.CONTEXT_VALUES, contexts.Values(ctx))
+	newCtx = context.WithValue(newCtx, consts.LOADERS, ctx.Value(consts.LOADERS))
 	go func() {
 		ModelObservers.Range(func(key interface{}, value interface{}) bool {
-			value.(ModelObserver).ObjectPosted(object, entity, ctx)
+			value.(ModelObserver).ObjectPosted(object, entity, newCtx)
 			return true
 		})
 	}()
