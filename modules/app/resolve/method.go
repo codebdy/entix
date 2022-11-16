@@ -3,6 +3,7 @@ package resolve
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 
 	"github.com/dop251/goja"
 	"github.com/graphql-go/graphql"
@@ -21,10 +22,15 @@ func MethodResolveFn(code string, methodArgs []meta.ArgMeta, model *model.Model)
 		script.Enable(vm)
 
 		me := contexts.Values(p.Context).Me
-
-		marshalContent, err := json.Marshal(me)
 		var meMap map[string]interface{}
-		json.Unmarshal(marshalContent, &meMap)
+
+		if me != nil {
+			marshalContent, err := json.Marshal(me)
+			if err != nil {
+				log.Panic(err)
+			}
+			json.Unmarshal(marshalContent, &meMap)
+		}
 
 		vm.Set("$args", p.Args)
 		vm.Set("$beginTx", scriptService.BeginTx)
