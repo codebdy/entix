@@ -227,7 +227,7 @@ func (con *Session) QueryOne(entity *graph.Entity, args map[string]interface{}) 
 	queryStr, params := con.buildQueryEntityRecordsSQL(entity, args, entity.AllAttributes())
 
 	values := makeEntityQueryValues(entity.AllAttributes())
-	log.Println("doQueryOneEntity SQL:", queryStr, params)
+	//log.Println("doQueryOneEntity SQL:", queryStr, params)
 	err := con.Dbx.QueryRow(queryStr, params...).Scan(values...)
 	switch {
 	case err == sql.ErrNoRows:
