@@ -90,6 +90,7 @@ func main() {
 	}
 
 	fmt.Println(fmt.Sprintf("🚀 Graphql server ready at http://localhost:%d/graphql", PORT))
+	fmt.Println(fmt.Sprintf("Subscriptions endpoint is ws://localhost:%d/subscriptions", PORT))
 	err := http.ListenAndServe(fmt.Sprintf(":%d", PORT), nil)
 	if err != nil {
 		fmt.Printf("启动失败:%s", err)
