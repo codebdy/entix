@@ -18,14 +18,9 @@ func (m *SubscriptionModule) SubscriptionFields() []*graphql.Field {
 				Subscribe: func(p graphql.ResolveParams) (interface{}, error) {
 					subscrber := newSubscriber(p, m.app.Model)
 					go func() {
-						for {
-							select {
-							case <-p.Context.Done():
-								log.Println("[RootSubscription] [Subscribe] subscription canceled")
-								subscrber.destory()
-								return
-							}
-						}
+						<-p.Context.Done()
+						log.Println("[RootSubscription] [Subscribe] subscription canceled")
+						subscrber.destory()
 					}()
 
 					return subscrber.channel, nil

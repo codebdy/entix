@@ -10,7 +10,7 @@ import (
 
 type Subscriber struct {
 	key     string
-	channel <-chan (interface{})
+	channel chan (interface{})
 	p       graphql.ResolveParams
 	model   *model.Model
 }
@@ -18,7 +18,7 @@ type Subscriber struct {
 func newSubscriber(p graphql.ResolveParams, model *model.Model) *Subscriber {
 	s := &Subscriber{
 		key:     uuid.New().String(),
-		channel: make(<-chan interface{}),
+		channel: make(chan interface{}),
 		p:       p,
 		model:   model,
 	}
@@ -51,5 +51,6 @@ func (s *Subscriber) notificationDeleted(ctx context.Context) {
 }
 
 func (s *Subscriber) destory() {
+	close(s.channel)
 	NoticeModelObserver.deleteSubscriber(s.key)
 }
