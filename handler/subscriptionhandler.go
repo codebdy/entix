@@ -22,7 +22,7 @@ var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
 		return true
 	},
-	Subprotocols: []string{"graphql-ws"},
+	Subprotocols: []string{"graphql-transport-ws", "graphql-ws"}, //  subscriptions-transport-ws 使用 graphql-ws
 }
 
 type ConnectionACKMessage struct {
