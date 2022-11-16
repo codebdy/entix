@@ -51,5 +51,5 @@ func (s *Subscriber) notificationDeleted(ctx context.Context) {
 }
 
 func (s *Subscriber) destory() {
-	NoticeModelObserver.delteSubscriber(s.key)
+	NoticeModelObserver.deleteSubscriber(s.key)
 }

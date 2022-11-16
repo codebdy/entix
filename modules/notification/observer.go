@@ -133,6 +133,6 @@ func (o *NotificationObserver) addSubscriber(s *Subscriber) {
 	o.subscribers.Store(s.key, s)
 }
 
-func (o *NotificationObserver) delteSubscriber(key string) {
+func (o *NotificationObserver) deleteSubscriber(key string) {
 	o.subscribers.Delete(key)
 }

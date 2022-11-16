@@ -64,12 +64,13 @@ func (h *SubscriptionHandler) ContextHandler(ctx context.Context, w http.Respons
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	go handleSubscription(conn, ctx)
+	schema := register.GetSchema(ctx)
+	go handleSubscription(conn, &schema)
 }
 
-func handleSubscription(conn *websocket.Conn, ctx context.Context) {
+func handleSubscription(conn *websocket.Conn, schema *graphql.Schema) {
 	var subscriber *Subscriber
-	subscriptionCtx, subscriptionCancelFn := context.WithCancel(ctx)
+	subscriptionCtx, subscriptionCancelFn := context.WithCancel(context.Background())
 
 	handleClosedConnection := func() {
 		log.Println("[SubscriptionsHandler] subscriber closed connection")
@@ -96,7 +97,7 @@ func handleSubscription(conn *websocket.Conn, ctx context.Context) {
 		}
 
 		if msg.Type == "start" {
-			subscriber = subscribe(subscriptionCtx, subscriptionCancelFn, conn, msg)
+			subscriber = subscribe(subscriptionCtx, subscriptionCancelFn, conn, msg, schema)
 		}
 	}
 }
@@ -131,6 +132,7 @@ func unsubscribe(subscriptionCancelFn context.CancelFunc, subscriber *Subscriber
 func subscribe(ctx context.Context,
 	subscriptionCancelFn context.CancelFunc,
 	conn *websocket.Conn, msg ConnectionACKMessage,
+	schema *graphql.Schema,
 ) *Subscriber {
 	subscriber := &Subscriber{
 		UUID:          uuid.New().String(),
@@ -163,7 +165,7 @@ func subscribe(ctx context.Context,
 		subscribeParams := graphql.Params{
 			Context:       ctx,
 			RequestString: msg.Payload.Query,
-			Schema:        register.GetSchema(ctx),
+			Schema:        *schema,
 		}
 
 		subscribeChannel := graphql.Subscribe(subscribeParams)

@@ -1,6 +1,8 @@
 package notification
 
 import (
+	"log"
+
 	"github.com/graphql-go/graphql"
 )
 
@@ -16,9 +18,14 @@ func (m *SubscriptionModule) SubscriptionFields() []*graphql.Field {
 				Subscribe: func(p graphql.ResolveParams) (interface{}, error) {
 					subscrber := newSubscriber(p, m.app.Model)
 					go func() {
-						<-p.Context.Done()
-						subscrber.destory()
-						return
+						for {
+							select {
+							case <-p.Context.Done():
+								log.Println("[RootSubscription] [Subscribe] subscription canceled")
+								subscrber.destory()
+								return
+							}
+						}
 					}()
 
 					return subscrber.channel, nil
