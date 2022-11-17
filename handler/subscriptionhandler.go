@@ -22,7 +22,7 @@ var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
 		return true
 	},
-	Subprotocols: []string{"graphql-transport-ws", "graphql-ws"}, //  subscriptions-transport-ws 使用 graphql-ws
+	Subprotocols: []string{"graphql-ws"}, //  subscriptions-transport-ws 使用 graphql-ws，其它的使用"graphql-transport-ws" 这个还不会用,
 }
 
 type ConnectionACKMessage struct {
@@ -82,6 +82,7 @@ func handleSubscription(conn *websocket.Conn, schema *graphql.Schema) {
 		_, p, err := conn.ReadMessage()
 		if err != nil {
 			log.Printf("failed to read websocket message: %v", err)
+			subscriptionCancelFn()
 			return
 		}
 
