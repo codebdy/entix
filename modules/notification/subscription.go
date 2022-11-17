@@ -16,7 +16,7 @@ func (m *SubscriptionModule) SubscriptionFields() []*graphql.Field {
 					return p.Source, nil
 				},
 				Subscribe: func(p graphql.ResolveParams) (interface{}, error) {
-					subscrber := newSubscriber(p, m.app.Model)
+					subscrber := newSubscriber(m.ctx, m.app.Model)
 					go func() {
 						subscrber.pushCounts()
 						<-p.Context.Done()

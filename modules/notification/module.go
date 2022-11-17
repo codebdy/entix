@@ -13,6 +13,7 @@ import (
 
 type SubscriptionModule struct {
 	app *app.App
+	ctx context.Context
 }
 
 func (m *SubscriptionModule) Init(ctx context.Context) {
@@ -30,6 +31,7 @@ func (m *SubscriptionModule) Init(ctx context.Context) {
 		log.Panic(err.Error())
 	}
 	m.app = app
+	m.ctx = ctx
 }
 
 func (m *SubscriptionModule) QueryFields() []*graphql.Field {
