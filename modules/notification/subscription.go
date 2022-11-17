@@ -17,6 +17,7 @@ func (m *SubscriptionModule) SubscriptionFields() []*graphql.Field {
 				},
 				Subscribe: func(p graphql.ResolveParams) (interface{}, error) {
 					subscrber := newSubscriber(p, m.app.Model)
+					subscrber.pushCounts()
 					go func() {
 						<-p.Context.Done()
 						log.Println("[RootSubscription] [Subscribe] subscription canceled")

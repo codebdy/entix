@@ -37,13 +37,17 @@ func (s *Subscriber) notificationChanged(notification map[string]interface{}, ct
 	if me == nil || appId == 0 {
 		log.Panic("User or app not set!")
 	}
-	session, err := orm.Open()
-	if err != nil {
-		log.Panic(err.Error())
-	}
 
 	if notification["user"] == nil {
 		log.Panic("Notification no user")
+	}
+	s.pushCounts()
+}
+
+func (s *Subscriber) pushCounts() {
+	session, err := orm.Open()
+	if err != nil {
+		log.Panic(err.Error())
 	}
 
 	result := session.Query(
