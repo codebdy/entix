@@ -2,6 +2,7 @@ package notification
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/google/uuid"
@@ -45,7 +46,7 @@ func (s *Subscriber) notificationChanged(notification map[string]interface{}, ct
 		log.Panic("Notification no app")
 	}
 
-	if notification["user"].(map[string]interface{})["id"] == me.Id && notification["app"].(map[string]interface{})["id"] == appId {
+	if notification["user"].(map[string]interface{})["id"] == me.Id && notification["app"].(map[string]interface{})["id"] == fmt.Sprintf("%d", appId) {
 		s.pushCounts()
 	}
 }
